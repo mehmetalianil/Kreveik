@@ -40,9 +40,7 @@ def generate_random(n_nodes,probability=0.5):
     num.random.seed()
     adjacency_matrix=num.random.permutation(num.random.randint(0,2,(n_nodes,n_nodes)))
     #    First state of the system is determined
-    num.random.seed()
     state=num.random.permutation(num.random.randint(0,2,(1,n_nodes))[0])
-    num.random.seed()
     bool_fcn=num.random.permutation(num.random.randint(0,2,(n_nodes,n_nodes)))
     
     return network(adjacency_matrix, bool_fcn, state)
