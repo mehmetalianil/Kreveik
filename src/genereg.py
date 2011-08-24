@@ -69,10 +69,11 @@ class family(object):
     family in a more structured manner.
     '''
     
-    def __init__ (self):
+    def __init__ (self,scorer):
         self.network_list = []
         self.wildtype_list = [] 
         self.equilibria = []
+        self.scorer = scorer
     
     def add_to_family(self, network):
         '''
@@ -203,7 +204,19 @@ class family(object):
             print "Unable to create new bunch"
             return False
 
+    def genetic_algorithm(self,howmany=5):
         
+        scores = []
+        kout=[]
+        self.populate_equilibria_in_family()
+        
+        for i in range(howmany):
+            meanscore = self.equilibria.mean()
+            petri1.genetic_iteration(18)
+            scores.append(petri1.equilibria.tolist())
+            all_degrees = [net.nx.in_degree().values() for net in petri1.network_list]
+            kout.append(all_degrees)
+            
 class network(object):
     '''
     Network Class
@@ -228,11 +241,7 @@ class network(object):
         self.score = 0
         self.mama = []
         self.children = []
-        
-        #    The state vector is tiled, such that we can apply 
-        #    every boolean function to the whole system
-    
-        self.state_tiled = num.tile(state_vec,(self.n_nodes,1))
+        self.scorer = None
     
     def print_id(self,content='imcasatk'):
         '''
@@ -468,12 +477,13 @@ class network(object):
         for state in int_binspace:
             self.search_equilibrium(100,state)  
         
-        self.score = sum([sum(k) for k in self.equilibria])
+        self.score = self.scorer()
         
     def mutant(self, mutated_obj=('Both',1), rule=None, howmany=1):
         '''
         Will result in mutation
         Returns mutated network.
+        
         Arranges the identification of the newcomer.
         Input Arguments:
             mutated_obj -> A tuple is fed, the first argument of the tuple determines the nature of the 
@@ -536,4 +546,7 @@ class network(object):
             
         return mutant_list
     
+def sum_scorer(family):
+    return sum([sum(k) for k in family.equilibria])
     
+   

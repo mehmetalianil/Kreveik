@@ -29,14 +29,6 @@ if __name__ == '__main__':
         net[numbertag] = genereg.generate_random(4)
         petri2.add_to_family(net[numbertag])
     
-    scores = []
-    kout=[]
 
-    petri2.populate_equilibria_in_family()
     
-for i in range(1,5):
-    meanscore = petri1.equilibria.mean()
-    petri1.genetic_iteration(18)
-    scores.append(petri1.equilibria.tolist())
-    all_degrees = [net.nx.in_degree().values() for net in petri1.network_list]
-    kout.append(all_degrees)
+
