@@ -14,6 +14,10 @@ import matplotlib.pyplot as plt
 import genereg
 import copy
 import pickle
+import sys
+
+print_enable = False
+
 
 __author__ = "Mehmet Ali Anil"
 __copyright__ = ""
@@ -25,7 +29,7 @@ __email__ = "anilm@itu.edu.tr"
 __status__ = "Production"
         
 
-def generate_random(n_nodes,probability=0.5):
+def generate_random(n_nodes,probability=(0.5,0.5,0.5)):
     '''
     Generates and returns a random network with a random initial conditions.
     The adjacency matrix, initial state, boolean function are populated with 
@@ -38,12 +42,23 @@ def generate_random(n_nodes,probability=0.5):
     A smaller value will decrease complexity and clustering coefficient.  
     '''
     num.random.seed()
-    adjacency_matrix=num.random.permutation(num.random.randint(0,2,(n_nodes,n_nodes)))
+    adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])*1.0
     #    First state of the system is determined
-    state=num.random.permutation(num.random.randint(0,2,(1,n_nodes))[0])
-    bool_fcn=num.random.permutation(num.random.randint(0,2,(n_nodes,n_nodes)))
+    state=(num.random.random((1,n_nodes))<probability[1])*1.0
+    bool_fcn=(num.random.random((n_nodes,n_nodes))<probability[2])*1.0
     
-    return network(adjacency_matrix, bool_fcn, state)
+    if print_enable:
+        print adjacency_matrix
+        print state
+        print bool_fcn
+    try:
+        network(adjacency_matrix, bool_fcn, state)
+    except ValueError,e:
+        z = e
+        print "Network is too big to model."
+        print z
+    
+    return 
 
 class family(object):
     '''
@@ -64,6 +79,7 @@ class family(object):
         This method will add a network to the specified family.
         network -> The network that is to be appended to the family.
         '''
+        
         if type(network) != genereg.network:
             print "The object that you're trying to append doesn't seem to be a network"
             print "Please double check."
@@ -93,21 +109,26 @@ class family(object):
             the wildtype club.
         '''
         if len(self.equilibria) == 0:
-            print "Warning: Equilibria not found."
-            print "Populating equilibria ..."
+            if print_enable:
+                print "Warning: Equilibria not found."
+                print "Populating equilibria ..."
             self.populate_equilibria_in_family()
-            print "    Done!"
+            if print_enable:
+                print "    Done!"
         
         print "Checking individuals in this family by their scores"
         for network in self.network_list:
             if network.score == 0:
-                print "Warning: Network "+str(network.id)+" has no information on its equilibrium"
-                print "Now calculating its equilibria..."
+                if print_enable:
+                    print "Warning: Network "+str(network.id)+" has no information on its equilibrium"
+                    print "Now calculating its equilibria..."
                 network.populate_equilibria()
-                print "    Done!"
+                if print_enable:    
+                    print "    Done!"
                 
             if network.score < wildtype_threshold:
-                print "Network "+str(network.id)+" is wild."
+                if print_enable:
+                    print "Network "+str(network.id)+" is wild."
                 self.wildtype_list.append(network)
     
         return True
@@ -125,8 +146,10 @@ class family(object):
             return False
             
         self.equilibria = num.zeros(len(self.network_list))
+        
         for id,network in enumerate(self.network_list): 
-            print "Populating equilibrium for "+str(id)+", namely: "+str(network.id)
+            if print_enable:
+                print "Populating equilibrium for "+str(id)+", namely: "+str(network.id)
             network.populate_equilibria()
             self.equilibria[id] = network.score
             
@@ -155,7 +178,8 @@ class family(object):
         
         for number,to_be_killed in enumerate(random_kill_list):
             if to_be_killed == 1:
-                print str(self.network_list[number].id)+" is killed with score"+str(self.network_list[number].score) 
+                if print_enable:
+                    print str(self.network_list[number].id)+" is killed with score"+str(self.network_list[number].score) 
                 self.network_list[number] = None
                 
         #    If there are ones that are killed, populate the remaining gaps with mutated wildtypes.
@@ -163,9 +187,11 @@ class family(object):
         
         for id,all_networks in enumerate(self.network_list):
             if all_networks == None:
-                print "mutating network "+str(self.wildtype_list[counter_wt].id)
+                if print_enable:
+                    print "mutating network "+str(self.wildtype_list[counter_wt].id)
                 self.network_list[id] = self.wildtype_list[counter_wt].mutant(mutated_obj=mutant_recipe,howmany=howmany_gntc)[0]
-                print "finding equilibria of the new network "+str(self.network_list[id].id)
+                if print_enable:    
+                    print "finding equilibria of the new network "+str(self.network_list[id].id)
                 self.network_list[id].populate_equilibria()
                 self.equilibria[id] = self.network_list[id].score
                 counter_wt = counter_wt +1
