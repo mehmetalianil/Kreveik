@@ -15,6 +15,7 @@ import genereg
 import copy
 import pickle
 import sys
+import scorers
 
 print_enable = False
 
@@ -22,14 +23,14 @@ print_enable = False
 __author__ = "Mehmet Ali Anil"
 __copyright__ = ""
 __credits__ = ["Mehmet Ali Anil"]
-__license__ = "GPL"
+__license__ = ""
 __version__ = "0.0.5"
 __maintainer__ = "Mehmet Ali Anil"
 __email__ = "anilm@itu.edu.tr"
 __status__ = "Production"
         
 
-def generate_random(n_nodes,probability=(0.5,0.5,0.5)):
+def generate_random(n_nodes,scorer,probability=(0.5,0.5,0.5)):
     '''
     Generates and returns a random network with a random initial conditions.
     The adjacency matrix, initial state, boolean function are populated with 
@@ -40,6 +41,7 @@ def generate_random(n_nodes,probability=(0.5,0.5,0.5)):
     network with manageable size and complexity.
     probability -> The probability of having a connection in any two nodes. 
     A smaller value will decrease complexity and clustering coefficient.  
+    scorer -> a function for the type network
     '''
     num.random.seed()
     adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])*1.0
@@ -52,7 +54,8 @@ def generate_random(n_nodes,probability=(0.5,0.5,0.5)):
         print state
         print bool_fcn
     try:
-        network(adjacency_matrix, bool_fcn, state)
+        return network(adjacency_matrix, bool_fcn, scorer, state_vec=state)
+        
     except ValueError,e:
         z = e
         print "Network is too big to model."
@@ -69,11 +72,10 @@ class family(object):
     family in a more structured manner.
     '''
     
-    def __init__ (self,scorer):
+    def __init__ (self):
         self.network_list = []
         self.wildtype_list = [] 
         self.equilibria = []
-        self.scorer = scorer
     
     def add_to_family(self, network):
         '''
@@ -121,7 +123,7 @@ class family(object):
         for network in self.network_list:
             if network.score == 0:
                 if print_enable:
-                    print "Warning: Network "+str(network.id)+" has no information on its equilibrium"
+                    print "Warning: Network "+str(id(network))+" has no information on its equilibrium"
                     print "Now calculating its equilibria..."
                 network.populate_equilibria()
                 if print_enable:    
@@ -129,7 +131,7 @@ class family(object):
                 
             if network.score < wildtype_threshold:
                 if print_enable:
-                    print "Network "+str(network.id)+" is wild."
+                    print "Network "+str(id(network))+" is wild."
                 self.wildtype_list.append(network)
     
         return True
@@ -150,7 +152,7 @@ class family(object):
         
         for id,network in enumerate(self.network_list): 
             if print_enable:
-                print "Populating equilibrium for "+str(id)+", namely: "+str(network.id)
+                print "Populating equilibrium for "+str(id)+", namely: "+str(id(network))
             network.populate_equilibria()
             self.equilibria[id] = network.score
             
@@ -180,7 +182,7 @@ class family(object):
         for number,to_be_killed in enumerate(random_kill_list):
             if to_be_killed == 1:
                 if print_enable:
-                    print str(self.network_list[number].id)+" is killed with score"+str(self.network_list[number].score) 
+                    print str(id(self.network_list[number]))+" is killed with score"+str(self.network_list[number].score) 
                 self.network_list[number] = None
                 
         #    If there are ones that are killed, populate the remaining gaps with mutated wildtypes.
@@ -189,10 +191,10 @@ class family(object):
         for id,all_networks in enumerate(self.network_list):
             if all_networks == None:
                 if print_enable:
-                    print "mutating network "+str(self.wildtype_list[counter_wt].id)
+                    print "mutating network "+str(id(self.wildtype_list[counter_wt]))
                 self.network_list[id] = self.wildtype_list[counter_wt].mutant(mutated_obj=mutant_recipe,howmany=howmany_gntc)[0]
                 if print_enable:    
-                    print "finding equilibria of the new network "+str(self.network_list[id].id)
+                    print "finding equilibria of the new network "+str(id(self.network_list[id]))
                 self.network_list[id].populate_equilibria()
                 self.equilibria[id] = self.network_list[id].score
                 counter_wt = counter_wt +1
@@ -204,18 +206,18 @@ class family(object):
             print "Unable to create new bunch"
             return False
 
-    def genetic_algorithm(self,howmany=5):
-        
-        scores = []
-        kout=[]
+    def genetic_algorithm(self,howmany=(5,20),*args,**kwargs):
+
         self.populate_equilibria_in_family()
+        for extract in args:
+            eval(extract) = [] 
         
-        for i in range(howmany):
+        for i in range(howmany[0]):
             meanscore = self.equilibria.mean()
-            petri1.genetic_iteration(18)
-            scores.append(petri1.equilibria.tolist())
-            all_degrees = [net.nx.in_degree().values() for net in petri1.network_list]
-            kout.append(all_degrees)
+            self.genetic_iteration(howmany[1])
+            num.append(scores,petri1.equilibria)
+            
+        
             
 class network(object):
     '''
@@ -226,8 +228,8 @@ class network(object):
         maskm
         state_vec  
     '''
-    def __init__ (self,adjacency_matrix,mask,state_vec=None):
-        self.id=id(self)
+    def __init__ (self,adjacency_matrix,mask,score,state_vec=None):
+
         self.adjacency=adjacency_matrix
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
@@ -235,13 +237,12 @@ class network(object):
         if state_vec == None:
             state_vec= num.zeros(self.n_nodes)
         self.state.append(state_vec)
-        self.nx=nx.DiGraph(adjacency_matrix)
         self.equilibria=num.ones((num.power(2,self.n_nodes/2),num.power(2,self.n_nodes/2))).tolist()
         self.orbits = num.zeros((num.power(2,self.n_nodes/2),num.power(2,self.n_nodes/2))).tolist()
         self.score = 0
         self.mama = []
         self.children = []
-        self.scorer = None
+        self.scorer = score
     
     def print_id(self,content='imcasatk'):
         '''
@@ -276,14 +277,22 @@ class network(object):
         Visualizes the network with the help of networkx class generated from the
         adjacency matrix.
         '''
+        try:
+            import networkx as nx
+        except:
+            print "networkx package is not installed, please install it via terminal"
+            print "# easy_install networkx"
+            print "via lanl.gov"
+            
+        nx_image = nx.DiGraph(adjacency_matrix)
         if type is 'circular':
-            nx.draw_circular(self.nx)
+            nx.draw_circular(nx_image)
         if type is 'random':
-            nx.draw_random(self.nx)
+            nx.draw_random(nx_image)
         if type is 'graphviz':
-            nx.draw_graphviz(self.nx)
+            nx.draw_graphviz(nx_image)
         if type is 'normal':
-            nx.draw(self.nx,pos=nx.spring_layout(self.nx))
+            nx.draw(self.nx,pos=nx.spring_layout(nx_image))
         plt.show()
 
 
@@ -317,6 +326,7 @@ class network(object):
                 #    Detect all nodes that have an incoming connection
                 
                 nonzero_of_adj = self.adjacency[i,].ravel().nonzero()[0]
+                
                 #    Reduce the boolean function and the state to a boolean function
                 #     and state concerning only the incoming connections.
                 
@@ -350,9 +360,6 @@ class network(object):
         plt.show()
 
 
-
-
-
     def plot_equilibria(self):
         
         # Take the state vector, convert the list of arrays into a 2d array, then show it as an image
@@ -364,7 +371,7 @@ class network(object):
         plt.imshow(self.equilibria,cmap=plt.cm.gray,interpolation='nearest')
         
         # Wont go on unless the Window is closed.
-        plt.colorbar()
+        # plt.colorbar()
         plt.show()
         
     def hamming_distance_of_state(self,state_vector):
@@ -477,8 +484,14 @@ class network(object):
         for state in int_binspace:
             self.search_equilibrium(100,state)  
         
-        self.score = self.scorer()
+        self.score = self.scorer(self)
         
+    def degree(self):
+        sum=[]
+        for row in self.adjacency:
+            sum.append(num.sum(row))
+        return num.mean(sum)
+    
     def mutant(self, mutated_obj=('Both',1), rule=None, howmany=1):
         '''
         Will result in mutation
@@ -534,19 +547,13 @@ class network(object):
             
             mutated_network.mama = copy.copy(self.mama)
             mutated_network.mama.append(id(self))
-            mutated_network.id = id(mutated_network)
             mutated_network.children = []
             mutated_network.nx=nx.DiGraph(mutated_network.adjacency)
             
             ##
             # Records that self has a mutant child somewhere
             
-            self.children.append(mutated_network.id)
+            self.children.append(id(mutated_network))
             mutant_list.append(mutated_network) 
             
         return mutant_list
-    
-def sum_scorer(family):
-    return sum([sum(k) for k in family.equilibria])
-    
-   
