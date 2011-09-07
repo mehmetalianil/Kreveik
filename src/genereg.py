@@ -545,15 +545,14 @@ class network(object):
             # Records the fact that self is the mama of the mutant.
             # Has no children, et cetera.
             
-            mutated_network.mama = copy.copy(self.mama)
-            mutated_network.mama.append(id(self))
+            mutated_network.mama = self
             mutated_network.children = []
             mutated_network.nx=nx.DiGraph(mutated_network.adjacency)
             
             ##
             # Records that self has a mutant child somewhere
             
-            self.children.append(id(mutated_network))
+            self.children.append(mutated_network)
             mutant_list.append(mutated_network) 
             
         return mutant_list
