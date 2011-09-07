@@ -233,10 +233,10 @@ class network(object):
         self.adjacency=adjacency_matrix
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
-        self.state=list()
+        self.state=num.array([])
         if state_vec == None:
-            state_vec= num.zeros(self.n_nodes)
-        self.state.append(state_vec)
+            state_vec= (num.random.random((self.n_nodes,self.n_nodes))< 0.5 )*1.0
+        self.state=num.append(self.state,state_vec)
         self.equilibria=num.ones((num.power(2,self.n_nodes/2),num.power(2,self.n_nodes/2))).tolist()
         self.orbits = num.zeros((num.power(2,self.n_nodes/2),num.power(2,self.n_nodes/2))).tolist()
         self.score = 0
@@ -312,7 +312,7 @@ class network(object):
             starter_state = self.state[-1]
         
         first_newstate=len(self.state)    
-        self.state.extend(num.zeros((times,self.n_nodes))) 
+        self.state = num.vstack((self.state,num.zeros((times,self.n_nodes)))) 
         
         # advance n times
         
@@ -353,7 +353,7 @@ class network(object):
         # Future Modification 
         # May show a 'color' based on the whole state vector, easier for us to see states. 
         
-        plt.imshow(num.array(self.state[-last:]),cmap=plt.cm.binary,interpolation='nearest')
+        plt.imshow(self.state[-last:],cmap=plt.cm.binary,interpolation='nearest')
         
         # Wont go on unless the Window is closed.
         
@@ -381,7 +381,7 @@ class network(object):
         Input Arguments:
             state_vector -> the vector that we'd like to calculate the Hamming distance to.
         '''
-        return num.array(num.abs(state_vector-num.array(self.state))).sum(axis=1)
+        return num.array(num.abs(state_vector-self.state)).sum(axis=1)
     
     def plot_hamming_distance_of_state(self,state_vector):
         '''
@@ -406,7 +406,7 @@ class network(object):
         
         #flushes states
         
-        self.state = [num.array(starter_state)]
+        self.state = num.array(starter_state)
         
         #Advances chaos limit times.
         #self.advance(chaos_limit)
@@ -435,7 +435,7 @@ class network(object):
             
             # All matrices are converted into lists.
             memory_as_list = memory.tolist()
-            last_state_as_list = num.array(self.state).tolist()[-1]
+            last_state_as_list = self.state.tolist()[-1]
             
             # if this particular state we are concerned with is present in the memory 
             if last_state_as_list in memory_as_list:
