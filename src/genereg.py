@@ -271,19 +271,6 @@ class network(object):
         print "The scorer is : "
         print self.scorer
             
-
-        
-    def status(self):
-        '''
-        Prints out the initial status of the network, namely, the
-            adjacency_matrix
-            state
-        '''
-        print "State:"
-        print self.state[-1]
-        print "Adjacency Matrix:"
-        print self.adjacency
-        
         
     def show_graph(self,type='circular'):
         '''
