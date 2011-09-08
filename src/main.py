@@ -5,7 +5,6 @@ Created on Mar 8, 2011
 '''
 import numpy as num
 import genereg
-import networkx as nx
 import matplotlib.pyplot as plt
 import pickle
 import scorers
@@ -24,11 +23,11 @@ __status__ = "Production"
         
 
 if __name__ == '__main__':
-    net = [None]*500
+    net = [None]*50
     petri2 = genereg.family()
     
     for numbertag,network in enumerate(net): 
-        net[numbertag] = genereg.generate_random(4,
+        net[numbertag] = genereg.generate_random(5,
                                                  scorers.sum_scorer,
                                                  functions.xor_masking,
                                                  probability = (0.2,0.5,0.5))

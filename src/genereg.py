@@ -90,11 +90,10 @@ class family(object):
         return True
             
     def plot_equilibria(self):
-                   
+             
         plt.plot(self.equilibria)
         
         # Wont go on unless the Window is closed.
-        plt.colorbar()
         plt.show()
         
     def populate_wildtype(self,wildtype_threshold):
@@ -232,8 +231,8 @@ class network(object):
         if state_vec == None:
             state_vec= (num.random.random((self.n_nodes,self.n_nodes))< 0.5 )*1.0
         self.state=num.array([state_vec])
-        self.equilibria=num.ones((num.power(2,self.n_nodes/2),num.power(2,self.n_nodes/2))).tolist()
-        self.orbits = num.zeros((num.power(2,self.n_nodes/2),num.power(2,self.n_nodes/2))).tolist()
+        self.equilibria=num.zeros(2**self.n_nodes)
+        self.orbits = num.zeros(2**self.n_nodes)
         self.score = 0
         self.mama = []
         self.children = []
@@ -342,10 +341,23 @@ class network(object):
         
         # Future Modification 
         # May show a 'color' based on the whole state vector, easier for us to see states. 
+        if self.n_nodes % 2 == 0:
+            jumper = 2**(self.n_nodes/2)
+            im_matrix = num.zeros((jumper,jumper))
+            for ctr,offset in enumerate(num.multiply(range(jumper,jumper))):
+                im_matrix[ctr,:] = self.equilibria[offset:jumper+offset]
         
-        plt.imshow(self.equilibria,cmap=plt.cm.gray,interpolation='nearest')
+        if self.n_nodes % 2 == 1:
+            jumper = 2**(self.n_nodes/2+1)
+            im_matrix = num.zeros((jumper/2,jumper))
+            for ctr,offset in enumerate(num.multiply(range(jumper/2),jumper)):
+                im_matrix[ctr,:] = self.equilibria[offset:jumper+offset]
+        
+        plt.imshow(im_matrix,cmap=plt.cm.gray,interpolation='nearest')
         
         # Wont go on unless the Window is closed.
+        
+        plt.grid()
         plt.colorbar()
         plt.show()
         
@@ -420,17 +432,13 @@ class network(object):
                 for state in memory[0:where]:
                     # Convert the state to a list
                     state_as_list = state.tolist()
-                    # These are only necessary for the matrix representation.
-                    first_half_of_state = state[:len(state_as_list)/2]
-                    second_half_of_state = state[len(state_as_list)/2:]
                     # Finds the decimal representation of the binary number
-                    first_location_in_equilibrium = int(reduce(lambda s, x: s*2 + x, first_half_of_state))
-                    second_location_in_equilibrium = int(reduce(lambda s, x: s*2 + x, second_half_of_state))
+                    location_in_equilibrium = int(reduce(lambda s, x: s*2 + x, state_as_list))
                     # Memory_ctr is the present number of iteration, whereas Where is the last identical state
-                    self.equilibria[first_location_in_equilibrium][second_location_in_equilibrium] = memory_ctr-where+1
+                    self.equilibria[location_in_equilibrium] = memory_ctr-where+1
                     # Extract orbits, if it was requested to do so.
                     if orbit_extraction == True:
-                        self.orbits[first_location_in_equilibrium][second_location_in_equilibrium] = memory [:memory_ctr]
+                        self.orbits[location_in_equilibrium] = memory [:memory_ctr]
                 return (memory [:memory_ctr+1],memory_ctr-where+1)
             memory_ctr += 1
             

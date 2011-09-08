@@ -61,7 +61,7 @@ def and_masking(network):
     They are subject to a boolean operation from numpy libraries.
     Then from the fact that whether the node outputs a number greater than the 
     shortened state vector, the node outputs 1 or 0.
-    These values are gathered up and outputted as a new state vector.
+    These values are gathered up and outputed as a new state vector.
     """
     first_newstate=len(network.state) 
     newstate=num.zeros(network.n_nodes)
