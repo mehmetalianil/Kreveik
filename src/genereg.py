@@ -14,6 +14,7 @@ import copy
 import pickle
 import sys
 import scorers
+import functions
 import networkx as nx
 
 print_enable = False
@@ -29,7 +30,7 @@ __email__ = "anilm@itu.edu.tr"
 __status__ = "Production"
         
 
-def generate_random(n_nodes,scorer,probability=(0.5,0.5,0.5)):
+def generate_random(n_nodes,scorer,function,probability=(0.5,0.5,0.5)):
     '''
     Generates and returns a random network with a random initial conditions.
     The adjacency matrix, initial state, boolean function are populated with 
@@ -53,7 +54,7 @@ def generate_random(n_nodes,scorer,probability=(0.5,0.5,0.5)):
         print state
         print bool_fcn
     try:
-        return network(adjacency_matrix, bool_fcn, scorer, state_vec=state)
+        return network(adjacency_matrix, bool_fcn, scorer,function,state_vec=state)
         
     except ValueError,e:
         z = e
@@ -222,7 +223,7 @@ class network(object):
         maskm
         state_vec  
     '''
-    def __init__ (self,adjacency_matrix,mask,score,state_vec=None):
+    def __init__ (self,adjacency_matrix,mask,score,function,state_vec=None):
 
         self.adjacency=adjacency_matrix
         self.n_nodes= num.size(adjacency_matrix,0)
@@ -237,6 +238,7 @@ class network(object):
         self.mama = []
         self.children = []
         self.scorer = score
+        self.funtion = function
     
     def print_id(self):
         '''
@@ -304,35 +306,13 @@ class network(object):
         
         if starter_state == None:
             starter_state = self.state[-1]
-        
-        first_newstate=len(self.state)    
-        self.state = num.vstack((self.state,num.zeros((times,self.n_nodes)))) 
-        
-        # advance n times
-        
-        for n in range(0,times):
-        
-        #    For all nodes in the graph,
             
-            newstate=num.zeros(self.n_nodes)
-            for i in range(0,self.n_nodes):
-                
-                #    Detect all nodes that have an incoming connection
-                
-                nonzero_of_adj = self.adjacency[i,].ravel().nonzero()[0]
-                
-                #    Reduce the boolean function and the state to a boolean function
-                #     and state concerning only the incoming connections.
-                
-                short_mask = self.mask[i,].take(nonzero_of_adj)
-                short_state = self.state[first_newstate-1+n].take(nonzero_of_adj)
-
-                #    Two vectors are AND'ed element wise, and is summed in modulo 2
-                #    This corresponds to i th node operating its boolean function over the same
-                #    state vector.
-                
-                newstate[i]=num.int((len(short_state)/2) < (num.logical_xor(short_state,short_mask).sum()))
-            self.state[n+first_newstate]=newstate
+        # Could have preallocated, but 
+        # Premature pre-optimization is the root of all evil.
+        
+        for counter in range(times):
+            newstate = self.function(self)
+            self.state=num.append(self.state,newstate)
             
     def plot_state(self,last=20):
         '''
