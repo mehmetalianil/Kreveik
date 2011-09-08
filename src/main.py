@@ -9,6 +9,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import pickle
 import scorers
+import functions
 
 
 
@@ -29,6 +30,7 @@ if __name__ == '__main__':
     for numbertag,network in enumerate(net): 
         net[numbertag] = genereg.generate_random(4,
                                                  scorers.sum_scorer,
+                                                 functions.xor_masking,
                                                  probability = (0.2,0.5,0.5))
         petri2.add_to_family(net[numbertag])
     

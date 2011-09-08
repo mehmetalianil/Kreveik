@@ -17,7 +17,7 @@ import scorers
 import functions
 import networkx as nx
 
-print_enable = False
+print_enable = True
 
 
 __author__ = "Mehmet Ali Anil"
@@ -48,11 +48,7 @@ def generate_random(n_nodes,scorer,function,probability=(0.5,0.5,0.5)):
     #    First state of the system is determined
     state=(num.random.random((1,n_nodes))<probability[1])*1.0
     bool_fcn=(num.random.random((n_nodes,n_nodes))<probability[2])*1.0
-    
-    if print_enable:
-        print adjacency_matrix
-        print state
-        print bool_fcn
+
     try:
         return network(adjacency_matrix, bool_fcn, scorer,function,state_vec=state)
         
@@ -149,7 +145,7 @@ class family(object):
         
         for id,network in enumerate(self.network_list): 
             if print_enable:
-                print "Populating equilibrium for "+str(id)+", namely: "+str(id(network))
+                print "("+str(id+1)+"/"+str(len(self.network_list))+") Populating equilibrium for: "+str(network)
             network.populate_equilibria()
             self.equilibria[id] = network.score
             
@@ -205,14 +201,16 @@ class family(object):
             print "Unable to create new bunch"
             return False
 
-    def genetic_algorithm(self,howmany=(5,20),*args,**kwargs):
+    def genetic_algorithm(self,howmany=5,*args,**kwargs):
         """
         The wrapper for consecutive genetic iterations.
         """
         self.populate_equilibria_in_family()
         
-        for i in range(howmany[0]):
+        for ctr in range(howmany[0]):
             meanscore = self.equilibria.mean()
+            if print_enable:
+                print "Iteration "+str(ctr)+" Mean Score is: "+str(meanscore)
             self.genetic_iteration(meanscore,howmany[1])
             
 
@@ -231,17 +229,16 @@ class network(object):
         self.adjacency=adjacency_matrix
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
-        self.state=num.array([])
         if state_vec == None:
             state_vec= (num.random.random((self.n_nodes,self.n_nodes))< 0.5 )*1.0
-        self.state=num.append(self.state,state_vec)
+        self.state=num.array([state_vec])
         self.equilibria=num.ones((num.power(2,self.n_nodes/2),num.power(2,self.n_nodes/2))).tolist()
         self.orbits = num.zeros((num.power(2,self.n_nodes/2),num.power(2,self.n_nodes/2))).tolist()
         self.score = 0
         self.mama = []
         self.children = []
         self.scorer = score
-        self.funtion = function
+        self.function = function
     
     def print_id(self):
         '''
@@ -272,7 +269,7 @@ class network(object):
             print str(num)+" th node : "+str(node)
         print "The following are the states with respect to time "
         for (t,state) in enumerate(self.state):
-            print "t= "str(t)+" : "+str(node)
+            print "t= "+str(t)+" : "+str(node)
         print "The scorer is : "
         print self.scorer
             
@@ -310,12 +307,13 @@ class network(object):
         if starter_state == None:
             starter_state = self.state[-1]
             
+        
         # Could have preallocated, but 
         # Premature pre-optimization is the root of all evil.
         
         for counter in range(times):
             newstate = self.function(self)
-            self.state=num.append(self.state,newstate)
+            self.state=num.append(self.state,[newstate],axis=0)
             
     def plot_state(self,last=20):
         '''
@@ -348,7 +346,7 @@ class network(object):
         plt.imshow(self.equilibria,cmap=plt.cm.gray,interpolation='nearest')
         
         # Wont go on unless the Window is closed.
-        # plt.colorbar()
+        plt.colorbar()
         plt.show()
         
     def hamming_distance_of_state(self,state_vector):
@@ -383,7 +381,7 @@ class network(object):
         
         #flushes states
         
-        self.state = num.array(starter_state)
+        self.state = num.array([starter_state])
         
         #Advances chaos limit times.
         #self.advance(chaos_limit)
