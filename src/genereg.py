@@ -244,7 +244,7 @@ class network(object):
         self.children = []
         self.scorer = score
     
-    def print_id(self,content='imcasatk'):
+    def print_id(self):
         '''
         Prints out an identification of the network.
         Prints:
@@ -252,13 +252,32 @@ class network(object):
             Mothers
             Children
             Orbits
-            Resultant_equilibrium
             Score
             Adjacency matrix
             sTate
             masK
         '''
-        pass
+        print "This network is : "+str(id(self))+"."
+        print "Nodes: "+str(self.n_nodes)
+        print "Score: "+str(self.score)
+        print "Its mothers are: "
+        for mother in self.mama:
+            print "   "+str(id(mother))
+        print "Its children are: "
+        for child in self.children:
+            print "   "+str(id(child))
+        print "It has the following adjacency matrix: "
+        print self.adjacency
+        print "The following are the masks for each node: "
+        for (num,node) in enumerate(self.mask):
+            print str(num)+" th node : "+str(node)
+        print "The following are the states with respect to time "
+        for (t,state) in enumerate(self.state):
+            print "t= "str(num)+" : "+str(node)
+        print "The scorer is : "
+        print self.scorer
+            
+
         
     def status(self):
         '''
