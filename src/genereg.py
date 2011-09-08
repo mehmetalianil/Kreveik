@@ -9,13 +9,12 @@ algorithm and how networks evolve accordingly.
 '''
 
 import numpy as num
-import networkx as nx
 import matplotlib.pyplot as plt
-import genereg
 import copy
 import pickle
 import sys
 import scorers
+import networkx as nx
 
 print_enable = False
 
@@ -83,10 +82,6 @@ class family(object):
         network -> The network that is to be appended to the family.
         '''
         
-        if type(network) != genereg.network:
-            print "The object that you're trying to append doesn't seem to be a network"
-            print "Please double check."
-            return False
         
         if network in self.network_list:
             print "The network that you're trying to add to the family is already a member."
@@ -199,10 +194,9 @@ class family(object):
                 self.equilibria[id] = self.network_list[id].score
                 counter_wt = counter_wt +1
                 
-        if all([type(i)==genereg.network for i in self.network_list])==True:
-            print "New bunch created."
+        try:
             return self.equilibria
-        else:
+        except:
             print "Unable to create new bunch"
             return False
 
@@ -215,7 +209,7 @@ class family(object):
         for i in range(howmany[0]):
             meanscore = self.equilibria.mean()
             self.genetic_iteration(howmany[1])
-            num.append(scores,petri1.equilibria)
+            num.append(scores,self.equilibria)
             
         
             
@@ -273,7 +267,7 @@ class network(object):
             print str(num)+" th node : "+str(node)
         print "The following are the states with respect to time "
         for (t,state) in enumerate(self.state):
-            print "t= "str(num)+" : "+str(node)
+            print "t= "str(t)+" : "+str(node)
         print "The scorer is : "
         print self.scorer
             
@@ -296,14 +290,8 @@ class network(object):
         Visualizes the network with the help of networkx class generated from the
         adjacency matrix.
         '''
-        try:
-            import networkx as nx
-        except:
-            print "networkx package is not installed, please install it via terminal"
-            print "# easy_install networkx"
-            print "via lanl.gov"
-            
-        nx_image = nx.DiGraph(adjacency_matrix)
+
+        nx_image = nx.DiGraph(self.adjacency)
         if type is 'circular':
             nx.draw_circular(nx_image)
         if type is 'random':
