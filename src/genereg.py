@@ -76,6 +76,7 @@ class family(object):
         self.network_list = []
         self.wildtype_list = [] 
         self.equilibria = []
+        self.equilibria_history = []
     
     def add_to_family(self, network):
         '''
@@ -160,9 +161,11 @@ class family(object):
         '''
         if self.wildtype_list != []:
             self.wildtype_list = []
-        print "Determining wildtypes"
+        if print_enable:
+            print "Determining wildtypes"
         self.populate_wildtype(score_threshold)
-        print str(len(self.wildtype_list))+"wild individuals"
+        if print_enable:
+            print str(len(self.wildtype_list))+"wild individuals"
         kill_count = len(self.wildtype_list)
         family_count = len(self.network_list)
         
@@ -196,23 +199,23 @@ class family(object):
                 counter_wt = counter_wt +1
                 
         try:
+            self.scores = num.append(self.scores,self.equilibria)
             return self.equilibria
         except:
             print "Unable to create new bunch"
             return False
 
     def genetic_algorithm(self,howmany=(5,20),*args,**kwargs):
-
+        """
+        The wrapper for consecutive genetic iterations.
+        """
         self.populate_equilibria_in_family()
-        for extract in args:
-            eval(extract) = [] 
         
         for i in range(howmany[0]):
             meanscore = self.equilibria.mean()
-            self.genetic_iteration(howmany[1])
-            num.append(scores,self.equilibria)
+            self.genetic_iteration(meanscore,howmany[1])
             
-        
+
             
 class network(object):
     '''
