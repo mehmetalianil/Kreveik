@@ -71,8 +71,8 @@ class family(object):
     def __init__ (self):
         self.network_list = []
         self.wildtype_list = [] 
-        self.equilibria = []
-        self.equilibria_history = []
+        self.scores = num.array([])
+        self.scores_history = []
     
     def add_to_family(self, network):
         '''
@@ -89,9 +89,9 @@ class family(object):
         self.network_list.append(network)
         return True
             
-    def plot_equilibria(self):
+    def plot_scores(self):
              
-        plt.plot(self.equilibria)
+        plt.plot(self.scores)
         
         # Wont go on unless the Window is closed.
         plt.show()
@@ -103,7 +103,7 @@ class family(object):
             wildtype_threshold -> a threshold for the score of he individual in order to attend
             the wildtype club.
         '''
-        if len(self.equilibria) == 0:
+        if len(self.scores) == 0:
             if print_enable:
                 print "Warning: Equilibria not found."
                 print "Populating equilibria ..."
@@ -115,7 +115,7 @@ class family(object):
         for network in self.network_list:
             if network.score == 0:
                 if print_enable:
-                    print "Warning: Network "+str(id(network))+" has no information on its equilibrium"
+                    print "Warning: Network "+str(network)+" has no information on its equilibrium"
                     print "Now calculating its equilibria..."
                 network.populate_equilibria()
                 if print_enable:    
@@ -140,13 +140,13 @@ class family(object):
             print "Please adopt individuals."
             return False
             
-        self.equilibria = num.zeros(len(self.network_list))
+        self.scores = num.zeros(len(self.network_list))
         
         for id,network in enumerate(self.network_list): 
             if print_enable:
                 print "("+str(id+1)+"/"+str(len(self.network_list))+") Populating equilibrium for: "+str(network)
             network.populate_equilibria()
-            self.equilibria[id] = network.score
+            self.scores[id] = network.score
             
     def genetic_iteration(self,score_threshold,mutant_recipe=('Both',1),howmany_gntc=1):
         '''
@@ -176,29 +176,26 @@ class family(object):
         for number,to_be_killed in enumerate(random_kill_list):
             if to_be_killed == 1:
                 if print_enable:
-                    print str(id(self.network_list[number]))+" is killed with score"+str(self.network_list[number].score) 
+                    print str(self.network_list[number])+" is killed with score"+str(self.network_list[number].score) 
                 self.network_list[number] = None
                 
         #    If there are ones that are killed, populate the remaining gaps with mutated wildtypes.
         counter_wt = 0
         
-        for id,all_networks in enumerate(self.network_list):
+        for network_ctr,all_networks in enumerate(self.network_list):
             if all_networks == None:
                 if print_enable:
-                    print "mutating network "+str(id(self.wildtype_list[counter_wt]))
-                self.network_list[id] = self.wildtype_list[counter_wt].mutant(mutated_obj=mutant_recipe,howmany=howmany_gntc)[0]
+                    print "mutating network "+str(self.wildtype_list[counter_wt])
+                self.network_list[network_ctr] = self.wildtype_list[counter_wt].mutant(mutated_obj=mutant_recipe,howmany=howmany_gntc)[0]
                 if print_enable:    
-                    print "finding equilibria of the new network "+str(id(self.network_list[id]))
-                self.network_list[id].populate_equilibria()
-                self.equilibria[id] = self.network_list[id].score
+                    print "finding equilibria of the new network "+str(self.network_list[network_ctr])
+                self.network_list[network_ctr].populate_equilibria()
+                self.scores[network_ctr] = self.network_list[network_ctr].score
                 counter_wt = counter_wt +1
                 
-        try:
-            self.scores = num.append(self.scores,self.equilibria)
-            return self.equilibria
-        except:
-            print "Unable to create new bunch"
-            return False
+        self.scores_history = num.append(self.scores_history,self.scores)
+        return self.scores
+        
 
     def genetic_algorithm(self,howmany=5,*args,**kwargs):
         """
@@ -207,7 +204,7 @@ class family(object):
         self.populate_equilibria_in_family()
         
         for ctr in range(howmany[0]):
-            meanscore = self.equilibria.mean()
+            meanscore = self.scores.mean()
             if print_enable:
                 print "Iteration "+str(ctr)+" Mean Score is: "+str(meanscore)
             self.genetic_iteration(meanscore,howmany[1])
@@ -256,8 +253,7 @@ class network(object):
         print "Nodes: "+str(self.n_nodes)
         print "Score: "+str(self.score)
         print "Its mothers are: "
-        for mother in self.mama:
-            print "   "+str(id(mother))
+        print "   "+str(id(mother))
         print "Its children are: "
         for child in self.children:
             print "   "+str(id(child))
