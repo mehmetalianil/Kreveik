@@ -1,0 +1,5 @@
+boolfuncs module
+
+A module that  the boolean functions that network elements, 
+namely nodes, are can be fed as input arguments.  Any function here must
+be applicable to a network, for now. 
