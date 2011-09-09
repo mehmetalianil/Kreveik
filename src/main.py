@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import pickle
 import scorers
 import functions
+import cProfile
 
 
 
@@ -33,6 +34,5 @@ if __name__ == '__main__':
                                                  probability = (0.2,0.5,0.5))
         petri2.add_to_family(net[numbertag])
     
-
     
 
