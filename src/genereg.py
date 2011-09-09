@@ -73,6 +73,7 @@ class family(object):
         self.wildtype_list = [] 
         self.scores = num.array([])
         self.scores_history = []
+        self.probes = []
     
     def add_to_family(self, network):
         '''
@@ -235,6 +236,7 @@ class network(object):
         self.children = []
         self.scorer = score
         self.function = function
+        self.probes = []
     
     def print_id(self):
         '''

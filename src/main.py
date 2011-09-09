@@ -8,7 +8,7 @@ import genereg
 import matplotlib.pyplot as plt
 import pickle
 import scorers
-import functions
+import boolfuncs
 import cProfile
 
 
@@ -16,7 +16,7 @@ import cProfile
 __author__ = "Mehmet Ali Anil"
 __copyright__ = ""
 __credits__ = ["Mehmet Ali Anil"]
-__license__ = "GPL"
+__license__ = ""
 __version__ = "0.0.5"
 __maintainer__ = "Mehmet Ali Anil"
 __email__ = "anilm@itu.edu.tr"
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     for numbertag,network in enumerate(net): 
         net[numbertag] = genereg.generate_random(5,
                                                  scorers.sum_scorer,
-                                                 functions.xor_masking,
+                                                 boolfuncs.xor_masking,
                                                  probability = (0.2,0.5,0.5))
         petri2.add_to_family(net[numbertag])
     

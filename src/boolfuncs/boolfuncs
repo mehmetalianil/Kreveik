@@ -28,7 +28,7 @@ def xor_masking(network):
         
         or any other function that outputs an integer with an input of two ndarrays.        
     """
-    first_newstate=len(network.state) 
+
     newstate=num.zeros(network.n_nodes)
     for i in range(0,network.n_nodes):
         #    Detect all nodes that have an incoming connection
@@ -63,12 +63,12 @@ def and_masking(network):
     shortened state vector, the node outputs 1 or 0.
     These values are gathered up and outputed as a new state vector.
     """
-    first_newstate=len(network.state) 
+    
     newstate=num.zeros(network.n_nodes)
     for i in range(0,network.n_nodes):
         nonzero_of_adj = network.adjacency[i,].nonzero()[0]
         short_mask = network.mask[i,].take(nonzero_of_adj)
-        short_state = network.state[first_newstate-1].take(nonzero_of_adj)
+        short_state = network.state[-1].take(nonzero_of_adj)
         sum_of_bool = num.logical_and(short_mask,short_state).sum()
         newstate[i]=num.int((len(short_state)/2.0) < sum_of_bool)
     try:
@@ -87,12 +87,12 @@ def or_masking(network):
     shortened state vector, the node outputs 1 or 0.
     These values are gathered up and outputted as a new state vector.
     """
-    first_newstate=len(network.state) 
+    
     newstate=num.zeros(network.n_nodes)
     for i in range(0,network.n_nodes):
         nonzero_of_adj = network.adjacency[i,].nonzero()[0]
         short_mask = network.mask[i,].take(nonzero_of_adj)
-        short_state = network.state[first_newstate-1].take(nonzero_of_adj)
+        short_state = network.state[-1].take(nonzero_of_adj)
         sum_of_bool = num.logical_or(short_mask,short_state).sum()
         newstate[i]=num.int((len(short_state)/2.0) < sum_of_bool)
     try:
