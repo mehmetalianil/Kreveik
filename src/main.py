@@ -8,6 +8,7 @@ import genereg
 import matplotlib.pyplot as plt
 import pickle
 import scorers
+import probes
 import boolfuncs
 import cProfile
 
@@ -33,5 +34,7 @@ if __name__ == '__main__':
                                                  boolfuncs.xor_masking,
                                                  probability = (0.2,0.5,0.5))
         petri2.add_to_family(net[numbertag])
+        petri2.attach(probes.mean_score_probe)
+        
     
 

@@ -2,12 +2,13 @@
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
-from generators import *
 import networkx as nx
+import probes
+from probeable import *
 
 print_enable=True
        
-class network(object):
+class network(probeable_obj):
     '''
     Network Class
     
@@ -31,7 +32,6 @@ class network(object):
         self.children = []
         self.scorer = score
         self.function = function
-        self.probes = []
     
     def print_id(self):
         '''
@@ -106,6 +106,8 @@ class network(object):
         for counter in range(times):
             newstate = self.function(self)
             self.state=num.append(self.state,[newstate],axis=0)
+            
+        self.populate_probes(probes.advance)
             
     def plot_state(self,last=20):
         '''
@@ -234,6 +236,7 @@ class network(object):
                         self.orbits[location_in_equilibrium] = memory [:memory_ctr]
                 return (memory [:memory_ctr+1],memory_ctr-where+1)
             memory_ctr += 1
+        self.populate_probes(probes.search_equilibrium)
             
     def populate_equilibria(self,normalize=1):
         '''
@@ -261,6 +264,7 @@ class network(object):
             self.search_equilibrium(100,state)  
         
         self.score = self.scorer(self)
+        self.populate_probes(probes.populate_equilibria)
         
     def degree(self):
         sum=[]

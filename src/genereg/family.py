@@ -1,12 +1,12 @@
 
 import numpy as num
 import matplotlib.pyplot as plt
-from generators import *
-from network import *
+import probes
+from probeable import *
 
 print_enable=True
 
-class family(object):
+class family(probeable_obj):
     '''
     Family Class.
     A class that will have a single family of networks, a genetic algorithm 
@@ -20,7 +20,6 @@ class family(object):
         self.wildtype_list = [] 
         self.scores = num.array([])
         self.scores_history = []
-        self.probes = []
     
     def add_to_family(self, network):
         '''
@@ -73,7 +72,8 @@ class family(object):
                 if print_enable:
                     print "Network "+str(id(network))+" is wild."
                 self.wildtype_list.append(network)
-    
+        
+        self.populate_probes(probes.populate_wildtype)
         return True
     
     def populate_equilibria_in_family(self):
@@ -95,6 +95,7 @@ class family(object):
                 print "("+str(id+1)+"/"+str(len(self.network_list))+") Populating equilibrium for: "+str(network)
             network.populate_equilibria()
             self.scores[id] = network.score
+        self.populate_probes(probes.populate_equilibria_in_family)
             
     def genetic_iteration(self,score_threshold,mutant_recipe=('Both',1),howmany_gntc=1):
         '''
@@ -142,6 +143,7 @@ class family(object):
                 counter_wt = counter_wt +1
                 
         self.scores_history = num.append(self.scores_history,self.scores)
+        self.populate_probes(probes.genetic_iteration)
         return self.scores
         
 
@@ -156,3 +158,4 @@ class family(object):
             if print_enable:
                 print "Iteration "+str(ctr)+" Mean Score is: "+str(meanscore)
             self.genetic_iteration(meanscore,howmany[1])
+        self.populate_probes(probes.genetic_algorithm)

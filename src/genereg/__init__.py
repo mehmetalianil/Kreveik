@@ -20,6 +20,7 @@ __maintainer__ = "Mehmet Ali Anil"
 __email__ = "anilm@itu.edu.tr"
 __status__ = "Production"
 
+from probeable import *
 from family import *
 from generators import *
 from network import *
