@@ -1,6 +1,7 @@
-import numpy as num
+
 from family import *
 from network import *
+
 print_enable=True
 
 def generate_random(n_nodes,scorer,function,probability=(0.5,0.5,0.5)):

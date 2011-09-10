@@ -2,9 +2,9 @@
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
-from family import *
 from generators import *
 import networkx as nx
+
 print_enable=True
        
 class network(object):
