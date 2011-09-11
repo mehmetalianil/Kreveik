@@ -6,12 +6,10 @@ Created on Mar 8, 2011
 import numpy as num
 import genereg
 import matplotlib.pyplot as plt
-import pickle
 import scorers
 import probes
 import copy
 import boolfuncs
-import cProfile
 
 
 

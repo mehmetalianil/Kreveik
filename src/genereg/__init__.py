@@ -8,8 +8,14 @@ statistical evaluation of random boolean networks. The emphasis is upon genetic
 algorithm and how networks evolve accordingly.
 '''
 
+from probeable import *
 import numpy as num
-print_enable = True
+import matplotlib.pyplot as plt
+import copy
+import networkx as nx
+import probes
+
+print_enable=True
 
 
 __author__ = "Mehmet Ali Anil"
@@ -21,6 +27,8 @@ __maintainer__ = "Mehmet Ali Anil"
 __email__ = "anilm@itu.edu.tr"
 __status__ = "Production"
 
-from classes import *
+from probeable import *
+from network import *
+from family import *
 from generators import *
 
