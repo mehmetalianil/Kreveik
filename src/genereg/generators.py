@@ -1,6 +1,6 @@
 
-from family import *
-from network import *
+import numpy as num
+from classes import *
 
 print_enable=True
 

@@ -27,14 +27,24 @@ class probe (object):
         self.subroutine = None
         self.data = num.array([])
 
-
-def mean_score(probeable):
-    return num.mean(probeable.scores.mean)
+class mean_score_probe (probe):
+    def __init__ (self):       
+        probe.__init__(self)
+        self.function = self.mean_score
+        self.subroutine = genetic_iteration
+        
+    def mean_score(self,probeable):
+        return num.mean(probeable.scores)
     
-mean_score_probe = probe()
-mean_score_probe.function = mean_score
-mean_score_probe.subroutine = genetic_iteration
-
+class eq_score_probe (probe):
+    def __init__ (self):       
+        probe.__init__(self)
+        self.function = self.eq_score
+        self.subroutine = populate_equilibria
+        
+    def eq_score(self,probeable):
+        print num.mean(probeable.equilibria)
+        return num.mean(probeable.equilibria)
 
 
     

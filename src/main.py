@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import pickle
 import scorers
 import probes
+import copy
 import boolfuncs
 import cProfile
 
@@ -26,15 +27,20 @@ __status__ = "Production"
 
 if __name__ == '__main__':
     net = [None]*50
+    probelist = [None]*50
     petri2 = genereg.family()
-    
+    eq_probe = probes.eq_score_probe()
     for numbertag,network in enumerate(net): 
-        net[numbertag] = genereg.generate_random(5,
+        net[numbertag] = genereg.generate_random(4,
                                                  scorers.sum_scorer,
                                                  boolfuncs.xor_masking,
                                                  probability = (0.2,0.5,0.5))
         petri2.add_to_family(net[numbertag])
-        petri2.attach(probes.mean_score_probe)
+        probelist[numbertag] = copy.copy(eq_probe)
+        petri2.network_list[numbertag].attach(probelist[numbertag])
         
+    mean_score_1 = probes.mean_score_probe()
+    petri2.attach(mean_score_1)  
+    
     
 
