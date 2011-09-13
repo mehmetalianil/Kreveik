@@ -12,7 +12,7 @@ import probes
 print_enable=True
 
 
-class network(object, probeable_obj):
+class Network(ProbeableObj):
     '''
     Network Class
     
@@ -22,7 +22,7 @@ class network(object, probeable_obj):
         state_vec  
     '''
     def __init__ (self,adjacency_matrix,mask,score,function,state_vec=None):
-        probeable_obj.__init__(self)
+        ProbeableObj.__init__(self)
         self.adjacency=adjacency_matrix
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
@@ -39,7 +39,7 @@ class network(object, probeable_obj):
     
     def print_id(self):
         '''
-        Prints out an identification of the network.
+        Prints out an identification of the Network.
         Prints:
             Id
             Mothers
@@ -265,7 +265,7 @@ class network(object, probeable_obj):
         int_binspace=[[int(i) for i in k] for k in binspace] 
         
         for state in int_binspace:
-            self.search_equilibrium(100,state)  
+            self.search_equilibrium(2^self.n_nodes,state)  
         
         self.score = self.scorer(self)
         self.populate_probes(probes.populate_equilibria)
@@ -279,7 +279,7 @@ class network(object, probeable_obj):
     def mutant(self, mutated_obj=('Both',1), rule=None, howmany=1):
         '''
         Will result in mutation
-        Returns mutated network.
+        Returns mutated Network.
         
         Arranges the identification of the newcomer.
         Input Arguments:

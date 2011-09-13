@@ -1,5 +1,5 @@
 scorers module
 
 A module that provides a package for all functions and definitions for scorers that 
-determine the scores for each network. These functions take only one argument, 
+determine the scores for each Network. These functions take only one argument, 
 the network itself.

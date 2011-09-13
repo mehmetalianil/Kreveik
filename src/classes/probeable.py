@@ -3,7 +3,7 @@ Probable Class definition
 """
 import numpy as num
 
-class probeable_obj ():
+class ProbeableObj (object):
     def __init__ (self):
         self.probes = []
     def attach (self,probe):
@@ -16,6 +16,5 @@ class probeable_obj ():
         for probe in self.probes:
             if probe.subroutine == subroutine:
                 measured = probe.function(self)
-                print measured
                 probe.data = num.append(probe.data,measured)
                 

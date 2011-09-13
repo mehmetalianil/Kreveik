@@ -4,7 +4,7 @@ Created on Mar 8, 2011
 @author: Mehmet Ali Anil
 '''
 import numpy as num
-import genereg
+import classes
 import matplotlib.pyplot as plt
 import scorers
 import probes
@@ -24,21 +24,18 @@ __status__ = "Production"
         
 
 if __name__ == '__main__':
-    net = [None]*50
-    probelist = [None]*50
-    petri2 = genereg.family()
-    eq_probe = probes.eq_score_probe()
-    for numbertag,network in enumerate(net): 
-        net[numbertag] = genereg.generate_random(4,
-                                                 scorers.sum_scorer,
-                                                 boolfuncs.xor_masking,
-                                                 probability = (0.2,0.5,0.5))
-        petri2.add_to_family(net[numbertag])
-        probelist[numbertag] = copy.copy(eq_probe)
-        petri2.network_list[numbertag].attach(probelist[numbertag])
-        
-    mean_score_1 = probes.mean_score_probe()
-    petri2.attach(mean_score_1)  
+    petri=[None]*2000
+    scores=[None]*2000
+    for n in range(2000):
+        petri[n] = classes.Family()
+        for m in range(10):
+            petri[n].add_to_family(classes.generate_random(7,
+                                            scorers.sum_scorer,
+                                            boolfuncs.xor_masking,
+                                            probability = (n/1999.0,0.5,0.5)))
+        petri[n].populate_equilibria_in_family()
+        scores[n] = petri[n].scores.mean()  
+        print scores[n]
     
     
 

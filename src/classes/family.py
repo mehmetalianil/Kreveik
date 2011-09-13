@@ -12,7 +12,7 @@ import probes
 print_enable=True
 
 
-class family(object, probeable_obj):
+class Family(ProbeableObj):
     '''
     Family Class.
     A class that will have a single family of networks, a genetic algorithm 
@@ -22,7 +22,7 @@ class family(object, probeable_obj):
     '''
     
     def __init__ (self):
-        probeable_obj.__init__(self)
+        ProbeableObj.__init__(self)
         self.network_list = []
         self.wildtype_list = [] 
         self.scores = num.array([])
