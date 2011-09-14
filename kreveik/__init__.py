@@ -14,9 +14,9 @@ __author__ = "Mehmet Ali Anil"
 __copyright__ = ""
 __credits__ = ["Mehmet Ali Anil"]
 __license__ = ""
-__version__ = "0.0.5"
+__version__ = "0.5.0 dev"
 __maintainer__ = "Mehmet Ali Anil"
-__email__ = "anilm@itu.edu.tr"
+__email__ = "mehmet.ali.anil@ieee.org"
 __status__ = "Production"
     
     
