@@ -7,7 +7,8 @@ import numpy as num
 import matplotlib.pyplot as plt
 import copy
 import networkx as nx
-import probes
+from ..probes import *
+
 
 print_enable=True
 
@@ -32,7 +33,7 @@ class Network(ProbeableObj):
         self.equilibria=num.zeros(2**self.n_nodes)
         self.orbits = num.zeros(2**self.n_nodes)
         self.score = 0
-        self.mama = []
+        self.mother = None
         self.children = []
         self.scorer = score
         self.function = function
@@ -54,10 +55,10 @@ class Network(ProbeableObj):
         print "Nodes: "+str(self.n_nodes)
         print "Score: "+str(self.score)
         print "Its mothers are: "
-        print "   "+str(id(self.mother))
+        print "   "+str(self.mother)
         print "Its children are: "
         for child in self.children:
-            print "   "+str(id(child))
+            print "   "+str(child)
         print "It has the following adjacency matrix: "
         print self.adjacency
         print "The following are the masks for each node: "

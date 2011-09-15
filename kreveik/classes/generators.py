@@ -1,11 +1,8 @@
-
-from probeable import *
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
 import networkx as nx
-import probes
-from classes import *
+from ..classes import *
 
 print_enable=True
 
