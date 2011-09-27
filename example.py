@@ -6,12 +6,8 @@ Created on Mar 8, 2011
 
 from kreveik import * 
 import numpy as num
-import classes
 import matplotlib.pyplot as plt
-import scorers
-import probes
 import copy
-import boolfuncs
 
 
 

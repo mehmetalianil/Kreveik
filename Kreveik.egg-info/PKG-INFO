@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: Kreveik
+Version: 0.5.0.dev
+Summary: Kreveik is a Python module for Boolean networks. With Kreveik, one can build Boolean networks, create random Boolean networks, investigate dynamics of these networks, form families of them, investigate macroscopic variables and expose them to genetic algorithms.
+Home-page: http://github.com/mehmetalianil/Kreveik/
+Author: Mehmet Ali Anil
+Author-email: mehmet.ali.anil@ieee.org
+License: LICENSE.txt
+Description: UNKNOWN
+Keywords: random boolean networks genetic algorithm
+Platform: UNKNOWN
