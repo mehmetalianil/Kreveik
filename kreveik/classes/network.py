@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import copy
 import networkx as nx
 from ..probes import *
-
+import itertools 
 
 print_enable=True
 
@@ -21,6 +21,14 @@ class TopologicalNetwork(ProbeableObj):
         ProbeableObj.__init__(self)
         self.adjacency=adjacency_matrix
         
+    def is_connected(self):
+        # We want to check whether the graph is connected.
+        are_you_zero = (self.adjacency * (1-num.eye(len(self.adjacency))) == 0)
+        print are_you_zero
+        zero_rows = num.all(are_you_zero, axis=0)
+        zero_columns = num.all(are_you_zero, axis=1)
+        zero_crosses = zero_rows*zero_columns
+        return not(any(zero_crosses))
     
     def show_graph(self,type='circular'):
         '''
@@ -40,8 +48,61 @@ class TopologicalNetwork(ProbeableObj):
         if type is 'normal':
             nx.draw(self.nx,pos=nx.spring_layout(nx_image))
         plt.show()
-
+        
+    def motif_freqs (self,degree):
+        """
+        Returns a list of motifs.
+        """
     
+        all_permutations = itertools.permutations(range(len(self.adjacency)),degree)
+        motif_list = []
+        
+        for permutation in all_permutations:
+            print list(permutation)
+            
+            this_motif_adj = num.zeros((degree,degree))
+            for (first_ctr,first_node) in enumerate(list(permutation)):
+                for (second_ctr,second_node) in enumerate(list(permutation)):
+                    this_motif_adj[first_ctr][second_ctr] = self.adjacency[first_node][second_node]
+            
+            this_motif = Motif(this_motif_adj)
+
+            if this_motif.is_connected():                
+                truth = [this_motif == old_motif for old_motif in motif_list]
+                if (any(truth) == True):
+                    index = truth.index(True)
+                    motif_list[index].freq = motif_list[index].freq+1
+                elif (all(truth) == False) or (len(truth)==0):
+                    motif_list.append(this_motif)
+                else:
+                    print "There has been a problem while extracting Motifs"
+                    break
+            
+        return motif_list
+
+class Motif(TopologicalNetwork):
+    """
+    Motif
+    """
+    def __init__(self, adjacency_matrix):
+        TopologicalNetwork.__init__(self, adjacency_matrix)
+        self.degree = len(adjacency_matrix)
+        self.freq = 1
+    
+    def __eq__(self,other):
+        permutation_list = itertools.permutations(range(self.degree),self.degree)
+        for permutation in permutation_list:
+            for (node_init,node_end) in enumerate(permutation):
+                newarray = self.adjacency.copy()
+                newarray[[node_init,node_end]] = newarray[[node_end,node_init]]
+                newarray[:,[node_init,node_end]] = newarray[:,[node_end,node_init]]
+            if num.all(newarray == other.adjacency):
+                return True
+        return False    
+                
+ 
+
+            
 
 class Network(TopologicalNetwork):
     '''
