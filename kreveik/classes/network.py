@@ -12,19 +12,49 @@ from ..probes import *
 
 print_enable=True
 
+class TopologicalNetwork(ProbeableObj):
+    """
+    This object is a stripped down network, designated to be a core 
+    object for all network-like objects, like sub-graphs and motifs.
+    """
+    def __init__ (self,adjacency_matrix):
+        ProbeableObj.__init__(self)
+        self.adjacency=adjacency_matrix
+        
+    
+    def show_graph(self,type='circular'):
+        '''
+        Visualizes the network with the help of networkx class generated from the
+        adjacency matrix.
+        
+        Can't display self loops. 
+        '''
+        
+        nx_image = nx.DiGraph(self.adjacency)
+        if type is 'circular':
+            nx.draw_circular(nx_image)
+        if type is 'random':
+            nx.draw_random(nx_image)
+        if type is 'graphviz':
+            nx.draw_graphviz(nx_image)
+        if type is 'normal':
+            nx.draw(self.nx,pos=nx.spring_layout(nx_image))
+        plt.show()
 
-class Network(ProbeableObj):
+    
+
+class Network(ProbeableObj,TopologicalNetwork):
     '''
     Network Class
     
     Input Arguments
         adjacency_matrix
-        maskm
+        mask
         state_vec  
     '''
     def __init__ (self,adjacency_matrix,mask,score,function,state_vec=None):
         ProbeableObj.__init__(self)
-        self.adjacency=adjacency_matrix
+        TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
         if state_vec == None:
@@ -70,24 +100,6 @@ class Network(ProbeableObj):
         print "The scorer is : "
         print self.scorer
             
-        
-    def show_graph(self,type='circular'):
-        '''
-        Visualizes the network with the help of networkx class generated from the
-        adjacency matrix.
-        '''
-
-        nx_image = nx.DiGraph(self.adjacency)
-        if type is 'circular':
-            nx.draw_circular(nx_image)
-        if type is 'random':
-            nx.draw_random(nx_image)
-        if type is 'graphviz':
-            nx.draw_graphviz(nx_image)
-        if type is 'normal':
-            nx.draw(self.nx,pos=nx.spring_layout(nx_image))
-        plt.show()
-
 
     def advance(self,times,starter_state=None):
         '''
@@ -99,15 +111,10 @@ class Network(ProbeableObj):
             starter_state -> the initial state to be used
         '''
                 
-        # it no initial state is given, the last state is the initial state.
         
         if starter_state == None:
             starter_state = self.state[-1]
             
-        
-        # Could have preallocated, but 
-        # Premature pre-optimization is the root of all evil.
-        
         for counter in range(times):
             newstate = self.function(self)
             self.state=num.append(self.state,[newstate],axis=0)
@@ -124,13 +131,7 @@ class Network(ProbeableObj):
         # Take the state vector, convert the list of arrays into a 2d array, then show it as an image
         # Black and white. 
         
-        # Future Modification 
-        # May show a 'color' based on the whole state vector, easier for us to see states. 
-        
-        plt.imshow(self.state[-last:],cmap=plt.cm.binary,interpolation='nearest')
-        
-        # Wont go on unless the Window is closed.
-        
+        plt.imshow(self.state[-last:],cmap=plt.cm.binary,interpolation='nearest')     
         plt.show()
 
 
@@ -141,6 +142,7 @@ class Network(ProbeableObj):
         
         # Future Modification 
         # May show a 'color' based on the whole state vector, easier for us to see states. 
+        
         if self.n_nodes % 2 == 0:
             jumper = 2**(self.n_nodes/2)
             im_matrix = num.zeros((jumper,jumper))
@@ -152,10 +154,8 @@ class Network(ProbeableObj):
             im_matrix = num.zeros((jumper/2,jumper))
             for ctr,offset in enumerate(num.multiply(range(jumper/2),jumper)):
                 im_matrix[ctr,:] = self.equilibria[offset:jumper+offset]
-        
+    
         plt.imshow(im_matrix,cmap=plt.cm.gray,interpolation='nearest')
-        
-        # Wont go on unless the Window is closed.
         
         plt.grid()
         plt.colorbar()
