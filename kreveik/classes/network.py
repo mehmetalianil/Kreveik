@@ -43,7 +43,7 @@ class TopologicalNetwork(ProbeableObj):
 
     
 
-class Network(ProbeableObj,TopologicalNetwork):
+class Network(TopologicalNetwork):
     '''
     Network Class
     
@@ -53,7 +53,6 @@ class Network(ProbeableObj,TopologicalNetwork):
         state_vec  
     '''
     def __init__ (self,adjacency_matrix,mask,score,function,state_vec=None):
-        ProbeableObj.__init__(self)
         TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
