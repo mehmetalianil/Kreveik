@@ -28,8 +28,8 @@ class Network(ProbeableObj):
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
         if state_vec == None:
-            state_vec= (num.random.random((self.n_nodes,self.n_nodes))< 0.5 )*1.0
-        self.state=num.array([state_vec])
+            state_vec= (num.random.random((1,self.n_nodes))< 0.5 )*1.0
+        self.state=num.array(state_vec)
         self.equilibria=num.zeros(2**self.n_nodes)
         self.orbits = num.zeros(2**self.n_nodes)
         self.score = 0
@@ -330,7 +330,7 @@ class Network(ProbeableObj):
             # Records the fact that self is the mama of the mutant.
             # Has no children, et cetera.
             
-            mutated_network.mama = self
+            mutated_network.mother = self
             mutated_network.children = []
             mutated_network.nx=nx.DiGraph(mutated_network.adjacency)
             
