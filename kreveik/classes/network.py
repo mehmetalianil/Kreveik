@@ -11,6 +11,7 @@ from ..probes import *
 import itertools 
 
 print_enable=True
+debug = False
 
 class TopologicalNetwork(ProbeableObj):
     """
@@ -19,12 +20,14 @@ class TopologicalNetwork(ProbeableObj):
     """
     def __init__ (self,adjacency_matrix):
         ProbeableObj.__init__(self)
-        self.adjacency=adjacency_matrix
+        self.adjacency = adjacency_matrix
         
     def is_connected(self):
         # We want to check whether the graph is connected.
         are_you_zero = (self.adjacency * (1-num.eye(len(self.adjacency))) == 0)
-        print are_you_zero
+        if debug:
+            print "Is this motif connected?"
+            print are_you_zero
         zero_rows = num.all(are_you_zero, axis=0)
         zero_columns = num.all(are_you_zero, axis=1)
         zero_crosses = zero_rows*zero_columns
@@ -58,7 +61,8 @@ class TopologicalNetwork(ProbeableObj):
         motif_list = []
         
         for permutation in all_permutations:
-            print list(permutation)
+            if debug: 
+                print "Motif Permutation:"+str(list(permutation))
             
             this_motif_adj = num.zeros((degree,degree))
             for (first_ctr,first_node) in enumerate(list(permutation)):
@@ -118,10 +122,10 @@ class Network(TopologicalNetwork):
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
         if state_vec == None:
-            state_vec= (num.random.random((1,self.n_nodes))< 0.5 )*1.0
+            state_vec= (num.random.random((1,self.n_nodes))< 0.5)
         self.state=num.array(state_vec)
-        self.equilibria=num.zeros(2**self.n_nodes)
-        self.orbits = num.zeros(2**self.n_nodes)
+        self.equilibria = num.zeros(2**self.n_nodes)
+        self.orbits = num.array([None]*2**self.n_nodes)
         self.score = 0
         self.mother = None
         self.children = []
@@ -161,7 +165,7 @@ class Network(TopologicalNetwork):
         print self.scorer
             
 
-    def advance(self,times,starter_state=None):
+    def advance(self,times,starter_state=None,*args):
         '''
         Advances the state in the phase space a given number of times.
         If a starter state is given, the initial condition is taken as the given state.
@@ -170,17 +174,34 @@ class Network(TopologicalNetwork):
             times -> the number of iterations to be taken.
             starter_state -> the initial state to be used
         '''
-                
         
+        
+                     
         if starter_state == None:
             starter_state = self.state[-1]
+        
+        if "reset" in args:
+            self.set_state(starter_state)
             
-        for counter in range(times):
-            newstate = self.function(self)
-            self.state=num.append(self.state,[newstate],axis=0)
+        
+        for counter in xrange(times):
+            newstate = self.function(self,starter_state)
+            self.state = num.append(self.state,[newstate],axis=0)
             
         self.populate_probes(probes.advance)
-            
+        
+    def set_state(self,state):
+        """
+        Flushes the state of the system, and sets the new state as the given one 
+        """
+        
+        if type(state) == int:
+            state = [int(strings)==True for strings in list(num.binary_repr(
+                                                (state),width=self.n_nodes))]
+        state_bool = [i == True for i in state]
+        state = [list(state_bool)]
+        self.state = num.array(state)
+        
     def plot_state(self,last=20):
         '''
         Plots the last 20 states as a black and white strips vertically.
@@ -239,7 +260,7 @@ class Network(TopologicalNetwork):
         plt.plot(self.hamming_distance_of_state(state_vector))
         plt.show()           
            
-    def search_equilibrium(self,chaos_limit,starter_state,orbit_extraction=False):
+    def search_equilibrium(self,chaos_limit,starter_state,orbit_extraction=False,def_advance=1):
         '''
         Searches for an equilibrium point, or a limit cycle. 
         Returns the state vector, or the state vector list, if the equilibrium is a limit cycle.
@@ -253,54 +274,32 @@ class Network(TopologicalNetwork):
         
         #flushes states
         
-        self.state = num.array([starter_state])
+        self.set_state(starter_state)
+        starter_state = self.state[-1]
         
-        #Advances chaos limit times.
-        #self.advance(chaos_limit)
-        
-        # A memory of chaos limit is created, preallocation.
-        
-        #memory = num.zeros((chaos_limit,self.n_nodes))
-        
-        memory = num.array([[None]*self.n_nodes]*chaos_limit)
-        
-        # to the first memory block, the initial state is written. 
-        
-        memory_ctr = 0
-        
-        while (memory_ctr < chaos_limit):
+        for ctr in xrange(chaos_limit):
             
-            memory [memory_ctr] = self.state[-1]
-            #advance once , last state will be a new one 
+            self.advance(def_advance)
+            row = num.all(self.state[-1] == self.state, axis=1) 
+            where = num.where(row==True)
+            
+            if len(where[0])> 1:
+                frst_where = where[0][0]
+                scnd_where = where[0][1]
+                
+                orbit_length = scnd_where-frst_where
+                
+                orbit = None
+                location = reduce(lambda x,y : 2*x+y, starter_state)
+                
+                if orbit_extraction:
+                    orbit = self.state[frst_where:scnd_where]
+                    self.orbits[location] = orbit
+                 
+                self.equilibria[location] = orbit_length
 
-            self.advance(1,starter_state)
-            
-            # VERY INEFFICIENT EXTREMELY EXTRAVAGANT!!!
-            # BUT WORKS.
-            # We'd like to remove tolist s
-            
-            
-            # All matrices are converted into lists.
-            memory_as_list = memory.tolist()
-            last_state_as_list = self.state.tolist()[-1]
-            
-            # if this particular state we are concerned with is present in the memory 
-            if last_state_as_list in memory_as_list:
-                # Where in the memory is this particular state?
-                where = memory_as_list.index(last_state_as_list)
-                # If We'd like to extract the orbit out, for all states in the memory, 
-                for state in memory[0:where]:
-                    # Convert the state to a list
-                    state_as_list = state.tolist()
-                    # Finds the decimal representation of the binary number
-                    location_in_equilibrium = int(reduce(lambda s, x: s*2 + x, state_as_list))
-                    # Memory_ctr is the present number of iteration, whereas Where is the last identical state
-                    self.equilibria[location_in_equilibrium] = memory_ctr-where+1
-                    # Extract orbits, if it was requested to do so.
-                    if orbit_extraction == True:
-                        self.orbits[location_in_equilibrium] = memory [:memory_ctr]
-                return (memory [:memory_ctr+1],memory_ctr-where+1)
-            memory_ctr += 1
+                return (orbit_length,orbit)
+        
         self.populate_probes(probes.search_equilibrium)
             
     def populate_equilibria(self,normalize=1):
@@ -318,15 +317,10 @@ class Network(TopologicalNetwork):
         # Converts them all to binaries, fills them all with zeroes such that they are all in the
         # form of 000111010 rather than 111010. Then creates a list out of them.
         
-        state_numbers_decimal = range(0,num.power(2,self.n_nodes))
-        binspace = [list((bin(k)[2:].zfill(self.n_nodes))) for k in state_numbers_decimal]
-        
-        # But this list has elements of strings. We convert all of the elements to integers
-        
-        int_binspace=[[int(i) for i in k] for k in binspace] 
-        
-        for state in int_binspace:
-            self.search_equilibrium(2^self.n_nodes,state)  
+        binspace = range(0,num.power(2,self.n_nodes))
+  
+        for state in binspace:
+            self.search_equilibrium(2**self.n_nodes,state,orbit_extraction=True)  
         
         self.score = self.scorer(self)
         self.populate_probes(probes.populate_equilibria)

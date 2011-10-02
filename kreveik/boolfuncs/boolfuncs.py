@@ -13,7 +13,7 @@ __status__ = "Production"
         
 import numpy as num
 
-def xor_masking(network):
+def xor_masking(network,state):
     """
     For a network, every single node is taken, its mask and state vector is clipped.
     They are subject to a boolean operation from numpy libraries.
@@ -28,8 +28,10 @@ def xor_masking(network):
         
         or any other function that outputs an integer with an input of two ndarrays.        
     """
-
-    newstate=num.zeros(network.n_nodes)
+    
+    state = num.array(state)
+    newstate = num.array([None]*network.n_nodes,dtype=bool)
+    
     for i in range(0,network.n_nodes):
         #    Detect all nodes that have an incoming connection
         
@@ -39,23 +41,24 @@ def xor_masking(network):
         #     and state concerning only the incoming connections.
         
         short_mask = network.mask[i,].take(nonzero_of_adj)
-        short_state = network.state[-1].take(nonzero_of_adj)
+        short_state = state.take(nonzero_of_adj)
     
         #    Two vectors are XOR' d element wise, and is summed in modulo 2
         #    This corresponds to i th node operating its boolean function over the same
         #    state vector.
-        sum_of_bool = num.logical_xor(short_mask,short_state).sum()
-        newstate[i]=num.int((len(short_state)/2.0) < sum_of_bool)
+        
+        newstate[i] = (num.logical_xor(short_mask,short_state).sum()<len(short_state)/2.0)
+        
     try:
         return newstate
     except:
         print "XOR masking failed in network"
         print "Printing id:"
-        network.print_id()
+        print id(network)
         return False
     
     
-def and_masking(network):
+def and_masking(network,state):
     """
     For a network, every single node is taken, its mask and state vector is clipped.
     They are subject to a boolean operation from numpy libraries.
@@ -63,14 +66,14 @@ def and_masking(network):
     shortened state vector, the node outputs 1 or 0.
     These values are gathered up and outputed as a new state vector.
     """
-    
+    state = num.array(state)
     newstate=num.zeros(network.n_nodes)
     for i in range(0,network.n_nodes):
         nonzero_of_adj = network.adjacency[i,].nonzero()[0]
         short_mask = network.mask[i,].take(nonzero_of_adj)
-        short_state = network.state[-1].take(nonzero_of_adj)
+        short_state =state.take(nonzero_of_adj)
         sum_of_bool = num.logical_and(short_mask,short_state).sum()
-        newstate[i]=num.int((len(short_state)/2.0) < sum_of_bool)
+        newstate[i]=(len(short_state)/2.0) < sum_of_bool
     try:
         return newstate
     except:
@@ -79,7 +82,7 @@ def and_masking(network):
         network.print_id()
         return False
     
-def or_masking(network):
+def or_masking(network,state):
     """
     For a network, every single node is taken, its mask and state vector is clipped.
     They are subject to a boolean operation from numpy libraries.
@@ -94,7 +97,7 @@ def or_masking(network):
         short_mask = network.mask[i,].take(nonzero_of_adj)
         short_state = network.state[-1].take(nonzero_of_adj)
         sum_of_bool = num.logical_or(short_mask,short_state).sum()
-        newstate[i]=num.int((len(short_state)/2.0) < sum_of_bool)
+        newstate[i]=(len(short_state)/2.0) < sum_of_bool
     try:
         return newstate
     except:

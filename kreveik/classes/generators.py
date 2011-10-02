@@ -20,10 +20,10 @@ def generate_random(n_nodes,scorer,function,probability=(0.5,0.5,0.5)):
     scorer -> a function for the type network
     '''
     num.random.seed()
-    adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])*1.0
+    adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])
     #    First state of the system is determined
-    state=(num.random.random((1,n_nodes))<probability[1])*1.0
-    bool_fcn=(num.random.random((n_nodes,n_nodes))<probability[2])*1.0
+    state=(num.random.random((1,n_nodes))<probability[1])
+    bool_fcn=(num.random.random((n_nodes,n_nodes))<probability[2])
 
     try:
         return Network(adjacency_matrix, bool_fcn, scorer,function,state_vec=state)
