@@ -2,6 +2,8 @@
 Probable Class definition
 """
 import numpy as num
+import cPickle
+import time
 
 class ProbeableObj (object):
     def __init__ (self):
@@ -18,3 +20,9 @@ class ProbeableObj (object):
                 measured = probe.function(self)
                 probe.data = num.append(probe.data,measured)
                 
+class SaveableObj (object):
+    def __init__ (self):
+        self.creation_time = time.ctime() 
+        
+    def save (self):
+        
