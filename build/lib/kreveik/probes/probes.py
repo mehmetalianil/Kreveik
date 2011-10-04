@@ -43,9 +43,6 @@ class eq_score_probe (probe):
         self.subroutine = populate_equilibria
         
     def eq_score(self,probeable):
-        print num.mean(probeable.equilibria)
-        return num.mean(probeable.equilibria)
+        print  [num.mean(probed.equilibria) for probed in probeable.network_list]
+        return [num.mean(probed.equilibria) for probed in probeable.network_list]
 
-
-    
-    

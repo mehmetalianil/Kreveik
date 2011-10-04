@@ -1,0 +1,8 @@
+/.settings
+/build
+/dist
+/doc
+/Kreveik.egg-info
+/distribute_setup.py
+/.pydevproject
+/.project

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "Kreveik",
-    version = "0.5.0 dev",
+    version = "0.5.2 dev",
     packages = find_packages(),
     # scripts = ['say_hello.py'],
 
@@ -20,11 +20,25 @@ setup(
     # metadata for upload to PyPI
     author = "Mehmet Ali Anil",
     author_email = "mehmet.ali.anil@ieee.org",
-    description = "Kreveik is a Python module for Boolean networks. With Kreveik, one can build Boolean networks, create random Boolean networks, investigate dynamics of these networks, form families of them, investigate macroscopic variables and expose them to genetic algorithms.",
+    description = "Kreveik is a Python module for Boolean networks. With Kreveik, one can create, investigate dynamics of, form families of random Boolean networks.",
     license = "LICENSE.txt",
     keywords = "random boolean networks genetic algorithm",
     url = "http://github.com/mehmetalianil/Kreveik/",    
     # project home page, if any
 
-    # could also include long_description, download_url, classifiers, etc.
+    classifiers=[
+          'Development Status :: 4 - Beta',
+          'Environment :: Console',
+	  'Intended Audience :: Science/Research',
+          'License :: Other/Proprietary License',
+	  'Natural Language :: English',
+          'Operating System :: MacOS :: MacOS X',
+          'Operating System :: Microsoft :: Windows',
+          'Operating System :: POSIX',
+          'Programming Language :: Python :: 2.7',
+          'Topic :: Scientific/Engineering :: Bio-Informatics',
+          'Topic :: Scientific/Engineering :: Information Analysis',
+          'Topic :: Scientific/Engineering :: Physics'
+          ],
+
 )

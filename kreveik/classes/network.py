@@ -104,10 +104,6 @@ class Motif(TopologicalNetwork):
                 return True
         return False    
                 
- 
-
-            
-
 class Network(TopologicalNetwork):
     '''
     Network Class

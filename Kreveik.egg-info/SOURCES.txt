@@ -1,4 +1,5 @@
 CHANGES.txt
+IPython_crash_report.txt
 LICENSE.txt
 MANIFEST.in
 setup.py
