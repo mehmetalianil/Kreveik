@@ -2,7 +2,7 @@
 Definition of the family class
 """
 
-from probeable import *
+from baseclasses import *
 import numpy as num
 import matplotlib.pyplot as plt
 import copy

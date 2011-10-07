@@ -25,4 +25,4 @@ class SaveableObj (object):
         self.creation_time = time.ctime() 
         
     def save (self):
-        
+        pass

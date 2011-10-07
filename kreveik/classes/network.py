@@ -2,7 +2,7 @@
 Definition of network object.
 """
 
-from probeable import *
+from baseclasses import *
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
@@ -120,8 +120,6 @@ class Network(TopologicalNetwork):
         if state_vec == None:
             state_vec= (num.random.random((1,self.n_nodes))< 0.5)
         self.state=num.array(state_vec)
-        self.equilibria = num.zeros(2**self.n_nodes)
-        self.orbits = num.array([None]*2**self.n_nodes)
         self.score = 0
         self.mother = None
         self.children = []
@@ -267,8 +265,11 @@ class Network(TopologicalNetwork):
                 The calculation will stop when this point is reached.
             orbit_extraction -> True when every individual orbit is recorded with its degree.
         '''
-        
-        #flushes states
+        if not(hasattr(self,"equilibria")):
+            self.equilibria = num.zeros(2**self.n_nodes)
+        if not(hasattr(self,"orbits")):
+            if orbit_extraction:
+                self.orbits = num.array([None]*2**self.n_nodes)
         
         self.set_state(starter_state)
         starter_state = self.state[-1]
@@ -293,12 +294,14 @@ class Network(TopologicalNetwork):
                     self.orbits[location] = orbit
                  
                 self.equilibria[location] = orbit_length
+                
+                self.populate_probes(probes.search_equilibrium)
 
                 return (orbit_length,orbit)
         
-        self.populate_probes(probes.search_equilibrium)
+        
             
-    def populate_equilibria(self,normalize=1):
+    def populate_equilibria(self,orbit_extraction=False):
         '''
         Creates all possible initial conditions by listing all possible 2^n boolean states.
         Then runs populate_equilibrium for each of them.
@@ -308,15 +311,15 @@ class Network(TopologicalNetwork):
         Input Arguments:
             normalize -> normalizes the scores to the value given.
         '''
- 
-        # Creates all possible initial conditions by listing all possible integers from 0 to 2^n_node-1
-        # Converts them all to binaries, fills them all with zeroes such that they are all in the
-        # form of 000111010 rather than 111010. Then creates a list out of them.
+  
+        self.equilibria = num.zeros(2**self.n_nodes)
+        if orbit_extraction:
+            self.orbits = num.array([None]*2**self.n_nodes)
         
         binspace = range(0,num.power(2,self.n_nodes))
   
         for state in binspace:
-            self.search_equilibrium(2**self.n_nodes,state,orbit_extraction=True)  
+            self.search_equilibrium(2**self.n_nodes,state,orbit_extraction)  
         
         self.score = self.scorer(self)
         self.populate_probes(probes.populate_equilibria)
