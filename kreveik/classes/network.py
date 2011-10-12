@@ -296,7 +296,6 @@ class Network(TopologicalNetwork):
                 self.equilibria[location] = orbit_length
                 
                 self.populate_probes(probes.search_equilibrium)
-
                 return (orbit_length,orbit)
         
         
@@ -358,10 +357,10 @@ class Network(TopologicalNetwork):
                 random_j = num.random.randint(0, self.n_nodes-1, size=mutated_obj[1])
                 for ith_row in random_i:
                     for jth_column in random_j:
-                        if mutant_adj[ith_row][jth_column] == 1:
-                            mutant_adj[ith_row][jth_column] = 0
-                        elif mutant_adj[ith_row][jth_column] == 0:
-                            mutant_adj[ith_row][jth_column] = 1
+                        if mutant_adj[ith_row][jth_column] == True:
+                            mutant_adj[ith_row][jth_column] = False
+                        elif mutant_adj[ith_row][jth_column] == False:
+                            mutant_adj[ith_row][jth_column] = True
                         
             
             if (mutated_obj[0] == 'Both' or mutated_obj[0] == 'Mask'):
@@ -371,10 +370,10 @@ class Network(TopologicalNetwork):
                 random_j = num.random.randint(0, self.n_nodes-1, size=mutated_obj[1])
                 for ith_row in random_i:
                     for jth_column in random_j:
-                        if mutant_mask[ith_row][jth_column] == 1:
-                            mutant_mask[ith_row][jth_column] = 0
-                        elif mutant_mask[ith_row][jth_column] == 0:
-                            mutant_mask[ith_row][jth_column] = 1
+                        if mutant_mask[ith_row][jth_column] == True:
+                            mutant_mask[ith_row][jth_column] = False
+                        elif mutant_mask[ith_row][jth_column] == False:
+                            mutant_mask[ith_row][jth_column] = True
                         
             mutated_network.adjacency = mutant_adj
             mutated_network.mask = mutant_mask

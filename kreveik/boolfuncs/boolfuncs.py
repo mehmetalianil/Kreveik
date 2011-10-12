@@ -29,7 +29,54 @@ def xor_masking(network,state):
         or any other function that outputs an integer with an input of two ndarrays.        
     """
     
-    state = num.array(state)
+    state = num.array(state,dtype=bool)
+    newstate = num.array([None]*network.n_nodes)
+    
+    for i in xrange(network.n_nodes):
+        #    Detect all nodes that have an incoming connection
+        
+        nonzero_of_adj = network.adjacency[i,].nonzero()[0]
+        
+        #    Reduce the boolean function and the state to a boolean function
+        #     and state concerning only the incoming connections.
+        
+        short_mask = network.mask[i,].take(nonzero_of_adj)
+        short_state = state.take(nonzero_of_adj)
+    
+        #    Two vectors are XOR' d element wise, and is summed in modulo 2
+        #    This corresponds to i th node operating its boolean function over the same
+        #    state vector.
+        
+        newstate[i] = (num.logical_xor(short_mask,short_state).sum()<len(short_state)/2.0)
+        
+    try:
+        return newstate
+    except:
+        print "XOR masking failed in network"
+        print "Printing id:"
+        print id(network)
+        return False
+
+def Cxor_masking(network,state):
+    """
+    For a network, every single node is taken, its mask and state vector is clipped.
+    They are subject to a boolean operation from numpy libraries.
+    Then from the fact that whether the node outputs a number greater than the 
+    shortened state vector, the node outputs 1 or 0.
+    These values are gathered up and outputted as a new state vector.
+    The method can be:
+        num.logical_or
+        num.logical_and
+        num.logical_xor
+        num.logical_xnor
+        
+        or any other function that outputs an integer with an input of two ndarrays.        
+    """
+    DTYPE = num.bool
+    ctypedef num.bool_t DTYPE_t
+    
+    
+    cdef state = num.array(state)
     newstate = num.array([None]*network.n_nodes,dtype=bool)
     
     for i in range(0,network.n_nodes):

@@ -18,7 +18,7 @@ class ProbeableObj (object):
         for probe in self.probes:
             if probe.subroutine == subroutine:
                 measured = probe.function(self)
-                probe.data = num.append(probe.data,measured)
+                probe.data.append(measured)
                 
 class SaveableObj (object):
     def __init__ (self):
