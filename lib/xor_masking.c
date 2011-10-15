@@ -1,96 +1,95 @@
 #include <Python.h>
-#include "Numeric/arrayobject.h"
+#include "numpy/arrayobject.h"
+#include "numpy/ndarraytypes.h"
 #include <stdio.h>
 #include <stdbool.h>
 
-int main(){
-Py_Initialize();
-import_array();
-}
+static PyObject* xor_masking(PyObject *self, PyObject *args);
 
-static char doc[] =
+static char doc_xor[] =
 "This is the C extension for xor_masking routine. It interfaces with Python via C-Api, and calculates the"
 "next state with C pointer arithmetic";
 
-	static PyObject *
-	trace(PyObject *self, PyObject *args)
-	{
-
-	PyObject *input;
-	PyObject *mask;
-	PyObject *adjacency;
-	PyObject *state;
-	PyArrayObject *arr_mask;
-	PyArrayObject *arr_adjacency;
-	PyArrayObject *arr_state;
-	PyArrayObject *arr_next_state;
-
-	double sum;
-	int counter_node, n_nodes;
-
-	/*  PyArg_ParseTuple
-	 *  checks if from args, the pointers of type "O" can be extracted, and extracts them
-	 */
-
-	if (!PyArg_ParseTuple(args, "OOO:xor_masking_C", &mask, &adjacency, &state))
-		return NULL;
-
-	/*
-	 *  The pointer returned by PyArray_ContiguousFromObject is typecasted to
-	 *  a PyArrayObject Pointer and array is pointed to the same address.
-	 */
-
-    arr_mask = (PyArrayObject *)
-    PyArray_ContiguousFromObject(mask, PyArray_BOOL, 2, 2);
-    arr_adjacency = (PyArrayObject *)
-    PyArray_ContiguousFromObject(adjacency, PyArray_BOOL, 2, 2);
-    arr_state = (PyArrayObject *)
-    PyArray_ContiguousFromObject(state, PyArray_BOOL, 2, 2);
-
-	if (array == NULL)
-		return NULL;
-
-	int n_mask_0 = mask->dimensions[0];
-	int n_mask_1 = mask->dimensions[1];
-	int n_adjacency_0 = adjacency->dimensions[0];
-	int n_adjacency_1 = adjacency->dimensions[1];
-	int n_state_0 = state->dimensions[0];
-    int n_nodes = n_state_0;
-	/*
-	 * if the dimensions don't match, return NULL
-	 */
-
-    bool c_mask[n_nodes][n_nodes];
-
-	if (n_mask_0 != n_mask_1 || n_adjacency_0 != n_adjacency_1 ||
-	n_adjacency_0 != n_mask_0 || n_adjacency_0 != n_adjacency_1) {
-		return NULL;
-	}
-
-	/*
-	 *    The 2D arrays are introduced as follows
-	 *    array[i][j] = (array->data + i*array->strides[0] + j*array->strides[1])
-	 */
-
-	for (counter_node = 0; i < n_mask; i++){
-		*row_start = (array->data + i*array->strides[0]);
-	}
-
-
-	//Py_DECREF();
-
-	//return PyFloat_FromDouble();
-	}
-
-static PyMethodDef TraceMethods[] = {
-	{"trace", trace, METH_VARARGS, doc},
-	{NULL, NULL, 0, NULL}
+static PyMethodDef XORMethods[] = {
+    {"xor_masking", xor_masking, METH_VARARGS, doc_xor},
+    {NULL, NULL, 0, NULL}
 };
 
 PyMODINIT_FUNC
-inittrace(void)
+initxor_masking(void)
 {
-    (void) Py_InitModule("trace", TraceMethods);
+    (void) Py_InitModule("xor_masking", XORMethods);
     import_array();
 }
 
+static PyObject* xor_masking(PyObject *self, PyObject *args){
+    PyObject *adjacency ,*mask, *state;
+    PyArrayObject *adjacency_arr, *mask_arr, *state_arr, *state_out;
+
+    if (!PyArg_ParseTuple(args,"OOO:trace", &adjacency, &mask, &state)) return NULL;
+
+    adjacency_arr = (PyArrayObject *)
+        PyArray_ContiguousFromObject(adjacency, NPY_BOOL,2,2);
+
+    if (adjacency_arr == NULL) return NULL;
+    mask_arr = (PyArrayObject *)
+        PyArray_ContiguousFromObject(mask, NPY_BOOL,2,2);
+
+    if (mask_arr == NULL) return NULL;
+    state_arr = (PyArrayObject *)
+        PyArray_ContiguousFromObject(state, NPY_BOOL,1,1);
+
+    if (state_arr == NULL) return NULL;
+
+    int dims[2], dims_new[1];
+    dims[0] = adjacency_arr -> dimensions[0];
+    dims[1] = adjacency_arr -> dimensions[1];
+    dims_new[0] =  adjacency_arr -> dimensions[0];
+    if (!(dims[0]==dims[1] && mask_arr -> dimensions[0] == dims[0]
+                         && mask_arr -> dimensions[1] == dims[0]
+                         && state_arr -> dimensions[0] == dims[0]))
+                         return NULL;
+
+
+    state_out = (PyArrayObject *) PyArray_FromDims(1,dims_new,NPY_BOOL);
+
+    npy_bool *adj_value_ptr, *mask_value_ptr, *state_value_ptr, *state_out_ptr;
+
+    int i,j;
+
+    for(i=0;i<dims[0];i++){
+        int sum = 0;
+        int conn_ctr = 0;
+
+            for(j=0;j<dims[1];j++){
+
+                adj_value_ptr = (adjacency_arr->data + i*adjacency_arr->strides[0]
+                         +j*adjacency_arr->strides[1]);
+
+                if (*(bool *) adj_value_ptr == true){
+
+                    mask_value_ptr = (mask_arr->data + i*mask_arr->strides[0]
+                    +j*mask_arr->strides[1]);
+
+                    state_value_ptr = (state_arr->data + j*state_arr->strides[0]);
+
+                    if ( (*(bool *) mask_value_ptr ^ *(bool *)state_value_ptr) ==  true){
+                        sum++;
+                    }
+                    conn_ctr++;
+                }
+            }
+            state_out_ptr = (state_out->data + i*state_out->strides[0]);
+            if (conn_ctr < sum*2){
+                *state_out_ptr =  true;
+            }
+            else {
+                *state_out_ptr =  false;
+            }
+    }
+
+    Py_DECREF(adjacency_arr);
+    Py_DECREF(mask_arr);
+    Py_DECREF(state_arr);
+    return PyArray_Return(state_out);
+}
