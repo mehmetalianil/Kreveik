@@ -54,19 +54,18 @@ static PyObject* xor_masking(PyObject *self, PyObject *args){
     state_out = (PyArrayObject *) PyArray_FromDims(1,dims_new,NPY_BOOL);
 
     npy_bool *adj_value_ptr, *mask_value_ptr, *state_value_ptr, *state_out_ptr;
-
-    int i,j;
+    npy_intp i,j;
 
     for(i=0;i<dims[0];i++){
-        int sum = 0;
-        int conn_ctr = 0;
+        npy_int sum = 0;
+        npy_int conn_ctr = 0;
 
             for(j=0;j<dims[1];j++){
 
                 adj_value_ptr = (adjacency_arr->data + i*adjacency_arr->strides[0]
                          +j*adjacency_arr->strides[1]);
 
-                if (*(bool *) adj_value_ptr == true){
+                if (*adj_value_ptr == true){
 
                     mask_value_ptr = (mask_arr->data + i*mask_arr->strides[0]
                     +j*mask_arr->strides[1]);
