@@ -22,19 +22,22 @@ __status__ = "Production"
 
         
 if __name__ == '__main__':
-    petri = classes.Family()
-    petric = classes.Family()
     
-    for counter in xrange(100):
-        petri.add_to_family(classes.generate_random(7,
-    	                                    scorers.sum_scorer,
-    	                                    boolfuncs.xor_masking,
-    	                                    probability = (0.5,0.5,0.5))) 
-    for counter in xrange(100):
-        petric.add_to_family(classes.generate_random(7,
-                                            scorers.sum_scorer,
-                                            boolfuncs.xor_masking_C,
-                                            probability = (0.5,0.5,0.5))) 
+    petri=[None]*101
+    scores=[None]*101
+    
+    for counter in xrange(101):
+        print "Family #" +str(counter)
+        petri[counter] = classes.Family()
+        prob = counter/100.0
+        for network_number in xrange(100):
+            petri[counter].add_to_family(classes.generate_random(7,
+        	                                    scorers.orbit_length_sum,
+        	                                    boolfuncs.xor_masking,
+        	                                    probability = (prob,0.5,0.5))) 
+    	                                    
+        petri[counter].populate_equilibria_in_family()
+        scores[counter] = [network.score for network in petri[counter].network_list]
    
     
     
