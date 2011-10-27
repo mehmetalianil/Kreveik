@@ -34,7 +34,6 @@ class Family(ProbeableObj):
         network -> The network that is to be appended to the family.
         '''
         
-        
         if network in self.network_list:
             print "The network that you're trying to add to the family is already a member."
             print "Please clone the individual and append the clone."

@@ -96,6 +96,10 @@ class Motif(TopologicalNetwork):
     def __eq__(self,other):
         permutation_list = itertools.permutations(range(self.degree),self.degree)
         for permutation in permutation_list:
+            degrees_match = [row_degree in other.adjacency.sum(axis=1) for 
+                             row_degree in self.adjacency.sum(axis=1)]
+            if not(all(degrees_match)):
+                return False
             for (node_init,node_end) in enumerate(permutation):
                 newarray = self.adjacency.copy()
                 newarray[[node_init,node_end]] = newarray[[node_end,node_init]]

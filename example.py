@@ -33,7 +33,7 @@ if __name__ == '__main__':
         for network_number in xrange(100):
             petri[counter].add_to_family(classes.generate_random(7,
         	                                    scorers.orbit_length_sum,
-        	                                    boolfuncs.xor_masking,
+        	                                    boolfuncs.xor_masking_C,
         	                                    probability = (prob,0.5,0.5))) 
     	                                    
         petri[counter].populate_equilibria_in_family()
