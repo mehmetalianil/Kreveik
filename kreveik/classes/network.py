@@ -57,16 +57,16 @@ class TopologicalNetwork(ProbeableObj):
         Returns a list of motifs.
         """
     
-        all_permutations = itertools.permutations(range(len(self.adjacency)),degree)
+        all_combinations = itertools.combinations(range(len(self.adjacency)),degree)
         motif_list = []
         
-        for permutation in all_permutations:
+        for combination in all_combinations:
             if debug: 
-                print "Motif Permutation:"+str(list(permutation))
+                print "Motif Permutation:"+str(list(combination))
             
             this_motif_adj = num.zeros((degree,degree))
-            for (first_ctr,first_node) in enumerate(list(permutation)):
-                for (second_ctr,second_node) in enumerate(list(permutation)):
+            for (first_ctr,first_node) in enumerate(list(combination)):
+                for (second_ctr,second_node) in enumerate(list(combination)):
                     this_motif_adj[first_ctr][second_ctr] = self.adjacency[first_node][second_node]
             
             this_motif = Motif(this_motif_adj)
@@ -96,9 +96,13 @@ class Motif(TopologicalNetwork):
     def __eq__(self,other):
         permutation_list = itertools.permutations(range(self.degree),self.degree)
         for permutation in permutation_list:
-            degrees_match = [row_degree in other.adjacency.sum(axis=1) for 
+            indegrees_match = [row_degree in other.adjacency.sum(axis=1) for 
                              row_degree in self.adjacency.sum(axis=1)]
-            if not(all(degrees_match)):
+            if not(all(indegrees_match)):
+                return False
+            outdegrees_match = [row_degree in other.adjacency.sum(axis=0) for 
+                             row_degree in self.adjacency.sum(axis=0)]
+            if not(all(outdegrees_match)):
                 return False
             for (node_init,node_end) in enumerate(permutation):
                 newarray = self.adjacency.copy()

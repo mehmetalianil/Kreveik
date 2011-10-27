@@ -3,14 +3,16 @@ Definition of the family class
 """
 
 from baseclasses import *
+from network import *
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
 import networkx as nx
 from ..probes import *
+import itertools
 
 print_enable=True
-
+debug=False
 
 class Family(ProbeableObj):
     '''
@@ -152,6 +154,37 @@ class Family(ProbeableObj):
         self.populate_probes(probes.genetic_iteration)
         return self.scores
         
+    def motif_freqs(self,degree):
+        """
+        Returns a list of motifs of the family.
+        """
+        motif_list = []
+        
+        for (enum,network) in enumerate(self.network_list):
+            all_combinations = itertools.combinations(range(len(network.adjacency)),degree)
+            if print_enable:
+                print "Extracting motifs of Network #"+str(enum)+" of "+str(len(self.network_list))
+            for combination in all_combinations:
+            
+                this_motif_adj = num.zeros((degree,degree))
+                for (first_ctr,first_node) in enumerate(list(combination)):
+                    for (second_ctr,second_node) in enumerate(list(combination)):
+                        this_motif_adj[first_ctr][second_ctr] = network.adjacency[first_node][second_node]
+                
+                this_motif = Motif(this_motif_adj)
+    
+                if this_motif.is_connected():                
+                    truth = [this_motif == old_motif for old_motif in motif_list]
+                    if (any(truth) == True):
+                        index = truth.index(True)
+                        motif_list[index].freq = motif_list[index].freq+1
+                    elif (all(truth) == False) or (len(truth)==0):
+                        motif_list.append(this_motif)
+                    else:
+                        print "There has been a problem while extracting Motifs"
+                        break
+                
+        return motif_list
 
     def genetic_algorithm(self,howmany=5,*args,**kwargs):
         """
