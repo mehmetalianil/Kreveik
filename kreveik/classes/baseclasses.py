@@ -2,7 +2,6 @@
 Probable Class definition
 """
 import numpy as num
-import cPickle
 import time
 
 class ProbeableObj (object):

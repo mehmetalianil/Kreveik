@@ -11,7 +11,7 @@ import networkx as nx
 from ..probes import *
 import itertools
 
-print_enable=True
+verbose=True
 debug=False
 
 class Family(ProbeableObj):
@@ -59,25 +59,25 @@ class Family(ProbeableObj):
             the wildtype club.
         '''
         if len(self.scores) == 0:
-            if print_enable:
+            if verbose:
                 print "Warning: Equilibria not found."
                 print "Populating equilibria ..."
             self.populate_equilibria_in_family()
-            if print_enable:
+            if verbose:
                 print "    Done!"
         
         print "Checking individuals in this family by their scores"
         for network in self.network_list:
             if network.score == 0:
-                if print_enable:
+                if verbose:
                     print "Warning: Network "+str(network)+" has no information on its equilibrium"
                     print "Now calculating its equilibria..."
                 network.populate_equilibria()
-                if print_enable:    
+                if verbose:    
                     print "    Done!"
                 
             if network.score < wildtype_threshold:
-                if print_enable:
+                if verbose:
                     print "Network "+str(id(network))+" is wild."
                 self.wildtype_list.append(network)
         
@@ -99,7 +99,7 @@ class Family(ProbeableObj):
         self.scores = num.zeros(len(self.network_list))
         
         for id,network in enumerate(self.network_list): 
-            if print_enable:
+            if verbose:
                 print "("+str(id+1)+"/"+str(len(self.network_list))+") Populating equilibrium for: "+str(network)
             network.populate_equilibria()
             self.scores[id] = network.score
@@ -113,10 +113,10 @@ class Family(ProbeableObj):
         '''
         if self.wildtype_list != []:
             self.wildtype_list = []
-        if print_enable:
+        if verbose:
             print "Determining wildtypes"
         self.populate_wildtype(score_threshold)
-        if print_enable:
+        if verbose:
             print str(len(self.wildtype_list))+"wild individuals"
         kill_count = len(self.wildtype_list)
         family_count = len(self.network_list)
@@ -132,8 +132,9 @@ class Family(ProbeableObj):
         
         for number,to_be_killed in enumerate(random_kill_list):
             if to_be_killed == 1:
-                if print_enable:
-                    print str(self.network_list[number])+" is killed with score"+str(self.network_list[number].score) 
+                if verbose:
+                    print str(self.network_list[number])+" is killed with score"
+                    +str(self.network_list[number].score) 
                 self.network_list[number] = None
                 
         #    If there are ones that are killed, populate the remaining gaps with mutated wildtypes.
@@ -141,10 +142,13 @@ class Family(ProbeableObj):
         
         for network_ctr,all_networks in enumerate(self.network_list):
             if all_networks == None:
-                if print_enable:
+                if verbose:
                     print "mutating network "+str(self.wildtype_list[counter_wt])
-                self.network_list[network_ctr] = self.wildtype_list[counter_wt].mutant(mutated_obj=mutant_recipe,howmany=howmany_gntc)[0]
-                if print_enable:    
+                    
+                self.network_list[network_ctr] = self.wildtype_list[counter_wt].mutant(mutated_obj
+                                                            =mutant_recipe,howmany=howmany_gntc)[0]
+                                                            
+                if verbose:    
                     print "finding equilibria of the new network "+str(self.network_list[network_ctr])
                 self.network_list[network_ctr].populate_equilibria()
                 self.scores[network_ctr] = self.network_list[network_ctr].score
@@ -162,7 +166,7 @@ class Family(ProbeableObj):
         
         for (enum,network) in enumerate(self.network_list):
             all_combinations = itertools.combinations(range(len(network.adjacency)),degree)
-            if print_enable:
+            if verbose:
                 print "Extracting motifs of Network #"+str(enum)+" of "+str(len(self.network_list))
             for combination in all_combinations:
             
@@ -194,7 +198,7 @@ class Family(ProbeableObj):
         
         for ctr in range(howmany[0]):
             meanscore = self.scores.mean()
-            if print_enable:
+            if verbose:
                 print "Iteration "+str(ctr)+" Mean Score is: "+str(meanscore)
             self.genetic_iteration(meanscore,howmany[1])
         self.populate_probes(probes.genetic_algorithm)

@@ -1,20 +1,19 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
+import numpy
+
+numpy_include = str(numpy.get_include())
+module = Extension('kreveik.boolfuncs.boolfuncs_c', 
+                   sources = ['lib/boolfuncs.c'], include_dirs=[numpy_include])
 
 setup(
     name = "Kreveik",
-    version = "0.5.2 dev",
+    version = "0.5.3dev",
     packages = find_packages(),
-    # scripts = ['say_hello.py'],
-
-    # Project uses reStructuredText, so ensure that the docutils get
-    # installed or upgraded on the target machine
-    install_requires = ['docutils>=0.3'],
+    install_requires = ['docutils>=0.3','numpy>=1.5','networkx>=1.5','matplotlib>=1.0'],
 
     package_data = {
-        # If any package contains *.txt or *.rst files, include them:
-        '': ['*.txt', '*.rst'],
-        # And include any *.msg files found in the 'hello' package, too:
-        'hello': ['*.msg'],
+        # If any package contains *.md files, include them:
+        '': ['*.md','README'],
     },
 
     # metadata for upload to PyPI
@@ -32,13 +31,12 @@ setup(
 	  'Intended Audience :: Science/Research',
           'License :: Other/Proprietary License',
 	  'Natural Language :: English',
-          'Operating System :: MacOS :: MacOS X',
-          'Operating System :: Microsoft :: Windows',
           'Operating System :: POSIX',
           'Programming Language :: Python :: 2.7',
           'Topic :: Scientific/Engineering :: Bio-Informatics',
           'Topic :: Scientific/Engineering :: Information Analysis',
           'Topic :: Scientific/Engineering :: Physics'
           ],
+      ext_modules = [module]
 
 )

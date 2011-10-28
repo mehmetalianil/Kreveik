@@ -111,7 +111,8 @@ class Motif(TopologicalNetwork):
             if num.all(newarray == other.adjacency):
                 return True
         return False    
-                
+
+
 class Network(TopologicalNetwork):
     '''
     Network Class
