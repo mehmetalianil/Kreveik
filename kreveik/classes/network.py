@@ -23,34 +23,20 @@ class TopologicalNetwork(ProbeableObj):
         self.adjacency = adjacency_matrix
         
     def is_connected(self):
-        # We want to check whether the graph is connected.
-        are_you_zero = (self.adjacency * (1-num.eye(len(self.adjacency))) == 0)
-        if debug:
-            print "Is this motif connected?"
-            print are_you_zero
-        zero_rows = num.all(are_you_zero, axis=0)
-        zero_columns = num.all(are_you_zero, axis=1)
-        zero_crosses = zero_rows*zero_columns
-        return not(any(zero_crosses))
+        """
+        Returns True if the graph is connected, False if not.
+        uses the algorithm explained in 
+        http://keithbriggs.info/documents/graph-eigenvalues.pdf
+        """
+        if (0 in self.adjacency.sum(axis=0) or 0 in self.adjacency.sum(axis=1)):
+            return False
+        symmetric = self.adjacency+self.adjacency.T-num.diag(
+                                 self.adjacency.diagonal())
+        degrees = symmetric.sum(axis=0)
+        laplacian = degrees-symmetric
+        determinant = num.linalg.det(num.ones((len(laplacian),len(laplacian) )))
+        return not(determinant == 0)
     
-    def show_graph(self,type='circular'):
-        '''
-        Visualizes the network with the help of networkx class generated from the
-        adjacency matrix.
-        
-        Can't display self loops. 
-        '''
-        
-        nx_image = nx.DiGraph(self.adjacency)
-        if type is 'circular':
-            nx.draw_circular(nx_image)
-        if type is 'random':
-            nx.draw_random(nx_image)
-        if type is 'graphviz':
-            nx.draw_graphviz(nx_image)
-        if type is 'normal':
-            nx.draw(self.nx,pos=nx.spring_layout(nx_image))
-        plt.show()
         
     def motif_freqs (self,degree):
         """
