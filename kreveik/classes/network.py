@@ -37,7 +37,24 @@ class TopologicalNetwork(ProbeableObj):
         determinant = num.linalg.det(num.ones((len(laplacian),len(laplacian) )))
         return not(determinant == 0)
     
-        
+    def copy(self):
+        """
+        Returns a copy of the Topological Network object. 
+        """
+        return copy.copy(self)
+    
+    def save(self,filename):
+        """
+        Saves the Network as an object to a file specified.
+        """
+        import pickle
+        try:
+            filehandler = open(filename+".net", 'w')
+            pickle.dump(self,filehandler) 
+        except pickle.PickleError:
+            print "The object failed to be pickled."
+            
+            
     def motif_freqs (self,degree):
         """
         Returns a list of motifs.
@@ -58,12 +75,12 @@ class TopologicalNetwork(ProbeableObj):
             this_motif = Motif(this_motif_adj)
 
             if this_motif.is_connected():                
-                truth = [this_motif == old_motif for old_motif in motif_list]
+                truth = [this_motif == old_motif[0] for old_motif in motif_list]
                 if (any(truth) == True):
                     index = truth.index(True)
-                    motif_list[index].freq = motif_list[index].freq+1
+                    motif_list[index][1] = motif_list[index][1]+1
                 elif (all(truth) == False) or (len(truth)==0):
-                    motif_list.append(this_motif)
+                    motif_list.append((this_motif,1))
                 else:
                     print "There has been a problem while extracting Motifs"
                     break
@@ -77,7 +94,6 @@ class Motif(TopologicalNetwork):
     def __init__(self, adjacency_matrix):
         TopologicalNetwork.__init__(self, adjacency_matrix)
         self.degree = len(adjacency_matrix)
-        self.freq = 1
     
     def __eq__(self,other):
         permutation_list = itertools.permutations(range(self.degree),self.degree)
@@ -231,7 +247,7 @@ class Network(TopologicalNetwork):
         plt.colorbar()
         plt.show()
         
-    def hamming_distance_of_state(self,state_vector):
+    def hamming_distance(self,state_vector):
         '''
         Returns the Hamming distance of the specified vector to the state vectors that
         are available.
@@ -240,7 +256,7 @@ class Network(TopologicalNetwork):
         '''
         return num.array(num.abs(state_vector-self.state)).sum(axis=1)
     
-    def plot_hamming_distance_of_state(self,state_vector):
+    def plot_hamming_distance(self,state_vector):
         '''
         Plots the Hamming distance of the specified vector to the state vectors that
         are available.
@@ -324,68 +340,15 @@ class Network(TopologicalNetwork):
             sum.append(num.sum(row))
         return num.mean(sum)
     
-    def mutant(self, mutated_obj=('Both',1), rule=None, howmany=1):
+    def point_mutate_adj(self,howmany=1):
         '''
-        Will result in mutation
-        Returns mutated Network.
-        
-        Arranges the identification of the newcomer.
-        Input Arguments:
-            mutated_obj -> A tuple is fed, the first argument of the tuple determines the nature of the 
-            mutation, whereas the second argument determines number of mutations inflicted on each round.
-            rule -> If possible, a rule for mutation will be implemented.
-            howmany -> The number of mutants that will be returned for each call. 
+        Will result in a series of implicit mutation.
         '''
+        for mutant_ctr in range(0,howmany):                        
         
-        mutant_list = []
-        
-        for mutant_ctr in range(0,howmany):
-            
-            mutated_network = copy.copy(self)
-            mutant_adj = copy.copy(mutated_network.adjacency)
-            mutant_mask = copy.copy(mutated_network.mask)
-            
-            if (mutated_obj[0] == 'Both' or mutated_obj[0] == 'Connections'):
-                num.random.seed()
-                random_i = num.random.randint(0, self.n_nodes-1, size=mutated_obj[1])
-                num.random.seed()
-                random_j = num.random.randint(0, self.n_nodes-1, size=mutated_obj[1])
-                for ith_row in random_i:
-                    for jth_column in random_j:
-                        if mutant_adj[ith_row][jth_column] == True:
-                            mutant_adj[ith_row][jth_column] = False
-                        elif mutant_adj[ith_row][jth_column] == False:
-                            mutant_adj[ith_row][jth_column] = True
-                        
-            
-            if (mutated_obj[0] == 'Both' or mutated_obj[0] == 'Mask'):
-                num.random.seed()
-                random_i = num.random.randint(0, self.n_nodes-1, size=mutated_obj[1])
-                num.random.seed()
-                random_j = num.random.randint(0, self.n_nodes-1, size=mutated_obj[1])
-                for ith_row in random_i:
-                    for jth_column in random_j:
-                        if mutant_mask[ith_row][jth_column] == True:
-                            mutant_mask[ith_row][jth_column] = False
-                        elif mutant_mask[ith_row][jth_column] == False:
-                            mutant_mask[ith_row][jth_column] = True
-                        
-            mutated_network.adjacency = mutant_adj
-            mutated_network.mask = mutant_mask
-            
-            ##
-            # Records the fact that self is the mama of the mutant.
-            # Has no children, et cetera.
-            
-            mutated_network.mother = self
-            mutated_network.children = []
-            mutated_network.nx=nx.DiGraph(mutated_network.adjacency)
-            
-            ##
-            # Records that self has a mutant child somewhere
-            
-            self.children.append(mutated_network)
-            mutant_list.append(mutated_network) 
-            
-        return mutant_list
+            num.random.seed()
+            random_i = num.random.randint(0, self.n_nodes-1)
+            random_j = num.random.randint(0, self.n_nodes-1)
+            self.adjacency[random_i][random_j] = not(self.adjacency[ith_row][jth_column]):
     
+
