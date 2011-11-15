@@ -47,42 +47,7 @@ class Family(ProbeableObj):
     def plot_scores(self):
              
         plt.plot(self.scores)
-        
-        # Wont go on unless the Window is closed.
         plt.show()
-        
-    def populate_wildtype(self,wildtype_threshold):
-        '''
-        Finds the wild types in a family and populates the list wildtype_list with them.
-        Input Arguments
-            wildtype_threshold -> a threshold for the score of he individual in order to attend
-            the wildtype club.
-        '''
-        if len(self.scores) == 0:
-            if verbose:
-                print "Warning: Equilibria not found."
-                print "Populating equilibria ..."
-            self.populate_equilibria_in_family()
-            if verbose:
-                print "    Done!"
-        
-        print "Checking individuals in this family by their scores"
-        for network in self.network_list:
-            if network.score == 0:
-                if verbose:
-                    print "Warning: Network "+str(network)+" has no information on its equilibrium"
-                    print "Now calculating its equilibria..."
-                network.populate_equilibria()
-                if verbose:    
-                    print "    Done!"
-                
-            if network.score < wildtype_threshold:
-                if verbose:
-                    print "Network "+str(id(network))+" is wild."
-                self.wildtype_list.append(network)
-        
-        self.populate_probes(probes.populate_wildtype)
-        return True
     
     def populate_equilibria_in_family(self):
         '''
@@ -105,59 +70,7 @@ class Family(ProbeableObj):
             self.scores[id] = network.score
         self.populate_probes(probes.populate_equilibria_in_family)
             
-    def genetic_iteration(self,score_threshold,mutant_recipe=('Both',1),howmany_gntc=1):
-        '''
-        Runs one iteration of the genetic algorithm.
-        It finds wildtypes of the family, mutates them, populates the family with mutants
-        and assasinates as much of it has mutated. 
-        '''
-        if self.wildtype_list != []:
-            self.wildtype_list = []
-        if verbose:
-            print "Determining wildtypes"
-        self.populate_wildtype(score_threshold)
-        if verbose:
-            print str(len(self.wildtype_list))+"wild individuals"
-        kill_count = len(self.wildtype_list)
-        family_count = len(self.network_list)
-        
-        #    Prepare a vector that has ones for each to be killed, zeroes for all remain.
-        #    and permute its elements randomly.
-        
-        array = [1]*kill_count+[0]*(family_count-kill_count)
- 
-        random_kill_list = num.random.permutation(array)
-        
-        #    Tag each element as None for those who'll be killed
-        
-        for number,to_be_killed in enumerate(random_kill_list):
-            if to_be_killed == 1:
-                if verbose:
-                    print str(self.network_list[number])+" is killed with score"
-                    +str(self.network_list[number].score) 
-                self.network_list[number] = None
-                
-        #    If there are ones that are killed, populate the remaining gaps with mutated wildtypes.
-        counter_wt = 0
-        
-        for network_ctr,all_networks in enumerate(self.network_list):
-            if all_networks == None:
-                if verbose:
-                    print "mutating network "+str(self.wildtype_list[counter_wt])
-                    
-                self.network_list[network_ctr] = self.wildtype_list[counter_wt].mutant(mutated_obj
-                                                            =mutant_recipe,howmany=howmany_gntc)[0]
-                                                            
-                if verbose:    
-                    print "finding equilibria of the new network "+str(self.network_list[network_ctr])
-                self.network_list[network_ctr].populate_equilibria()
-                self.scores[network_ctr] = self.network_list[network_ctr].score
-                counter_wt = counter_wt +1
-                
-        self.scores_history = num.append(self.scores_history,self.scores)
-        self.populate_probes(probes.genetic_iteration)
-        return self.scores
-        
+
     def motif_freqs(self,degree):
         """
         Returns a list of motifs of the family.
@@ -189,17 +102,4 @@ class Family(ProbeableObj):
                         break
                 
         return motif_list
-
-    def genetic_algorithm(self,howmany=5,*args,**kwargs):
-        """
-        The wrapper for consecutive genetic iterations.
-        """
-        self.populate_equilibria_in_family()
-        
-        for ctr in range(howmany[0]):
-            meanscore = self.scores.mean()
-            if verbose:
-                print "Iteration "+str(ctr)+" Mean Score is: "+str(meanscore)
-            self.genetic_iteration(meanscore,howmany[1])
-        self.populate_probes(probes.genetic_algorithm)
 

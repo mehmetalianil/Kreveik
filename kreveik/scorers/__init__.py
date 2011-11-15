@@ -1,16 +1,25 @@
 """
-This module contains different scorers that have a 
+This module contains different scorer functions that have a 
 single network as input and outputs its score accordingly.
 """
+
 print_enable = True
 import numpy as num
 
 def sum_scorer(network):
-    # The worst case is an orbit that walks the whole state space.
-    # Thus the scores are normalized to that value.
+    """
+    This function takes a network object and returns its score 
+    computed by summing the lengths of orbits for every single 
+    possible initial condition. If initial conditions turn 
+    out to have the same attractors, they are counted again.
+    """
     return sum(network.equilibria)/(2.0**(2*network.n_nodes))
 
 def orbit_length_sum(network):
+    """
+    This function takes a network object and and returns its 
+    score computed by summing the lengths of genuine orbits.
+    """
     binspace = range(0,num.power(2,network.n_nodes))
     genuine_orbits = []
     genuine_orbit_lengths=[]

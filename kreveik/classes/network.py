@@ -132,8 +132,6 @@ class Network(TopologicalNetwork):
             state_vec= (num.random.random((1,self.n_nodes))< 0.5)
         self.state=num.array(state_vec)
         self.score = 0
-        self.mother = None
-        self.children = []
         self.scorer = score
         self.function = function
     
@@ -339,16 +337,6 @@ class Network(TopologicalNetwork):
         for row in self.adjacency:
             sum.append(num.sum(row))
         return num.mean(sum)
-    
-    def point_mutate_adj(self,howmany=1):
-        '''
-        Will result in a series of implicit mutation.
-        '''
-        for mutant_ctr in range(0,howmany):                        
-        
-            num.random.seed()
-            random_i = num.random.randint(0, self.n_nodes-1)
-            random_j = num.random.randint(0, self.n_nodes-1)
-            self.adjacency[random_i][random_j] = not(self.adjacency[ith_row][jth_column]):
+
     
 
