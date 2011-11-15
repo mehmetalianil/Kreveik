@@ -5,6 +5,8 @@ import numpy as num
 import time
 
 class ProbeableObj (object):
+    """Base class for objects that a Probe object can be attached. 
+    """
     def __init__ (self):
         self.probes = []
     def attach (self,probe):
@@ -19,9 +21,3 @@ class ProbeableObj (object):
                 measured = probe.function(self)
                 probe.data.append(measured)
                 
-class SaveableObj (object):
-    def __init__ (self):
-        self.creation_time = time.ctime() 
-        
-    def save (self):
-        pass

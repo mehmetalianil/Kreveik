@@ -6,7 +6,6 @@ from baseclasses import *
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
-import networkx as nx
 from ..probes import *
 import itertools 
 
@@ -54,38 +53,6 @@ class TopologicalNetwork(ProbeableObj):
         except pickle.PickleError:
             print "The object failed to be pickled."
             
-            
-    def motif_freqs (self,degree):
-        """
-        Returns a list of motifs.
-        """
-    
-        all_combinations = itertools.combinations(range(len(self.adjacency)),degree)
-        motif_list = []
-        
-        for combination in all_combinations:
-            if debug: 
-                print "Motif Permutation:"+str(list(combination))
-            
-            this_motif_adj = num.zeros((degree,degree))
-            for (first_ctr,first_node) in enumerate(list(combination)):
-                for (second_ctr,second_node) in enumerate(list(combination)):
-                    this_motif_adj[first_ctr][second_ctr] = self.adjacency[first_node][second_node]
-            
-            this_motif = Motif(this_motif_adj)
-
-            if this_motif.is_connected():                
-                truth = [this_motif == old_motif[0] for old_motif in motif_list]
-                if (any(truth) == True):
-                    index = truth.index(True)
-                    motif_list[index][1] = motif_list[index][1]+1
-                elif (all(truth) == False) or (len(truth)==0):
-                    motif_list.append((this_motif,1))
-                else:
-                    print "There has been a problem while extracting Motifs"
-                    break
-            
-        return motif_list
 
 class Motif(TopologicalNetwork):
     """
@@ -135,7 +102,7 @@ class Network(TopologicalNetwork):
         self.scorer = score
         self.function = function
     
-    def print_id(self):
+    def __str__(self):
         '''
         Prints out an identification of the Network.
         Prints:
@@ -166,8 +133,32 @@ class Network(TopologicalNetwork):
             print "t= "+str(t)+" : "+str(node)
         print "The scorer is : "
         print self.scorer
+        
+    def __getitem__(self, index):
+        """
+        nth item of a network object is the state that it is in, in the nth 
+        iteration
+        """
+        if index > len(self.state):
+            raise IndexError
+        return self.state[index]
+    
+    def __contains__(self, state):
+        """
+        Returns a boolean according to whether a network includes the state  
+        """
+        item = num.array(state*True)
+        return item in self.state
             
-
+    def __call__ (self,state):
+        """
+        When a  network is called as a function, it sets the initial condition 
+        as the given vector, finds the equilibrium of that state.
+        """
+        self.set_state(state)
+        self.search_equilibrium(2**self.n_nodes,state,orbit_extraction=False,def_advance=1)
+        
+        
     def advance(self,times,starter_state=None,*args):
         '''
         Advances the state in the phase space a given number of times.
@@ -178,8 +169,6 @@ class Network(TopologicalNetwork):
             starter_state -> the initial state to be used
         '''
         
-        
-                     
         if starter_state == None:
             starter_state = self.state[-1]
         
@@ -244,24 +233,7 @@ class Network(TopologicalNetwork):
         plt.grid()
         plt.colorbar()
         plt.show()
-        
-    def hamming_distance(self,state_vector):
-        '''
-        Returns the Hamming distance of the specified vector to the state vectors that
-        are available.
-        Input Arguments:
-            state_vector -> the vector that we'd like to calculate the Hamming distance to.
-        '''
-        return num.array(num.abs(state_vector-self.state)).sum(axis=1)
-    
-    def plot_hamming_distance(self,state_vector):
-        '''
-        Plots the Hamming distance of the specified vector to the state vectors that
-        are available.
-            state_vector -> the vector that we'd like to plot the Hamming distance to.
-        '''
-        plt.plot(self.hamming_distance_of_state(state_vector))
-        plt.show()           
+             
            
     def search_equilibrium(self,chaos_limit,starter_state,orbit_extraction=False,def_advance=1):
         '''
@@ -332,11 +304,10 @@ class Network(TopologicalNetwork):
         self.score = self.scorer(self)
         self.populate_probes(probes.populate_equilibria)
         
-    def degree(self):
-        sum=[]
-        for row in self.adjacency:
-            sum.append(num.sum(row))
-        return num.mean(sum)
-
+    def indegree(self):
+        return self.adjacency.sum(axis=0)
+    
+    def outdegree(self):
+        return self.adjacency.sum(axis=1)
     
 

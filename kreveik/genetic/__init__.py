@@ -2,6 +2,27 @@ verbose=True
 from ..probes import *
 import wildtype
 
+
+class mutator (object):
+    """This is the class definition for the mutators. A mutating function must be given as an
+    input
+    """
+    def __init__ (self, function):
+        self.mutation = function
+    def __call__ (self,object):
+        self.mutation(object)
+    
+        
+class selector (object):
+    """This is the class definition for the selector of the genetic iteration
+    The selecting function must be supplied as an input.
+    """
+    def __init__ (self,function):
+        self.selection = function
+    def __call__ (self,ensemble):
+        self.selection(ensemble)        
+
+
 def populate_wildtype(family,wildtype_check):
     '''
     Finds the wild types in a family and populates the list wildtype_list with them.
