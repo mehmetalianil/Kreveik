@@ -10,7 +10,7 @@ import itertools
 import logging
 import probes
 
-class TopologicalNetwork(classes.ProbeableObj):
+class TopologicalNetwork(classes.ProbeableObj,classes.Element):
     """
     This object is a stripped down network, designated to be a core 
     object for all network-like objects, like sub-graphs and motifs.
@@ -62,7 +62,7 @@ class TopologicalNetwork(classes.ProbeableObj):
 
 class Motif(TopologicalNetwork):
     """
-    Motif
+    Motif is a 
     """
     def __init__(self, adjacency_matrix):
         classes.TopologicalNetwork.__init__(self, adjacency_matrix)
@@ -97,15 +97,13 @@ class Network(TopologicalNetwork):
         mask
         state_vec  
     '''
-    def __init__ (self,adjacency_matrix,mask,score,function,state_vec=None):
+    def __init__ (self,adjacency_matrix,mask,function,state_vec=None):
         classes.TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
         if state_vec == None:
             state_vec= (num.random.random((1,self.n_nodes))< 0.5)
         self.state=num.array(state_vec)
-        self.score = 0
-        self.scorer = score
         self.function = function
     
     def __str__(self):

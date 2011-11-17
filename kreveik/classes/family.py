@@ -41,7 +41,7 @@ class Family(classes.ProbeableObj,classes.Ensemble):
         return network in self.network_list
         
     
-    def add_to_family(self, network):
+    def add(self, network):
         '''
         This method will add a network to the specified family.
         network -> The network that is to be appended to the family.
@@ -60,7 +60,7 @@ class Family(classes.ProbeableObj,classes.Ensemble):
         plt.plot(self.scores)
         plt.show()
     
-    def populate_equilibria_in_family(self):
+    def populate_equilibria(self):
         '''
         If the family has individuals, it goes to each individual and finds the equilibria 
         for all possible initial conditions they may face. The orbits and scores are 
@@ -73,11 +73,11 @@ class Family(classes.ProbeableObj,classes.Ensemble):
             
         self.scores = num.zeros(len(self.network_list))
         
-        for id,network in enumerate(self.network_list): 
-            logging.info("("+str(id+1)+"/"+str(len(self.network_list))
+        for counter,network in enumerate(self.network_list): 
+            logging.info("("+str(counter+1)+"/"+str(len(self.network_list))
                          +") Populating equilibrium for: "+str(network))
             network.populate_equilibria()
-            self.scores[id] = network.score
+            self.scores[counter] = network.score
         self.populate_probes(probes.populate_equilibria_in_family)
             
 

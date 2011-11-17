@@ -2,7 +2,6 @@
 Probable Class definition
 """
 import numpy as num
-import time
 import logging
 
 class ProbeableObj (object):

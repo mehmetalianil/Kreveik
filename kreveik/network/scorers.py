@@ -3,10 +3,10 @@ This module contains different scorer functions that have a
 single network as input and outputs its score accordingly.
 """
 
-print_enable = True
 import numpy as num
+import genetic
 
-def sum_scorer(network):
+def sum_scorer_f(network):
     """
     This function takes a network object and returns its score 
     computed by summing the lengths of orbits for every single 
@@ -15,7 +15,9 @@ def sum_scorer(network):
     """
     return sum(network.equilibria)/(2.0**(2*network.n_nodes))
 
-def orbit_length_sum(network):
+sum_scorer = genetic.Scorer(sum_scorer_f)
+
+def orbit_length_sum_f(network):
     """
     This function takes a network object and and returns its 
     score computed by summing the lengths of genuine orbits.
@@ -34,3 +36,5 @@ def orbit_length_sum(network):
             genuine_orbits.append(orbit)
             genuine_orbit_lengths.append(orbit_length)
     return sum(genuine_orbit_lengths)
+
+orbit_length_sum = genetic.Scorer(orbit_length_sum_f)
