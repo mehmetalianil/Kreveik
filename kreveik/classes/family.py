@@ -1,18 +1,14 @@
 """
 Definition of the family class
 """
-
-from baseclasses import *
-from network import *
 import numpy as num
 import matplotlib.pyplot as plt
-import copy
-from ..probes import *
-import itertools
 import logging
+import classes
+import probes
 
 
-class Family(ProbeableObj,Ensemble):
+class Family(classes.ProbeableObj,classes.Ensemble):
     '''
     Family Class.
     A class that will have a single family of networks, a genetic algorithm 
@@ -22,8 +18,8 @@ class Family(ProbeableObj,Ensemble):
     '''
     
     def __init__ (self):
-        ProbeableObj.__init__(self)
-        Ensemble.__init__(self)
+        classes.ProbeableObj.__init__(self)
+        classes.Ensemble.__init__(self)
         self.network_list = []
         self.wildtype_list = [] 
         self.scores = num.array([])

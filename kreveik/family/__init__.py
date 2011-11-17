@@ -1,6 +1,11 @@
 import numpy as num
 import itertools
 import logging
+import classes
+
+ 
+__all__ = ['killers']
+
 
 def motif_freqs(family,degree):
     """
@@ -19,7 +24,7 @@ def motif_freqs(family,degree):
                 for (second_ctr,second_node) in enumerate(list(combination)):
                     this_motif_adj[first_ctr][second_ctr] = network.adjacency[first_node][second_node]
             
-            this_motif = Motif(this_motif_adj)
+            this_motif = classes.Motif(this_motif_adj)
 
             if this_motif.is_connected():                
                 truth = [this_motif == old_motif for old_motif in motif_list]

@@ -1,1 +1,2 @@
+Check Github page for Changes per commit.
 v0.05dev, 14.09.11 -- Initial release.

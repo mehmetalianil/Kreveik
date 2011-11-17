@@ -1,8 +1,5 @@
 import numpy as num
-import matplotlib.pyplot as plt
-import copy
-import networkx as nx
-from ..classes import *
+import classes
 import logging
 
 print_enable=True
@@ -27,7 +24,7 @@ def generate_random(n_nodes,scorer,function,probability=(0.5,0.5,0.5)):
     bool_fcn=(num.random.random((n_nodes,n_nodes))<probability[2])
 
     try:
-        return Network(adjacency_matrix, bool_fcn, scorer,function,state_vec=state)
+        return classes.Network(adjacency_matrix, bool_fcn, scorer,function,state_vec=state)
         
     except ValueError,e:
         z = e

@@ -1,18 +1,8 @@
 import numpy as num
 import itertools
-from mutator import *
+import classes
 import logging
 
-def score(network,scorer=None):
-    """
-    If a scorer is specified, the score of the network calculated with that
-    scorer is returned. 
-    If scorer is not set, then the network is scored implicitly,
-    """
-    if scorer == None:
-        network.score = network.scorer(network)
-    else
-        return scorer(network)
     
 def motif_freqs (network,degree):
         """
@@ -30,7 +20,7 @@ def motif_freqs (network,degree):
                 for (second_ctr,second_node) in enumerate(list(combination)):
                     this_motif_adj[first_ctr][second_ctr] = network.adjacency[first_node][second_node]
             
-            this_motif = Motif(this_motif_adj)
+            this_motif = classes.Motif(this_motif_adj)
 
             if this_motif.is_connected():                
                 truth = [this_motif == old_motif[0] for old_motif in motif_list]

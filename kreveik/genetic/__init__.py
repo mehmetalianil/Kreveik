@@ -1,7 +1,18 @@
-from ..probes import *
-import wildtype
+import probes
 import logging
 
+
+def score(element,scorer=None):
+    """
+    If a scorer is specified, the score of the element calculated with that
+    scorer is returned. 
+    If scorer is not set, then the element is scored with the scorer specified 
+    in its definition.
+    """
+    if scorer == None:
+        element.score = element.scorer(element)
+    else:
+        return scorer(element)
 
 class Mutator (object):
     """This is the class definition for the mutators. A mutating function must be given as an

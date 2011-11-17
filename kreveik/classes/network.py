@@ -2,26 +2,30 @@
 Definition of network object.
 """
 
-from baseclasses import *
+import classes
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
-from ..probes import *
 import itertools 
 import logging
+import probes
 
-print_enable=True
-debug = False
-
-class TopologicalNetwork(ProbeableObj):
+class TopologicalNetwork(classes.ProbeableObj):
     """
     This object is a stripped down network, designated to be a core 
     object for all network-like objects, like sub-graphs and motifs.
     """
     def __init__ (self,adjacency_matrix):
-        ProbeableObj.__init__(self)
-        Element.__init__(self)
+        classes.ProbeableObj.__init__(self)
+        classes.Element.__init__(self)
         self.adjacency = adjacency_matrix
+    
+            
+    def indegree(self):
+        return self.adjacency.sum(axis=0)
+    
+    def outdegree(self):
+        return self.adjacency.sum(axis=1)
         
     def is_connected(self):
         """
@@ -61,7 +65,7 @@ class Motif(TopologicalNetwork):
     Motif
     """
     def __init__(self, adjacency_matrix):
-        TopologicalNetwork.__init__(self, adjacency_matrix)
+        classes.TopologicalNetwork.__init__(self, adjacency_matrix)
         self.degree = len(adjacency_matrix)
     
     def __eq__(self,other):
@@ -94,7 +98,7 @@ class Network(TopologicalNetwork):
         state_vec  
     '''
     def __init__ (self,adjacency_matrix,mask,score,function,state_vec=None):
-        TopologicalNetwork.__init__(self,adjacency_matrix)
+        classes.TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
         if state_vec == None:
@@ -305,11 +309,6 @@ class Network(TopologicalNetwork):
         
         self.score = self.scorer(self)
         self.populate_probes(probes.populate_equilibria)
-        
-    def indegree(self):
-        return self.adjacency.sum(axis=0)
-    
-    def outdegree(self):
-        return self.adjacency.sum(axis=1)
+
     
 
