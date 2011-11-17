@@ -40,7 +40,12 @@ class Family(classes.ProbeableObj,classes.Ensemble):
         """
         return network in self.network_list
         
+    def __len__ (self):
+        return len(self.network_list)
     
+    def remove(self,n):
+        self.network_list = num.delete(self.network_list, n)
+        
     def add(self, network):
         '''
         This method will add a network to the specified family.

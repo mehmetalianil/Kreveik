@@ -15,7 +15,6 @@ def sum_scorer_f(network):
     """
     return sum(network.equilibria)/(2.0**(2*network.n_nodes))
 
-sum_scorer = genetic.Scorer(sum_scorer_f)
 
 def orbit_length_sum_f(network):
     """
@@ -37,4 +36,3 @@ def orbit_length_sum_f(network):
             genuine_orbit_lengths.append(orbit_length)
     return sum(genuine_orbit_lengths)
 
-orbit_length_sum = genetic.Scorer(orbit_length_sum_f)

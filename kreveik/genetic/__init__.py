@@ -28,10 +28,11 @@ class Selector (object):
     """This is the class definition for the selector of the genetic iteration
     The selecting function must be supplied as an input.
     """
-    def __init__ (self,function):
+    def __init__ (self,function,**kwargs):
         self.selection = function
+        self.kwargs = kwargs
     def __call__ (self,element):
-        self.selection(element)  
+        self.selection(element,self.kwargs)  
 
 class Killer (object):
     """This is the base class definition for the killer. A killing function must be supplied, which
