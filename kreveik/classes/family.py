@@ -11,8 +11,6 @@ from ..probes import *
 import itertools
 import logging
 
-verbose=True
-debug=False
 
 class Family(ProbeableObj,Ensemble):
     '''

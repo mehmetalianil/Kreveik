@@ -1,4 +1,3 @@
-verbose=True
 from ..probes import *
 import wildtype
 import logging
