@@ -1,3 +1,7 @@
+import numpy as num
+import itertools
+import logging
+
 def motif_freqs(family,degree):
     """
     Returns a list of motifs of the family.
@@ -6,8 +10,8 @@ def motif_freqs(family,degree):
     
     for (enum,network) in enumerate(family.network_list):
         all_combinations = itertools.combinations(range(len(network.adjacency)),degree)
-        if verbose:
-            print "Extracting motifs of Network #"+str(enum)+" of "+str(len(family.network_list))
+    
+        logging.info("Extracting motifs of Network #"+str(enum)+" of "+str(len(family.network_list)))
         for combination in all_combinations:
         
             this_motif_adj = num.zeros((degree,degree))
@@ -25,7 +29,7 @@ def motif_freqs(family,degree):
                 elif (all(truth) == False) or (len(truth)==0):
                     motif_list.append(this_motif)
                 else:
-                    print "There has been a problem while extracting Motifs"
-                    break
+                    logging.error("There has been a problem while extracting Motifs")
+                    raise RuntimeError
             
     return motif_list

@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import copy
 import networkx as nx
 from ..classes import *
+import logging
 
 print_enable=True
 

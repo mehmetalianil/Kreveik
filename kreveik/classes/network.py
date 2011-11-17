@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import copy
 from ..probes import *
 import itertools 
+import logging
 
 print_enable=True
 debug = False
@@ -19,6 +20,7 @@ class TopologicalNetwork(ProbeableObj):
     """
     def __init__ (self,adjacency_matrix):
         ProbeableObj.__init__(self)
+        Element.__init__(self)
         self.adjacency = adjacency_matrix
         
     def is_connected(self):
@@ -51,7 +53,7 @@ class TopologicalNetwork(ProbeableObj):
             filehandler = open(filename+".net", 'w')
             pickle.dump(self,filehandler) 
         except pickle.PickleError:
-            print "The object failed to be pickled."
+            logging.error("The object failed to be pickled.")
             
 
 class Motif(TopologicalNetwork):

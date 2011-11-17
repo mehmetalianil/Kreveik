@@ -9,11 +9,12 @@ import matplotlib.pyplot as plt
 import copy
 from ..probes import *
 import itertools
+import logging
 
 verbose=True
 debug=False
 
-class Family(ProbeableObj):
+class Family(ProbeableObj,Ensemble):
     '''
     Family Class.
     A class that will have a single family of networks, a genetic algorithm 
@@ -24,6 +25,7 @@ class Family(ProbeableObj):
     
     def __init__ (self):
         ProbeableObj.__init__(self)
+        Ensemble.__init__(self)
         self.network_list = []
         self.wildtype_list = [] 
         self.scores = num.array([])
@@ -52,8 +54,8 @@ class Family(ProbeableObj):
         '''
         
         if network in self.network_list:
-            print "The network that you're trying to add to the family is already a member."
-            print "Please clone the individual and append the clone."
+            logging.warning("The network that you're trying to add to the family is already a member.\
+            Please clone the individual and append the clone.")
             return False
         
         self.network_list.append(network)
@@ -72,15 +74,14 @@ class Family(ProbeableObj):
         '''
         
         if len(self.network_list) == 0:
-            print "Warning: There is nobody in this family."
-            print "Please adopt individuals."
+            logging.warning("Warning: There is nobody in this family.Please adopt individuals.")
             return False
             
         self.scores = num.zeros(len(self.network_list))
         
         for id,network in enumerate(self.network_list): 
-            if verbose:
-                print "("+str(id+1)+"/"+str(len(self.network_list))+") Populating equilibrium for: "+str(network)
+            logging.info("("+str(id+1)+"/"+str(len(self.network_list))
+                         +") Populating equilibrium for: "+str(network))
             network.populate_equilibria()
             self.scores[id] = network.score
         self.populate_probes(probes.populate_equilibria_in_family)

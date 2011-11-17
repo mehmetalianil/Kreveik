@@ -13,6 +13,7 @@ __status__ = "Production"
         
 import numpy as num
 import boolfuncs_c
+import logging
 
 def xor_masking(network,state):
     """
@@ -42,9 +43,9 @@ def xor_masking(network,state):
     try:
         return newstate
     except:
-        print "XOR masking failed in network"
-        print "Printing id:"
-        print id(network)
+        logging.error("XOR masking failed in network")
+        logging.error("Printing id:")
+        logging.error(id(network))
         return False
 
 
@@ -65,9 +66,9 @@ def and_masking(network,state):
     try:
         return newstate
     except:
-        print "AND masking failed in network"
-        print "Printing id:"
-        network.print_id()
+        logging.error("AND masking failed in network")
+        logging.error("Printing id:")
+        logging.error(id(network))
         return False
     
 def or_masking(network,state):
@@ -85,19 +86,21 @@ def or_masking(network,state):
     try:
         return newstate
     except:
-        print "OR masking failed in network"
-        print "Printing id:"
-        network.print_id()
+        logging.error("OR masking failed in network")
+        logging.error("Printing id:")
+        logging.error(id(network))
         return False
 
 def xor_masking_C(network,state):
 
     newstate = boolfuncs_c.xor_masking_c(network.adjacency,network.mask,state)
     return newstate
+
 def or_masking_C(network,state):
 
     newstate = boolfuncs_c.or_masking_c(network.adjacency,network.mask,state)
     return newstate
+
 def and_masking_C(network,state):
 
     newstate = boolfuncs_c.and_masking_c(network.adjacency,network.mask,state)

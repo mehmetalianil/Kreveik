@@ -1,6 +1,7 @@
 import numpy as num
 import itertools
 from mutator import *
+import logging
 
 def score(network,scorer=None):
     """
@@ -22,8 +23,7 @@ def motif_freqs (network,degree):
         motif_list = []
         
         for combination in all_combinations:
-            if debug: 
-                print "Motif Permutation:"+str(list(combination))
+            logging.info("Motif Permutation:"+str(list(combination)))
             
             this_motif_adj = num.zeros((degree,degree))
             for (first_ctr,first_node) in enumerate(list(combination)):
@@ -40,7 +40,7 @@ def motif_freqs (network,degree):
                 elif (all(truth) == False) or (len(truth)==0):
                     motif_list.append((this_motif,1))
                 else:
-                    print "There has been a problem while extracting Motifs"
+                    logging.error("There has been a problem while extracting Motifs")
                     break
             
         return motif_list

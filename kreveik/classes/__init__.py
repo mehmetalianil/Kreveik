@@ -12,7 +12,6 @@ algorithm and how networks evolve accordingly.
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
-import networkx as nx
 
 print_enable=True
 
