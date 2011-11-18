@@ -210,13 +210,10 @@ class Network(TopologicalNetwork,Element):
 
 
     def plot_equilibria(self):
-        
-        # Take the state vector, convert the list of arrays into a 2d array, then show it as an image
-        # Black and white. 
-        
-        # Future Modification 
-        # May show a 'color' based on the whole state vector, easier for us to see states. 
-        
+        """Creates a plot of the equilibria for all possible initial conditions
+        in the phase space. Every point in the phase space corresponds to the 
+        length of the orbit that initial condition is attracted to.
+        """
         rowsandcols = 2**(len(self.adjacency)/2)
         if self.n_nodes % 2 == 0:
             im_matrix = self.equilibria.reshape((rowsandcols,rowsandcols))
