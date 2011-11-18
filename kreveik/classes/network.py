@@ -2,22 +2,22 @@
 Definition of network object.
 """
 
-import classes
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
 import itertools 
 import logging
-import probes
+from kreveik.classes import *
 
-class TopologicalNetwork(classes.ProbeableObj,classes.Element):
+
+class TopologicalNetwork(ProbeableObj,Element):
     """
     This object is a stripped down network, designated to be a core 
     object for all network-like objects, like sub-graphs and motifs.
     """
     def __init__ (self,adjacency_matrix):
-        classes.ProbeableObj.__init__(self)
-        classes.Element.__init__(self)
+        ProbeableObj.__init__(self)
+        Element.__init__(self)
         self.adjacency = adjacency_matrix
     
             
@@ -65,7 +65,7 @@ class Motif(TopologicalNetwork):
     Motif is a 
     """
     def __init__(self, adjacency_matrix):
-        classes.TopologicalNetwork.__init__(self, adjacency_matrix)
+        TopologicalNetwork.__init__(self, adjacency_matrix)
         self.degree = len(adjacency_matrix)
     
     def __eq__(self,other):
@@ -98,7 +98,7 @@ class Network(TopologicalNetwork):
         state_vec  
     '''
     def __init__ (self,adjacency_matrix,mask,function,state_vec=None):
-        classes.TopologicalNetwork.__init__(self,adjacency_matrix)
+        TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
         if state_vec == None:

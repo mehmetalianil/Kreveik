@@ -1,4 +1,4 @@
-import probes
+import kreveik.probes as probes
 import logging
 
 
@@ -63,7 +63,7 @@ def genetic_iteration(ensemble):
         or (ensemble.mutator == None) or (ensemble.killer == None)):
         raise ValueError("An element needs its scorer, killer, selector and mutator \
         defined in order to be fed into the GA")
-        break
+        return False
     
     killcount = 0 
     for element in ensemble:

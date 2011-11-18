@@ -1,7 +1,7 @@
 import numpy as num
 import itertools
 import logging
-import classes
+import kreveik.classes as classes
 
  
 __all__ = ['killers']

@@ -1,6 +1,6 @@
 import numpy as num
 import itertools
-import classes
+import kreveik.classes as classes
 import logging
 
     

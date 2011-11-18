@@ -4,8 +4,7 @@ single network as input and outputs its score accordingly.
 """
 
 import numpy as num
-import genetic
-
+ 
 def sum_scorer_f(network):
     """
     This function takes a network object and returns its score 

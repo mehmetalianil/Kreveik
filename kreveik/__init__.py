@@ -1,3 +1,4 @@
+import classes
 import numpy as num
 import matplotlib.pyplot as plt
 import network
@@ -5,7 +6,5 @@ import probes
 import copy
 import genetic
 import family
-import classes
 
-    
-
+__all__ = ['classes','family','genetic','network','probes']
