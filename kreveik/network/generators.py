@@ -1,10 +1,8 @@
 import numpy as num
-import classes
+from kreveik.classes import Network
 import logging
 
-print_enable=True
-
-def generate_random(n_nodes,scorer,function,probability=(0.5,0.5,0.5)):
+def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5)):
     '''
     Generates and returns a random network with a random initial conditions.
     The adjacency matrix, initial state, boolean function are populated with 
@@ -24,7 +22,7 @@ def generate_random(n_nodes,scorer,function,probability=(0.5,0.5,0.5)):
     bool_fcn=(num.random.random((n_nodes,n_nodes))<probability[2])
 
     try:
-        return classes.Network(adjacency_matrix, bool_fcn, scorer,function,state_vec=state)
+        return Network(adjacency_matrix, bool_fcn, function, scorerfunc,state_vec=state)
         
     except ValueError,e:
         z = e

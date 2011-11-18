@@ -8,16 +8,16 @@ import copy
 import itertools 
 import logging
 from kreveik.classes import *
+import kreveik.probes as probes
 
 
-class TopologicalNetwork(ProbeableObj,Element):
+class TopologicalNetwork(ProbeableObj):
     """
     This object is a stripped down network, designated to be a core 
     object for all network-like objects, like sub-graphs and motifs.
     """
     def __init__ (self,adjacency_matrix):
         ProbeableObj.__init__(self)
-        Element.__init__(self)
         self.adjacency = adjacency_matrix
     
             
@@ -37,9 +37,9 @@ class TopologicalNetwork(ProbeableObj,Element):
             return False
         symmetric = self.adjacency+self.adjacency.T-num.diag(
                                  self.adjacency.diagonal())
-        degrees = symmetric.sum(axis=0)
+        degrees = num.diagflat(symmetric.sum(axis=0))
         laplacian = degrees-symmetric
-        determinant = num.linalg.det(num.ones((len(laplacian),len(laplacian) )))
+        determinant = num.linalg.det(laplacian +num.ones((len(laplacian),len(laplacian) )))
         return not(determinant == 0)
     
     def copy(self):
@@ -88,7 +88,7 @@ class Motif(TopologicalNetwork):
         return False    
 
 
-class Network(TopologicalNetwork):
+class Network(TopologicalNetwork,Element):
     '''
     Network Class
     
@@ -97,7 +97,8 @@ class Network(TopologicalNetwork):
         mask
         state_vec  
     '''
-    def __init__ (self,adjacency_matrix,mask,function,state_vec=None):
+    def __init__ (self,adjacency_matrix,mask,function,scorerfunc,state_vec=None):
+        Element.__init__(self,scorerfunc)
         TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
@@ -163,7 +164,7 @@ class Network(TopologicalNetwork):
         self.search_equilibrium(2**self.n_nodes,state,orbit_extraction=False,def_advance=1)
         
         
-    def advance(self,times,starter_state=None,*args):
+    def advance(self,times,start_from=None,*args):
         '''
         Advances the state in the phase space a given number of times.
         If a starter state is given, the initial condition is taken as the given state.
@@ -173,15 +174,11 @@ class Network(TopologicalNetwork):
             starter_state -> the initial state to be used
         '''
         
-        if starter_state == None:
-            starter_state = self.state[-1]
-        
-        if "reset" in args:
-            self.set_state(starter_state)
-            
+        if start_from != None:
+            self.set_set(start_from)
         
         for counter in xrange(times):
-            newstate = self.function(self,starter_state)
+            newstate = self.function(self,self.state[-1])
             self.state = num.append(self.state,[newstate],axis=0)
             
         self.populate_probes(probes.advance)
@@ -220,17 +217,12 @@ class Network(TopologicalNetwork):
         # Future Modification 
         # May show a 'color' based on the whole state vector, easier for us to see states. 
         
+        rowsandcols = 2**(len(self.adjacency)/2)
         if self.n_nodes % 2 == 0:
-            jumper = 2**(self.n_nodes/2)
-            im_matrix = num.zeros((jumper,jumper))
-            for ctr,offset in enumerate(num.multiply(range(jumper,jumper))):
-                im_matrix[ctr,:] = self.equilibria[offset:jumper+offset]
+            im_matrix = self.equilibria.reshape((rowsandcols,rowsandcols))
         
         if self.n_nodes % 2 == 1:
-            jumper = 2**(self.n_nodes/2+1)
-            im_matrix = num.zeros((jumper/2,jumper))
-            for ctr,offset in enumerate(num.multiply(range(jumper/2),jumper)):
-                im_matrix[ctr,:] = self.equilibria[offset:jumper+offset]
+            im_matrix = self.equilibria.reshape((rowsandcols,rowsandcols*2))
     
         plt.imshow(im_matrix,cmap=plt.cm.gray,interpolation='nearest')
         

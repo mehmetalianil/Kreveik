@@ -12,7 +12,7 @@ import logging
 def hard_threshold(network,**kwargs):
     if not ( kwargs['threshold'] ):
         logging.error("The hard_threshold Selector needs a threshold parameter to work.")
-        break
+        return None
     if network.score < kwargs['threshold']:
         return True
     else:
@@ -21,7 +21,7 @@ def hard_threshold(network,**kwargs):
 def logistic(network,**kwargs):
     if not ( kwargs['angle'] ) or not(kwargs['midpoint']):
         logging.error("The logistic Selector needs angle and midpoint parameters to work.")
-        break
+        return None
     angle = kwargs['angle']
     midpoint = kwargs['midpoint']
     prob = 1-(1/(1+math.exp(-angle*(network.score-midpoint))))

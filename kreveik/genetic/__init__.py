@@ -1,4 +1,3 @@
-import kreveik.probes as probes
 import logging
 
 
