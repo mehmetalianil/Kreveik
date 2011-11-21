@@ -11,6 +11,8 @@ import probes
 import copy
 import genetic
 import family
+import logging
+logging.basicConfig(level=logging.INFO)
 
 __all__ = ['classes','family','genetic','network','probes']
 

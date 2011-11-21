@@ -10,7 +10,7 @@ import kreveik.genetic as genetic
 import logging
 
 def hard_threshold(network,**kwargs):
-    if not ( kwargs['threshold'] ):
+    if not('threshold' in  kwargs):
         logging.error("The hard_threshold Selector needs a threshold parameter to work.")
         return None
     if network.score < kwargs['threshold']:
@@ -19,7 +19,7 @@ def hard_threshold(network,**kwargs):
         return False
     
 def logistic(network,**kwargs):
-    if not ( kwargs['angle'] ) or not(kwargs['midpoint']):
+    if not ('angle' in kwargs) or not('midpoint' in kwargs):
         logging.error("The logistic Selector needs angle and midpoint parameters to work.")
         return None
     angle = kwargs['angle']

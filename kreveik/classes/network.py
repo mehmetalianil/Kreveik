@@ -19,13 +19,39 @@ class TopologicalNetwork(ProbeableObj):
     def __init__ (self,adjacency_matrix):
         ProbeableObj.__init__(self)
         self.adjacency = adjacency_matrix
+        self.code = str(len(adjacency_matrix))+"-"+str(reduce(lambda x,y : 2*x+y, 
+                                                              adjacency_matrix.flatten()*1))
     
-            
     def indegree(self):
         return self.adjacency.sum(axis=0)
     
     def outdegree(self):
         return self.adjacency.sum(axis=1)
+    
+    def graph(self):
+        """Returns a pydot graph object.    
+        """
+        import pydot
+        
+        node_orig = 1
+    
+        graph = pydot.Dot(graph_type='digraph')
+
+        for row in self.adjacency:
+            skip = 0
+            r = row
+            node_dest = skip+1
+    
+            for e in r:
+                if e:
+                    graph.add_edge(
+                        pydot.Edge( node_orig, node_dest) )
+                node_dest += 1
+            node_orig += 1
+    
+        return graph
+
+        
         
     def is_connected(self):
         """
@@ -33,10 +59,10 @@ class TopologicalNetwork(ProbeableObj):
         uses the algorithm explained in 
         http://keithbriggs.info/documents/graph-eigenvalues.pdf
         """
-        if (0 in self.adjacency.sum(axis=0) or 0 in self.adjacency.sum(axis=1)):
-            return False
         symmetric = self.adjacency+self.adjacency.T-num.diag(
                                  self.adjacency.diagonal())
+        if (0 in symmetric.sum(axis=0) or 0 in symmetric.sum(axis=1)):
+            return False
         degrees = num.diagflat(symmetric.sum(axis=0))
         laplacian = degrees-symmetric
         determinant = num.linalg.det(laplacian +num.ones((len(laplacian),len(laplacian) )))
@@ -58,6 +84,7 @@ class TopologicalNetwork(ProbeableObj):
             pickle.dump(self,filehandler) 
         except pickle.PickleError:
             logging.error("The object failed to be pickled.")
+
             
 
 class Motif(TopologicalNetwork):
@@ -108,6 +135,9 @@ class Network(TopologicalNetwork,Element):
         self.function = function
     
     def __str__(self):
+        return self.code
+        
+    def info(self):
         '''
         Prints out an identification of the Network.
         Prints:

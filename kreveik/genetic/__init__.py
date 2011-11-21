@@ -52,7 +52,7 @@ class Scorer (object):
         self.scoring(element)
         
 
-def genetic_iteration(ensemble):
+def genetic_iteration(ensemble,**kwargs):
     '''
     Runs one iteration of the genetic algorithm.
     It finds wildtypes of the family, mutates them, populates the family with mutants
@@ -71,11 +71,11 @@ def genetic_iteration(ensemble):
         except: 
             logging.error("The scoring of the element failed.")
             
-        if ensemble.selector(element):
+        if ensemble.selector(element,kwargs):
             ensemble.add(ensemble.mutator(element))
             killcount =+ 1
     
-    ensemble.killer(killcount)
+    ensemble.killer(ensemble,killcount)
         
 
 

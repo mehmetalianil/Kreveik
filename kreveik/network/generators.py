@@ -15,6 +15,7 @@ def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5)):
     A smaller value will decrease complexity and clustering coefficient.  
     scorer -> a function for the type network
     '''
+    logging.info("Generating one network of node count "+str(n_nodes))
     num.random.seed()
     adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])
     #    First state of the system is determined
