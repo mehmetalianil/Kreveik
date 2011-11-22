@@ -2,7 +2,7 @@ import numpy as num
 from kreveik.classes import Network
 import logging
 
-def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5)):
+def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5),connected=False):
     '''
     Generates and returns a random network with a random initial conditions.
     The adjacency matrix, initial state, boolean function are populated with 
@@ -16,18 +16,44 @@ def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5)):
     scorer -> a function for the type network
     '''
     logging.info("Generating one network of node count "+str(n_nodes))
+    
+    
     num.random.seed()
     adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])
-    #    First state of the system is determined
     state=(num.random.random((1,n_nodes))<probability[1])
     bool_fcn=(num.random.random((n_nodes,n_nodes))<probability[2])
-
-    try:
-        return Network(adjacency_matrix, bool_fcn, function, scorerfunc,state_vec=state)
-        
-    except ValueError,e:
-        z = e
-        print "Network is too big to model."
-        print z
+    new_network = Network(adjacency_matrix, bool_fcn, function, scorerfunc,state_vec=state)
     
+    if connected==False:
+        try:
+            return new_network
+        
+        except ValueError,e:
+            z = e
+            logging.error("Network is too big to model.")
+            print z
+    elif new_network.is_connected():
+        try:
+            return new_network
+        
+        except ValueError,e:
+            z = e
+            logging.error("Network is too big to model.")
+            print z
+    else:
+        while not new_network.is_connected():
+            num.random.seed()
+            adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])
+            state=(num.random.random((1,n_nodes))<probability[1])
+            bool_fcn=(num.random.random((n_nodes,n_nodes))<probability[2])
+            new_network = Network(adjacency_matrix, bool_fcn, function, scorerfunc,state_vec=state)
+        
+        try:
+            return new_network
+        except ValueError,e:
+            z = e
+            logging.error("Network is too big to model.")
+            print z
+         
+        
     return 

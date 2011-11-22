@@ -44,8 +44,8 @@ class Family(ProbeableObj,Ensemble):
         return len(self.network_list)
     
     def remove(self,n):
-        self.network_list = num.delete(self.network_list, n)
-        
+        self.network_list = num.delete(self.network_list, n).tolist()
+                
     def add(self, network):
         '''
         This method will add a network to the specified family.

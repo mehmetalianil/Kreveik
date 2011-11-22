@@ -5,7 +5,7 @@ import kreveik.classes as classes
 import killer
 
 
-def motif_freqs(family,degree,**kwargs):
+def motif_freqs(family,degree, sorted=False, **kwargs):
     """
     Returns a list of motifs of the family.
     """
@@ -20,4 +20,7 @@ def motif_freqs(family,degree,**kwargs):
     
     for networkf in family:
         allmotifs = network.motif_freqs(networkf, degree, motiflist=allmotifs)
-    return  sorted (allmotifs, key = lambda allmotifs:allmotifs[1] , reverse = True)
+    if sorted:
+        return  sorted (allmotifs, key = lambda allmotifs:allmotifs[1] , reverse = True)
+    else:
+        return allmotifs

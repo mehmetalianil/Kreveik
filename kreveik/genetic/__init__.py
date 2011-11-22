@@ -64,18 +64,28 @@ def genetic_iteration(ensemble,**kwargs):
         defined in order to be fed into the GA")
         return False
     
+    logging.info("GA for ensemble "+str(ensemble)+" started.")
     killcount = 0 
+    
+    newcomer_list = []
     for element in ensemble:
         try:
-            ensemble.scorer(element)
+            element.score = ensemble.scorer(element)
         except: 
             logging.error("The scoring of the element failed.")
             
-        if ensemble.selector(element,kwargs):
-            ensemble.add(ensemble.mutator(element))
+        if ensemble.selector(element,**kwargs):
+            newcomer = element.copy()
+            ensemble.mutator(newcomer)
+            newcomer_list.append(newcomer)
             killcount =+ 1
+    for individual in newcomer_list:
+        ensemble.add(individual)
+        logging.info("New network added, "+str(individual)+".")
+        individual.populate_equilibria()
     
     ensemble.killer(ensemble,killcount)
+    
         
 
 

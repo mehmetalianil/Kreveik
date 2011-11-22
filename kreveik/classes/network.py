@@ -135,7 +135,7 @@ class Network(TopologicalNetwork,Element):
         self.function = function
     
     def __str__(self):
-        return self.code
+        return str(id(self))
         
     def info(self):
         '''
