@@ -6,8 +6,10 @@ import logging
 
 
 def random_killer(ensemble,times):
-    for i in xrange(times):
+    logging.info("Killing "+str(times)+" individuals")
+    for i in range(times):
         randomnum = num.random.randint(0,len(ensemble))
+        logging.info("("+str(i)+"/"+str(times)+") Killing "+str(ensemble))
         ensemble.remove(randomnum)
     
 def qualified_killer(ensemble,**kwargs):

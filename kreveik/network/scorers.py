@@ -12,6 +12,7 @@ def sum_scorer_f(network):
     possible initial condition. If initial conditions turn 
     out to have the same attractors, they are counted again.
     """
+    network.populate_equilibria()
     return sum(network.equilibria)/(2.0**(2*network.n_nodes))
 
 

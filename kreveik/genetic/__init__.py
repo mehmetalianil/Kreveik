@@ -78,7 +78,8 @@ def genetic_iteration(ensemble,**kwargs):
             newcomer = element.copy()
             ensemble.mutator(newcomer)
             newcomer_list.append(newcomer)
-            killcount =+ 1
+            killcount += 1
+            
     for individual in newcomer_list:
         ensemble.add(individual)
         logging.info("New network added, "+str(individual)+".")

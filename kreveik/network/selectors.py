@@ -14,6 +14,7 @@ def hard_threshold(network,**kwargs):
         logging.error("The hard_threshold Selector needs a threshold parameter to work.")
         return None
     if network.score < kwargs['threshold']:
+        logging.info("score = "+str(network.score)+" < "+str(kwargs['threshold'])+" = threshold.")
         return True
     else:
         return False
