@@ -15,9 +15,7 @@ def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5),connected=False
     A smaller value will decrease complexity and clustering coefficient.  
     scorer -> a function for the type network
     '''
-    logging.info("Generating one network of node count "+str(n_nodes))
-    
-    
+
     num.random.seed()
     adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])
     state=(num.random.random((1,n_nodes))<probability[1])
@@ -26,6 +24,7 @@ def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5),connected=False
     
     if connected==False:
         try:
+            logging.info("Generating one network of node count "+str(n_nodes))
             return new_network
         
         except ValueError,e:
@@ -34,6 +33,7 @@ def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5),connected=False
             print z
     elif new_network.is_connected():
         try:
+            logging.info("Generating one network of node count "+str(n_nodes))
             return new_network
         
         except ValueError,e:
@@ -49,6 +49,7 @@ def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5),connected=False
             new_network = Network(adjacency_matrix, bool_fcn, function, scorerfunc,state_vec=state)
         
         try:
+            logging.info("Generating one network of node count "+str(n_nodes))
             return new_network
         except ValueError,e:
             z = e

@@ -72,7 +72,7 @@ class TopologicalNetwork(ProbeableObj):
         """
         Returns a copy of the Topological Network object. 
         """
-        return copy.copy(self)
+        return copy.deepcopy(self)
     
     def save(self,filename):
         """

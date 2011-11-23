@@ -12,6 +12,7 @@ import boolfuncs
 def all_conn_motifs(nodes):
     """Returns a list of all connected motifs for a degree.
     """
+    logging.info("Returning all connected motifs with "+str(nodes)+" nodes")
     motiflist = []
     degree = nodes**2
     for number in xrange(2**degree):
@@ -36,12 +37,12 @@ def motif_freqs (network,degree,**kwargs):
     
     
     if 'motiflist' in kwargs:
-        motif_list = kwargs['motiflist']
+        allmotifs = kwargs['motiflist'][:]
+        motif_list = allmotifs[:]
     else:
         logging.info("Creating all possible motifs of node count "+str(degree)+".")
-        allmotifs = all_conn_motifs(degree)
-        motif_list = allmotifs
-    
+        motif_list = all_conn_motifs(degree)[:]
+        
     logging.info("Extracting motifs from all possible "+str(degree)+" node combinations of the network.")
     
     for combination in all_combinations:

@@ -85,8 +85,7 @@ def genetic_iteration(ensemble,**kwargs):
         logging.info("New network added, "+str(individual)+".")
         individual.populate_equilibria()
     
+
     ensemble.killer(ensemble,killcount)
-    
-        
 
 

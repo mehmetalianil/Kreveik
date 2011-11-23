@@ -16,6 +16,12 @@ def hard_threshold(network,**kwargs):
     if network.score < kwargs['threshold']:
         logging.info("score = "+str(network.score)+" < "+str(kwargs['threshold'])+" = threshold.")
         return True
+    elif network.score == kwargs['threshold']:
+        logging.info("score = "+str(network.score)+" = "+str(kwargs['threshold'])+" = threshold.")
+        if num.random.randint(0,2) == 1:
+            return True
+        else:
+            return False
     else:
         return False
     
