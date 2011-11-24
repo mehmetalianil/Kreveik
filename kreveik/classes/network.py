@@ -314,7 +314,7 @@ class Network(TopologicalNetwork,Element):
         Input Arguments:
             normalize -> normalizes the scores to the value given.
         '''
-  
+        
         self.equilibria = num.zeros(2**self.n_nodes)
         if orbit_extraction:
             self.orbits = num.array([None]*2**self.n_nodes)

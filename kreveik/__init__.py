@@ -11,6 +11,7 @@ import probes
 import copy
 import genetic
 import family
+import parallel
 import logging
 logging.basicConfig(level=logging.INFO)
 
