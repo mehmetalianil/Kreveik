@@ -23,22 +23,24 @@ def point_mutate_mask(network):
     random_j = num.random.randint(0, network.n_nodes)
     network.mask[random_i][random_j] = not(network.mask[random_i][random_j])
 
-def degree_preserving_mutation(network, max = 0, def_mutation = point_mutate_adj):
+def degree_preserving_mutation(network, maximum = 0, def_mutation = point_mutate_adj):
     """
     A mutation that preserves the degree of the network in concern.
     """
       
     adj = network.adjacency
-    if max == 0:
-        max = 10*len(adj)**2
+    if maximum == 0:
+        maximum = 10*len(adj)**2
         
     columns = adj.sum(axis=0)
     rows = adj.sum(axis=1)
     colsnotzero = num.where([item == 0 for item in columns],False)
     rowsnotzero = num.where([item == 0 for item in rows],False)
+    
     #if all columns are zero or all rows are zero we can't proceed
+    
     if len(colsnotzero) != 0 and len(rowsnotzero) != 0:
-        for i in xrange(max):
+        for cntr in xrange(maximum):
             randomrow = rowsnotzero(num.random.randint(len(colsnotzero)))
             randomcol = colsnotzero(num.random.randint(len(rowsnotzero)))
             boolean = adj[randomrow,randomcol]
