@@ -68,3 +68,50 @@ def motif_freqs (network,degree,**kwargs):
         
     logging.info("Extraction done!")
     return motif_list
+
+def local_clustering_in(network):
+    """
+    Returns the local clustering coefficient for input connections for every single node 
+    """
+    adj = network.adjacency*1-num.diagflat(num.diag(network.adjacency*1))
+    returned = num.zeros(len(adj))
+    for (counter,row) in enumerate(adj):
+        k = row.sum()
+        where = num.where(k)[0]
+        connections=0.0
+        for first in where:
+            for second in where:
+                if adj(first,second)==1 or adj(second,first)==1:
+                    connections += 1.0
+        returned[counter] = connections /((k)*(k+1))
+    return returned
+
+def local_clustering_out(network):
+    """
+    Returns the local clustering coefficient for output connections for every single node 
+    """
+    adj = num.transpose(network.adjacency*1-num.diagflat(num.diag(network.adjacency*1)))
+    returned = num.zeros(len(adj))
+    for (counter,row) in enumerate(adj):
+        k = row.sum()
+        where = num.where(k)[0]
+        connections=0.0
+        for first in where:
+            for second in where:
+                if adj(first,second)==1 or adj(second,first)==1:
+                    connections += 1.0
+        returned[counter] = connections /((k)*(k+1))
+    return returned
+
+def global_clustering_out(network):
+    """
+    Returns the global clustering coefficient for output connections for every single node 
+    """
+    local_clustering_out(network).mean()
+
+def global_clustering_in(network):
+    """
+    Returns the global clustering coefficient for input connections for every single node 
+    """
+    local_clustering_in(network).mean()
+                
