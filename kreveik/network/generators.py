@@ -56,5 +56,4 @@ def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5),connected=False
             logging.error("Network is too big to model.")
             print z
          
-        
-    return 
+    return new_network

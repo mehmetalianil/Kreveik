@@ -25,3 +25,9 @@ def motif_freqs(family,degree, sorting=False, **kwargs):
         return  sorted (returned_motifs, key = lambda returned_motifs:returned_motifs[1] , reverse = True)
     else:
         return returned_motifs
+
+def mean_connectivity(family):
+    """
+    The mean connectivity of a Family of networks is returned.
+    """
+    [network.network for network in family]
