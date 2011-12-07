@@ -31,6 +31,7 @@ def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5),connected=False
             z = e
             logging.error("Network is too big to model.")
             print z
+            
     elif new_network.is_connected():
         try:
             logging.info("Generating one network of node count "+str(n_nodes))
