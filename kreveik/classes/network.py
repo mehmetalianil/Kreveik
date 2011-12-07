@@ -19,8 +19,8 @@ class TopologicalNetwork(ProbeableObj):
     def __init__ (self,adjacency_matrix):
         ProbeableObj.__init__(self)
         self.adjacency = num.array(adjacency_matrix,dtype=bool)
-        self.code = str(len(adjacency_matrix))+"-"+str(reduce(lambda x,y : 2*x+y, 
-                                                              adjacency_matrix.flatten()*1))
+        self.code = str(len(self.adjacency))+"-"+str(reduce(lambda x,y : 2*x+y, 
+                                                              self.adjacency.flatten()*1))
     
     def indegree(self):
         return self.adjacency.sum(axis=0)
