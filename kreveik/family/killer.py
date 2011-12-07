@@ -4,7 +4,6 @@ import copy
 import itertools 
 import logging
 
-
 def random_killer(ensemble,times):
     logging.info("Killing "+str(times)+" individuals")
     for i in range(times):

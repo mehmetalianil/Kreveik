@@ -56,11 +56,11 @@ def motif_freqs (network,degree,**kwargs):
         this_motif = classes.Motif(this_motif_adj)
 
         if this_motif.is_connected():
-            truth = [this_motif == motif_vec[0]for motif_vec in motif_list]
+            truth = [this_motif == motif_vec[0] for motif_vec in motif_list]
             if (any(truth) == True):
                 index = truth.index(True)
                 motif_list[index][1] = motif_list[index][1]+1
-            elif (all(truth) == False) or (len(truth)==0):
+            elif (all(truth) == False):
                 motif_list.append([this_motif,1])
             else:
                 logging.error("There has been a problem while extracting Motifs")
