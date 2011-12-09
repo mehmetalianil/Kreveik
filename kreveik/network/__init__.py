@@ -46,7 +46,7 @@ def motif_freqs (network,degree,**kwargs):
     for combination in all_combinations:
         logging.debug("Motif Permutation:"+str(list(combination)))
         
-        this_motif_adj = num.zeros((degree,degree), dype = bool)
+        this_motif_adj = num.zeros((degree,degree), dtype = bool)
         for (first_ctr,first_node) in enumerate(list(combination)):
             for (second_ctr,second_node) in enumerate(list(combination)):
                 this_motif_adj[first_ctr][second_ctr] = network.adjacency[first_node][second_node]
