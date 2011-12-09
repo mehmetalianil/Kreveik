@@ -6,3 +6,5 @@
 /distribute_setup.py
 /.pydevproject
 /.project
+/examples
+/nodebox
