@@ -55,6 +55,7 @@ def motif_freqs (network,degree,**kwargs):
         logging.debug("Motif Adjacency:")
         print(str(this_motif_adj))
         
+        
         if this_motif.is_connected():
             truth = [this_motif == motif_vec[0] for motif_vec in motif_list]
             if (any(truth) == True):
