@@ -34,8 +34,6 @@ def motif_freqs (network,degree,**kwargs):
     logging.info("Extracting "+str(degree)+" motifs of network "+str(network))
     all_combinations = itertools.combinations(range(len(network.adjacency)),degree)
     
-    
-    
     if 'motiflist' in kwargs:
         allmotifs = kwargs['motiflist'][:]
         motif_list = allmotifs[:]
@@ -54,7 +52,9 @@ def motif_freqs (network,degree,**kwargs):
                 this_motif_adj[first_ctr][second_ctr] = network.adjacency[first_node][second_node]
         
         this_motif = classes.Motif(num.array(this_motif_adj, dtype=bool))
-
+        logging.debug("Motif Adjacency:")
+        print(str(this_motif_adj))
+        
         if this_motif.is_connected():
             truth = [this_motif == motif_vec[0] for motif_vec in motif_list]
             if (any(truth) == True):
