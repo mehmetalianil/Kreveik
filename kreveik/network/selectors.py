@@ -24,6 +24,28 @@ def hard_threshold(network,**kwargs):
             return False
     else:
         return False
+def hard_threshold_with_probability(network,**kwargs):
+    if not('threshold' in kwargs):
+        logging.error("The hard_threshold Selector needs a threshold parameter to work.")
+        return None
+    if not('prob' in kwargs):
+        logging.error("The hard_threshold Selector needs a prob parameter to work.")
+        return None
+    
+    if network.score < kwargs['threshold']:
+        logging.debug("score = "+str(network.score)+" < "+str(kwargs['threshold'])+" = threshold.")
+        if num.random.random() < kwargs['prob']:
+            return True
+        else:
+            return False
+    elif network.score == kwargs['threshold']:
+        logging.debug("score = "+str(network.score)+" = "+str(kwargs['threshold'])+" = threshold.")
+        if num.random.randint(0,2) == 1:
+            return True
+        else:
+            return False
+    else:
+        return False
     
 def logistic(network,**kwargs):
     if not ('angle' in kwargs) or not('midpoint' in kwargs):

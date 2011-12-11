@@ -1,48 +1,35 @@
-'''
-Created on Mar 8, 2011
-
-@author: Mehmet Ali Anil
-'''
-
-from kreveik import * 
+from kreveik import *
+import logging
 import numpy as num
-import matplotlib.pyplot as plt
-import copy
+logging.basicConfig(level=logging.INFO)
 
+# Create a family of 100 individuals with 10 nodes.
+petri = classes.Family()
+motiflist = []
+scores = []
+degrees = []
+allmotifs = network.all_conn_motifs(3)
 
-
-__author__ = "Mehmet Ali Anil"
-__copyright__ = ""
-__credits__ = ["Mehmet Ali Anil"]
-__license__ = ""
-__version__ = "0.0.5"
-__maintainer__ = "Mehmet Ali Anil"
-__email__ = "anilm@itu.edu.tr"
-__status__ = "Production"
-
-        
-if __name__ == '__main__':
-    
-    petri=[None]*101
-    scores=[None]*101
-    
-    for counter in xrange(101):
-        print "Family #" +str(counter)
-        petri[counter] = classes.Family()
-        prob = counter/100.0
-        for network_number in xrange(100):
-            petri[counter].add_to_family(classes.generate_random(7,
-        	                                    scorers.orbit_length_sum,
-        	                                    boolfuncs.xor_masking_C,
-        	                                    probability = (prob,0.5,0.5))) 
-    	                                    
-        petri[counter].populate_equilibria_in_family()
-        scores[counter] = [network.score for network in petri[counter].network_list]
-   
-    
+for i in xrange(200):
+    a = network.generators.random(7, network.boolfuncs.xor_masking_C,
+                                     network.scorers.orbit_length_sum_f,
+                                     probability=(0.2,0.5,0.5),
+                                     connected=True)
+    petri.add(a)
     
 
+petri.scorer = network.scorers.sum_scorer_f
+petri.selector = network.selectors.hard_threshold_with_probability
+petri.mutator = network.mutators.degree_preserving_mutation
+petri.killer = family.killer.random_killer
+
+
+for i in xrange(100):
+    print "("+str(i)+"/100)"
+    kwargs = {'motiflist':allmotifs[:],'prob':0.2,'threshold':0.01}
+    genetic.genetic_iteration(petri,**kwargs)
+    motiflist.append(family.motif_freqs(petri, 3, **kwargs))
+    scores.append(num.mean([network.score for network in petri]))
+    degrees.append(num.mean([element.outdegree() for element in petri]))
+    print [element.outdegree() for element in petri]
     
-    
-    
-        
