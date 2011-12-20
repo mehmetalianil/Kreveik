@@ -3,7 +3,6 @@ import logging
 import numpy as num
 logging.basicConfig(level=logging.INFO)
 
-# Create a family of 100 individuals with 10 nodes.
 petri = classes.Family()
 motiflist = []
 scores = []

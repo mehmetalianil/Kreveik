@@ -9,6 +9,7 @@ import itertools
 import logging
 from kreveik.classes import *
 import kreveik.probes as probes
+from kreveik import *
 
 
 class TopologicalNetwork(ProbeableObj):
@@ -98,20 +99,21 @@ class Motif(TopologicalNetwork):
     def __eq__(self,other):
         permutation_list = itertools.permutations(range(self.degree),self.degree)
         for permutation in permutation_list:
-            indegrees_match = [row_degree in other.adjacency.sum(axis=1) for 
-                             row_degree in self.adjacency.sum(axis=1)]
-            if not(all(indegrees_match)):
+            
+            if num.sum(self.indegree()) != num.sum(other.indegree()):
                 return False
-            outdegrees_match = [row_degree in other.adjacency.sum(axis=0) for 
-                             row_degree in self.adjacency.sum(axis=0)]
-            if not(all(outdegrees_match)):
-                return False
-            for (node_init,node_end) in enumerate(permutation):
-                newarray = self.adjacency.copy()
-                newarray[[node_init,node_end]] = newarray[[node_end,node_init]]
-                newarray[:,[node_init,node_end]] = newarray[:,[node_end,node_init]]
+
+            newarray = num.zeros((len(self.adjacency),len(self.adjacency)),dtype=bool)
+            #newarray[[node_init,node_end]] = newarray[[node_end,node_init]]
+            #newarray[:,[node_init,node_end]] = newarray[:,[node_end,node_init]]
+            for rowctr,row in enumerate(self.adjacency):
+                for colctr,col in enumerate(row):
+                    if col == True:
+                        newarray[permutation[rowctr]][permutation[colctr]]= True
+        
             if num.all(newarray == other.adjacency):
                 return True
+            
         return False    
 
 
