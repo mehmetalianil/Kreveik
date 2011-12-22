@@ -11,7 +11,7 @@ allmotifs = network.all_conn_motifs(3)
 
 for i in xrange(200):
     a = network.generators.random(7, network.boolfuncs.xor_masking_C,
-                                     network.scorers.orbit_length_sum_f,
+                                     network.scorers.sum_scorer_f,
                                      probability=(0.2,0.5,0.5),
                                      connected=True)
     petri.add(a)
