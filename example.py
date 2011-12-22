@@ -1,7 +1,6 @@
 from kreveik import *
 import logging
 import numpy as num
-import shelve
 logging.basicConfig(level=logging.INFO)
 
 petri = classes.Family()
@@ -26,18 +25,12 @@ petri.killer = family.killer.random_killer
     
 for i in xrange(100):
     for j in xrange(20):
-        print "("+str(i)+"/100)"
+        print "("+str(i)+"/100) ("+str(j)+"/20)"
         kwargs = {'motiflist':allmotifs[:],'prob':0.4,'threshold':0.2}
         genetic.genetic_iteration(petri,**kwargs)
         degrees.append(num.mean([element.outdegree() for element in petri]))
         scores.append(num.mean([network.score for network in petri]))
     motiflist.append(family.motif_freqs(petri, 3, **kwargs))
-    my_shelf = shelve.open("example"+str(i)+".dat")
-    my_shelf["petri"] = petri
-    my_shelf["degrees"] = degrees
-    my_shelf["scores"] = scores
-    my_shelf["motiflist"] = motiflist
-    my_shelf["allmotifs"] = allmotifs
-    my_shelf.close()
+
 
     
