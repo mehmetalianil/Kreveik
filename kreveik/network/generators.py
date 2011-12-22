@@ -2,7 +2,7 @@ import numpy as num
 from kreveik.classes import Network
 import logging
 
-def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5),connected=False):
+def random(n_nodes,function,probability=(0.5,0.5,0.5),connected=False):
     '''
     Generates and returns a random network with a random initial conditions.
     The adjacency matrix, initial state, boolean function are populated with 
@@ -47,7 +47,7 @@ def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5),connected=False
             adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])
             state=(num.random.random((1,n_nodes))<probability[1])
             bool_fcn=(num.random.random((n_nodes,n_nodes))<probability[2])
-            new_network = Network(adjacency_matrix, bool_fcn, function, scorerfunc,state_vec=state)
+            new_network = Network(adjacency_matrix, bool_fcn, function,state_vec=state)
         
         try:
             logging.info("Generating one network of node count "+str(n_nodes))
