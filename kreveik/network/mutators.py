@@ -51,16 +51,16 @@ def degree_preserving_mutation(network, maximum = 0, def_mutation = False):
             randomcolitem = colitemsnot[num.random.randint(len(colitemsnot))]
             
             if adj[randomrowitem][randomcolitem] == boolean:
-                logging.info("Degree preserving mutation From:")
-                logging.info(str(adj))
+                logging.debug("Degree preserving mutation From:")
+                logging.debug(str(adj))
                 
                 adj[randomrowitem,randomcolitem] = not(adj[randomrowitem,randomcolitem])
                 adj[randomcolitem,randomcol] = not(adj[randomcolitem,randomcol])
                 adj[randomrow,randomrowitem] = not(adj[randomrow,randomrowitem])
                 adj[randomrow,randomcol] = not(adj[randomrow,randomcol])
                 
-                logging.info("Degree preserving mutation:  To:")
-                logging.info(str(adj))
+                logging.debug("Degree preserving mutation:  To:")
+                logging.debug(str(adj))
                 return network
             
         logging.info("This network "+str(network)+"is unlikely to have a degree preserving\
