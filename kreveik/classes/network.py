@@ -325,8 +325,6 @@ class Network(TopologicalNetwork,Element):
   
         for state in binspace:
             self.search_equilibrium(2**self.n_nodes,state,orbit_extraction)  
-        
-        self.score = self.scorer(self)
         self.populate_probes(probes.populate_equilibria)
 
     

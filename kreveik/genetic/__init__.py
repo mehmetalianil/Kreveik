@@ -90,6 +90,7 @@ def genetic_iteration(ensemble,**kwargs):
         ensemble.add(individual)
         logging.info("New network added, "+str(individual)+".")
         individual.populate_equilibria()
+        individual.score = ensemble.scorer(individual)
     
     logging.info("GA: Killing...")
     ensemble.killer(ensemble,killcount)
