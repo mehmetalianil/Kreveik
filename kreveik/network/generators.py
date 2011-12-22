@@ -20,7 +20,7 @@ def random(n_nodes,function,scorerfunc,probability=(0.5,0.5,0.5),connected=False
     adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])
     state=(num.random.random((1,n_nodes))<probability[1])
     bool_fcn=(num.random.random((n_nodes,n_nodes))<probability[2])
-    new_network = Network(adjacency_matrix, bool_fcn, function, scorerfunc,state_vec=state)
+    new_network = Network(adjacency_matrix, bool_fcn, function, state_vec=state)
     
     if connected==False:
         try:

@@ -126,8 +126,8 @@ class Network(TopologicalNetwork,Element):
         mask
         state_vec  
     '''
-    def __init__ (self,adjacency_matrix,mask,function,scorerfunc,state_vec=None):
-        Element.__init__(self,scorerfunc)
+    def __init__ (self,adjacency_matrix,mask,function,state_vec=None):
+        Element.__init__(self)
         TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask

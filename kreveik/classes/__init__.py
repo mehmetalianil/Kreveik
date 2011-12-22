@@ -41,8 +41,7 @@ class Element(object):
     """Base class for all that are going to be used as individuals within an element in a Genetical 
     Algorithm
     """
-    def __init__(self,scorerfunc):
-        self.scorer = scorerfunc
+    def __init__(self):
         self.score = None
         self.mutated = 0
         self.parent = None
