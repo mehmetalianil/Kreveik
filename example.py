@@ -26,7 +26,7 @@ petri.killer = family.killer.random_killer
 for i in xrange(100):
     for j in xrange(20):
         print "("+str(i+1)+"/100) ("+str(j+1)+"/20)"
-        kwargs = {'motiflist':allmotifs[:],'prob':0.2,'threshold':0.01}
+        kwargs = {'motiflist':allmotifs[:],'prob':0.2,'threshold':1.28}
         genetic.genetic_iteration(petri,**kwargs)
         scores.append(num.mean([network.score for network in petri]))
         degrees.append(num.mean([element.outdegree() for element in petri]))
