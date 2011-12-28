@@ -13,7 +13,7 @@ def sum_scorer_f(network):
     out to have the same attractors, they are counted again.
     """
     network.populate_equilibria()
-    return sum(network.equilibria)/(2.0**(2*network.n_nodes))
+    return sum(network.equilibria)/(2.0**(network.n_nodes))
 
 
 def orbit_length_sum_f(network):
