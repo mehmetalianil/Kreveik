@@ -1,16 +1,16 @@
-from distribute_setup import use_setuptools
-use_setuptools()
+#from distribute_setup import use_setuptools
+#use_setuptools()
 
 from setuptools import setup, find_packages, Extension
 import numpy
 
 numpy_include = str(numpy.get_include())
-module = Extension('kreveik.boolfuncs.boolfuncs_c', 
+module = Extension('kreveik.network.boolfuncs.boolfuncs_c', 
                    sources = ['lib/boolfuncs.c'], include_dirs=[numpy_include])
 
 setup(
     name = "Kreveik",
-    version = "0.5.3dev",
+    version = "0.5.6a",
     packages = find_packages(),
     install_requires = ['docutils>=0.3','numpy>=1.5','matplotlib>=1.0'],
 
