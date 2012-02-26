@@ -6,11 +6,12 @@ import numpy
 
 numpy_include = str(numpy.get_include())
 module = Extension('kreveik.network.boolfuncs.boolfuncs_c', 
-                   sources = ['lib/boolfuncs.c'], include_dirs=[numpy_include])
+                   sources = ['kreveik/network/boolfuncs/boolfuncs.c'], 
+                   include_dirs=[numpy_include])
 
 setup(
     name = "Kreveik",
-    version = "0.5.6a",
+    version = "0.5.8a",
     packages = find_packages(),
     install_requires = ['docutils>=0.3','numpy>=1.5','matplotlib>=1.0'],
 

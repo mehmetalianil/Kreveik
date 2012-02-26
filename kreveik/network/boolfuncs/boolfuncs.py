@@ -12,8 +12,8 @@ __email__ = "anilm@itu.edu.tr"
 __status__ = "Production"
         
 import numpy as num
-import boolfuncs_c
 import logging
+import boolfuncs_c
 
 def xor_masking(network,state):
     """
@@ -90,7 +90,7 @@ def or_masking(network,state):
         logging.error("Printing id:")
         logging.error(id(network))
         return False
-
+    
 def xor_masking_C(network,state):
 
     newstate = boolfuncs_c.xor_masking_c(network.adjacency,network.mask,state)
