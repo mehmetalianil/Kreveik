@@ -118,8 +118,6 @@ def degree_preserving_mutation(network, maximum = 0, def_mutation = False):
                 adj[randomrow,randomcol] = not(adj[randomrow,randomcol])
                 logging.debug("New Network:")
                 logging.debug( num.array(adj[:],dtype=str))
-=======
->>>>>>> refs/heads/master
                 return network
             
         logging.info("This network "+str(network)+"is unlikely to have a degree preserving\
