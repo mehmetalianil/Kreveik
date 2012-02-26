@@ -1,3 +1,6 @@
+from distribute_setup import use_setuptools
+use_setuptools()
+
 from setuptools import setup, find_packages, Extension
 import numpy
 
@@ -9,7 +12,7 @@ setup(
     name = "Kreveik",
     version = "0.5.3dev",
     packages = find_packages(),
-    install_requires = ['docutils>=0.3','numpy>=1.5','networkx>=1.5','matplotlib>=1.0'],
+    install_requires = ['docutils>=0.3','numpy>=1.5','matplotlib>=1.0'],
 
     package_data = {
         # If any package contains *.md files, include them:

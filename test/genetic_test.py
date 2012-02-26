@@ -8,7 +8,7 @@ from kreveik import *
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
-
+from kreveik import network
 
 
 __author__ = "Mehmet Ali Anil"
@@ -28,8 +28,8 @@ if __name__ == '__main__':
     scorebox = [None]*50
     for network_number in xrange(40):
         petri.add_to_family(classes.generate_random(7,
-    	                                    scorers.orbit_length_sum,
-    	                                    boolfuncs.xor_masking_C,
+    	                                    network.scorers.orbit_length_sum_f,
+    	                                    network.boolfuncs.xor_masking_C,
     	                                    probability = (0.5,0.5,0.5))) 
 	                                    
     for i in xrange(50):

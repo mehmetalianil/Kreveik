@@ -1,3 +1,7 @@
+# This is a stand alone setup.py for boolfuncs.c library, 
+# the main setup file should work also, this is 
+# housed for practical reasons.
+
 from distutils.core import setup, Extension
 import numpy
 
