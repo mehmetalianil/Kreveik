@@ -56,16 +56,13 @@ def degree_and_connectivity_preserving_mutation(network, maximum = 0, def_mutati
             rowitemsnot = num.where(row != boolean)[0]
             randomrowitem = rowitemsnot[num.random.randint(len(rowitemsnot))]
             randomcolitem = colitemsnot[num.random.randint(len(colitemsnot))]
-            adj_debug[randomcolitem,randomcol]="2"
-            adj_debug[randomrow,randomrowitem]="3"
-            adj_debug[randomcolitem,randomrowitem]="4"
-            logging.debug(adj_debug)
-            if adj[randomcolitem][randomrowitem] == boolean:  
-                logging.debug("Success!"  )            
-                adj[randomcolitem,randomrowitem] = not(adj[randomcolitem,randomrowitem])
+
+            if adj[randomrowitem][randomcolitem] == boolean:
+                adj[randomrowitem,randomcolitem] = not(adj[randomrowitem,randomcolitem])
                 adj[randomcolitem,randomcol] = not(adj[randomcolitem,randomcol])
                 adj[randomrow,randomrowitem] = not(adj[randomrow,randomrowitem])
                 adj[randomrow,randomcol] = not(adj[randomrow,randomcol])
+                
                 logging.debug("New Network:")
                 logging.debug( num.array(adj[:],dtype=str))
                 if network.is_connected():
@@ -121,6 +118,8 @@ def degree_preserving_mutation(network, maximum = 0, def_mutation = False):
                 adj[randomrow,randomcol] = not(adj[randomrow,randomcol])
                 logging.debug("New Network:")
                 logging.debug( num.array(adj[:],dtype=str))
+=======
+>>>>>>> refs/heads/master
                 return network
             
         logging.info("This network "+str(network)+"is unlikely to have a degree preserving\
