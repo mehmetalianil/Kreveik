@@ -11,7 +11,7 @@ module = Extension('kreveik.network.boolfuncs.boolfuncs_c',
 
 setup(
     name = "Kreveik",
-    version = "0.5.8a",
+    version = "0.5.8c",
     packages = find_packages(),
     install_requires = ['docutils>=0.3','numpy>=1.5','matplotlib>=1.0'],
 
@@ -32,11 +32,12 @@ setup(
     classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',
-	  'Intended Audience :: Science/Research',
+	      'Intended Audience :: Science/Research',
           'License :: Other/Proprietary License',
-	  'Natural Language :: English',
+	      'Natural Language :: English',
           'Operating System :: POSIX',
           'Programming Language :: Python :: 2.7',
+          'Programming Language :: C',
           'Topic :: Scientific/Engineering :: Bio-Informatics',
           'Topic :: Scientific/Engineering :: Information Analysis',
           'Topic :: Scientific/Engineering :: Physics'
