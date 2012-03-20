@@ -29,28 +29,17 @@ class TopologicalNetwork(ProbeableObj):
     def outdegree(self):
         return self.adjacency.sum(axis=1)
     
-    def graph(self):
-        """Returns a pydot graph object.    
+    def show(self):
+        """Opens a window, draws the graph into the window.
         """
-        import pydot
-        
-        node_orig = 1
-    
-        graph = pydot.Dot(graph_type='digraph')
-
-        for row in self.adjacency:
-            skip = 0
-            r = row
-            node_dest = skip+1
-    
-            for e in r:
-                if e:
-                    graph.add_edge(
-                        pydot.Edge( node_orig, node_dest) )
-                node_dest += 1
-            node_orig += 1
-    
-        return graph
+        import Tkinter as tk
+        window= tk.Tk()
+        drawing = tk.Canvas(window, height=400, width=400, background="white")
+        drawing.create_rectangle(20,20,160,130,fill="green")
+        drawing.create_line(30,60,130,60,fill="white",width=20)
+        drawing.create_arc(40,20,240,220,extent=40,fill="red",outline="blue",start=120,width=5)
+        drawing.create_text(60,100,font="Arial 20 bold underline",text="Test")
+        drawing.pack()
 
         
         
