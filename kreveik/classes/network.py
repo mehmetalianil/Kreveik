@@ -32,6 +32,7 @@ class TopologicalNetwork(ProbeableObj):
     
     def plot(self):
         """Opens a window, draws the graph into the window.
+           Requires Tk, and of course a windowing system.
         """
         import Tkinter as tk
         import math
