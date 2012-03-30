@@ -27,7 +27,7 @@ if __name__ == '__main__':
     petri = kreveik.classes.Family()
     motifbox = [None]*50
     scorebox = [None]*50
-    for network_number in xrange(40):
+    for network_number in xrange(400):
         petri.add(kreveik.network.generators.random(7,
     	                                    kreveik.network.boolfuncs.xor_masking_C,
     	                                    probability = (0.5,0.5,0.5))) 

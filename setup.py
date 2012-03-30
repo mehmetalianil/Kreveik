@@ -11,7 +11,7 @@ module = Extension('kreveik.network.boolfuncs.boolfuncs_c',
 
 setup(
     name = "Kreveik",
-    version = "0.5.8c",
+    version = "0.5.8pp",
     packages = find_packages(),
     install_requires = ['docutils>=0.3','numpy>=1.5','matplotlib>=1.0','Tkinter'],
 
