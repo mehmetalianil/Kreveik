@@ -77,20 +77,13 @@ class Family(ProbeableObj,Ensemble):
             return False
             
         self.scores = num.zeros(len(self.network_list))
-        if pp:
+       
+        for counter,network in enumerate(self.network_list): 
+            logging.info("("+str(counter+1)+"/"+str(len(self.network_list))
+                         +") Populating equilibrium for: "+str(network))
+            network.populate_equilibria()
+            self.scores[counter] = network.score
             
-            jobs = [(network,parallel.JOBSERVER.submit(network.populate_equilibria,(), 
-            (self.equilibria, self.search_equilibrium, self.scorer, self.populate_probes),
-                                              ("numpy as num",))) for network in self]
-            for (ctr,(network,job)) in enumerate(jobs):
-                job()
-                self.scores[ctr] = network.score
-        else:    
-            for counter,network in enumerate(self.network_list): 
-                logging.info("("+str(counter+1)+"/"+str(len(self.network_list))
-                             +") Populating equilibrium for: "+str(network))
-                network.populate_equilibria()
-                self.scores[counter] = network.score
         self.populate_probes(probes.populate_equilibria_in_family)
             
 
