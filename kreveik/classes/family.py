@@ -65,7 +65,7 @@ class Family(ProbeableObj,Ensemble):
         plt.plot(self.scores)
         plt.show()
     
-    def populate_equilibria(self,pp=False):
+    def populate_equilibria(self):
         '''
         If the family has individuals, it goes to each individual and finds the equilibria 
         for all possible initial conditions they may face. The orbits and scores are 
