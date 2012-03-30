@@ -117,11 +117,17 @@ def global_clustering_in(network):
     local_clustering_in(network).mean()
     
         
-def populate_equilibria(network,orbit_extraction=False):
+def populate_equilibria(networks,orbit_extraction=False):
     """
     Calls the routine that populates all possible evolutions a network can undergo.
-    Implemented for parallel python integration
+    Implemented for Parallel Python integration
+    Returns a list for a list, an object for an object!!
     """
-    network.populate_equilibria(orbit_extraction=orbit_extraction)
-    return network  
+    import kreveik
+    if isinstance(networks,list):
+        networks = [network.populate_equilibria(orbit_extraction=orbit_extraction) for network in networks]
+        return networks
+    else:
+        networks = networks.populate_equilibria(orbit_extraction=orbit_extraction)
+        return networks
                 

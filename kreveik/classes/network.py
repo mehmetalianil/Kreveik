@@ -372,7 +372,7 @@ class Network(TopologicalNetwork,Element):
             self.search_equilibrium(2**self.n_nodes,state,orbit_extraction)  
 
         self.populate_probes(probes.populate_equilibria)
-
+        return self
     
     
 
