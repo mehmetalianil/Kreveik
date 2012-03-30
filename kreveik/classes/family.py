@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import logging
 from kreveik.classes import *
 import kreveik.probes as probes
-from kreveik import parallel
 
 
 class Family(ProbeableObj,Ensemble):

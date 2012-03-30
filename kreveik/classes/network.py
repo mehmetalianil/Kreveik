@@ -172,6 +172,7 @@ class Network(TopologicalNetwork,Element):
         state_vec  
     '''
     def __init__ (self,adjacency_matrix,mask,function,state_vec=None):
+
         Element.__init__(self)
         TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
@@ -180,6 +181,7 @@ class Network(TopologicalNetwork,Element):
             state_vec= (num.random.random((1,self.n_nodes))< 0.5)
         self.state=num.array(state_vec)
         self.function = function
+        self.equilibria = num.array([None]*(2**self.n_nodes))
     
     def __str__(self):
         return str(id(self))
@@ -365,10 +367,18 @@ class Network(TopologicalNetwork,Element):
             self.orbits = num.array([None]*2**self.n_nodes)
         
         binspace = range(0,num.power(2,self.n_nodes))
-  
+
         for state in binspace:
             self.search_equilibrium(2**self.n_nodes,state,orbit_extraction)  
-        self.populate_probes(probes.populate_equilibria)
 
+        self.populate_probes(probes.populate_equilibria)
+        
+def populate_equilibria(network,orbit_extraction=False):
+    """
+    Calls the routine that populates all possible evolutions a network can undergo.
+    """
+    network.populate_equilibria(orbit_extraction=orbit_extraction)
+    return network
+    
     
 
