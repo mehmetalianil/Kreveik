@@ -115,4 +115,13 @@ def global_clustering_in(network):
     Returns the global clustering coefficient for input connections for every single node 
     """
     local_clustering_in(network).mean()
+    
+        
+def populate_equilibria(network,orbit_extraction=False):
+    """
+    Calls the routine that populates all possible evolutions a network can undergo.
+    Implemented for parallel python integration
+    """
+    network.populate_equilibria(orbit_extraction=orbit_extraction)
+    return network  
                 

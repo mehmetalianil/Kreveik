@@ -372,13 +372,7 @@ class Network(TopologicalNetwork,Element):
             self.search_equilibrium(2**self.n_nodes,state,orbit_extraction)  
 
         self.populate_probes(probes.populate_equilibria)
-        
-def populate_equilibria(network,orbit_extraction=False):
-    """
-    Calls the routine that populates all possible evolutions a network can undergo.
-    """
-    network.populate_equilibria(orbit_extraction=orbit_extraction)
-    return network
+
     
     
 
