@@ -97,7 +97,14 @@ class TopologicalNetwork(ProbeableObj):
         drawing.pack()
         window.mainloop()
 
-        
+    def laplacian(self):  
+        """
+        Return the graph laplacian of the network
+        """  
+        symmetric = self.adjacency+self.adjacency.T-num.diag(self.adjacency.diagonal())
+        degrees = num.diag(symmetric.sum(axis=0))
+        laplacian = degrees-symmetric
+        return laplacian
         
     def is_connected(self):
         """
