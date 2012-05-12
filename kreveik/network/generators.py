@@ -2,6 +2,13 @@ import numpy as num
 from kreveik.classes import Network
 import logging
 
+def create(adjacency_matrix, bool_fcn, function):
+    """
+    """
+    initial_state= num.array(len(adjacency_matrix)*[0])
+    new_network=Network(adjacency_matrix, bool_fcn, function, state =initial_state)
+    return new_network
+    
 def random(n_nodes,function,probability=(0.5,0.5,0.5),connected=False):
     '''
     Generates and returns a random network with a random initial conditions.
