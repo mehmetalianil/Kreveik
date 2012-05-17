@@ -65,16 +65,7 @@ class Family(ProbeableObj,Ensemble):
         return True
             
     def plot_scores(self):
-        """
-        Plots the scores of the individuals within the family.
-        This right now works if the scores of the individuals are populated with 
-        family_name.populate_equilibria().
-        
-        This will be subject to a change: 
-           Properties such as scores, or equilibria will be held in dictionaries, in order to 
-           easily distinguish families or networks that have ondergone a procedure (scoring, for example.)
-           or not. This will give us the opportunity to check such flags and act accordingly.
-        """
+             
         plt.plot(self.scores)
         plt.show()
     

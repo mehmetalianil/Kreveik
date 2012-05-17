@@ -1,5 +1,7 @@
 '''
-This package includes the class definitions that are used within the scope of the software.
+The genereg package maintains class definitions and methods for manipulation,
+statistical evaluation of random boolean networks. The emphasis is upon genetic
+algorithm and how networks evolve accordingly.
 '''
 
 import numpy as num
@@ -7,8 +9,7 @@ import matplotlib.pyplot as plt
 import logging
 
 class ProbeableObj (object):
-    """
-    Base class for objects that a Probe object can be attached. 
+    """Base class for objects that a Probe object can be attached. 
     """
     def __init__ (self):
         self.probes = []
@@ -27,8 +28,7 @@ class ProbeableObj (object):
                 probe.data.append(measured)
                 
 class Ensemble(object):
-    """
-    Base class for all that are going to be used as an ensemble of elements that are subject to 
+    """Base class for all that are going to be used as an ensemble of elements that are subject to 
     Genetical Algorithm
     """
     def __init__(self):
