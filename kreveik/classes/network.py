@@ -78,7 +78,10 @@ class TopologicalNetwork(ProbeableObj):
                                         fill="black",width=2,arrow="last")
         
         for node_ctr,(x,y) in enumerate(list_of_coordinates):
-            if self.state == []:
+            if type(self) != Network:
+                node_color = "white"
+                text_color = "black"
+            elif self.state == num.array([[]]):
                 node_color = "white"
                 text_color = "black"
             else:
@@ -91,13 +94,10 @@ class TopologicalNetwork(ProbeableObj):
                     
             drawing.create_oval(x-node_radius,y-node_radius,x+node_radius,y+node_radius,width=2,fill=node_color)
             drawing.create_text(x,y,text =  str(node_ctr),fill = text_color, font="Arial")
-            
-
-        
+                    
         drawing.pack()
         window.mainloop()
 
-        
         
     def is_connected(self):
         """
