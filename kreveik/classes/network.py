@@ -24,6 +24,12 @@ class TopologicalNetwork(ProbeableObj):
                                                               self.adjacency.flatten()*1))
         self.n_nodes = len(self.adjacency)
     
+    def text_plot(self):
+        for i in range(len(self.adjacency)):
+            for j in range(len(self.adjacency)): 
+                if self.adjacency[i][j]==True:
+                    print str(j)+"--->"+str(i)     
+
     def indegree(self):
         return self.adjacency.sum(axis=0)
     
@@ -44,7 +50,7 @@ class TopologicalNetwork(ProbeableObj):
         node_radius = 10
         
         drawing.create_text(200,10,text = "Network:"+str(id(self)))
-        
+
         list_of_coordinates = [(radius*math.sin(2*math.pi*n/n_nodes)+canvas_size/2,radius*math.cos(2*math.pi*n/n_nodes)+canvas_size/2) for n in range(n_nodes)]
         
         for linksto,node in enumerate(self.adjacency):
@@ -78,7 +84,7 @@ class TopologicalNetwork(ProbeableObj):
                                         fill="black",width=2,arrow="last")
         
         for node_ctr,(x,y) in enumerate(list_of_coordinates):
-            if self.state == []:
+            if self.state = = []:
                 node_color = "white"
                 text_color = "black"
             else:
