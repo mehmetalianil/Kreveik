@@ -78,7 +78,10 @@ class TopologicalNetwork(ProbeableObj):
                                         fill="black",width=2,arrow="last")
         
         for node_ctr,(x,y) in enumerate(list_of_coordinates):
-            if self.state == []:
+            if type() != Network:
+                node_color = "white"
+                text_color = "black"
+            elif self.state == num.array([[]]):
                 node_color = "white"
                 text_color = "black"
             else:
