@@ -30,19 +30,28 @@ class TopologicalNetwork(ProbeableObj):
     def outdegree(self):
         return self.adjacency.sum(axis=1)
     
+    def save_image(self,filename):
+        drawing = self.tk_canvas()
+        drawing.postscript(file = filename)
+        
     def plot(self):
         """Opens a window, draws the graph into the window.
            Requires Tk, and of course a windowing system.
         """
         import Tkinter as tk
+        drawing = self.tk_canvas()
+        drawing.pack()
+        
+
+    def tk_canvas(self):
         import math
-        window= tk.Tk()
+        import Tkinter as tk
+        window = tk.Tk()
         canvas_size = 400
         drawing = tk.Canvas(window, height=canvas_size, width=canvas_size, background="white")
         n_nodes = self.n_nodes
         radius = 150
         node_radius = 10
-        
         drawing.create_text(200,10,text = "Network:"+str(id(self)))
         
         list_of_coordinates = [(radius*math.sin(2*math.pi*n/n_nodes)+canvas_size/2,radius*math.cos(2*math.pi*n/n_nodes)+canvas_size/2) for n in range(n_nodes)]
@@ -96,9 +105,8 @@ class TopologicalNetwork(ProbeableObj):
             drawing.create_text(x,y,text =  str(node_ctr),fill = text_color, font="Arial")
                     
         drawing.pack()
-        window.mainloop()
+        return drawing
 
-        
     def is_connected(self):
         """
         Returns True if the graph is connected, False if not.
@@ -135,7 +143,6 @@ class TopologicalNetwork(ProbeableObj):
 
 class Motif(TopologicalNetwork):
     """
-    Motif is a 
     """
     def __init__(self, adjacency_matrix):
         TopologicalNetwork.__init__(self, adjacency_matrix)
@@ -211,8 +218,7 @@ class Network(TopologicalNetwork,Element):
         print "The following are the states with respect to time "
         for (t,state) in enumerate(self.state):
             print "t= "+str(t)+" : "+str(node)
-        print "The scorer is : "
-        print self.scorer
+
         
     def __getitem__(self, index):
         """
