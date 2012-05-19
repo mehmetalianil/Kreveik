@@ -99,13 +99,41 @@ class TopologicalNetwork(ProbeableObj):
 
     def laplacian(self):  
         """
-        Return the graph laplacian of the network
+        Returns the graph laplacian of the network
         """  
         symmetric = self.adjacency+self.adjacency.T-num.diag(self.adjacency.diagonal())
         degrees = num.diag(symmetric.sum(axis=0))
         laplacian = degrees-symmetric
         return laplacian
         
+    def directed_laplacian(self):
+        """
+        Returns the laplacian of the network. It differs from laplacian function by using
+        the original adjacency matrix, not the symmetricised version of it. 
+        """
+        original = self.adjacency-num.diag(self.adjacency.diagonal())
+        degrees = num.diag(original.sum(axis=0)+original.sum(axis=1))
+        laplacian = degrees-original
+        return laplacian
+        
+    def indegree_laplacian(self):
+        """
+        Returns the laplacian composed of in-degrees of the nodes
+        """
+        original = self.adjacency-num.diag(self.adjacency.diagonal())
+        degrees = num.diag(original.sum(axis=1))
+        laplacian = degrees-original
+        return laplacian  
+    
+    def outdegree_laplacian(self):
+        """
+        Returns the laplacian composed of out-degrees of the nodes
+        """
+        original = self.adjacency-num.diag(self.adjacency.diagonal())
+        degrees = num.diag(original.sum(axis=0))
+        laplacian = degrees-original
+        return laplacian  
+      
     def is_connected(self):
         """
         Returns True if the graph is connected, False if not.
