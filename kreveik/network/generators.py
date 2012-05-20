@@ -15,6 +15,19 @@
 
 
 
+def create(adjacency_matrix, bool_fcn, function):
+    """
+    Generates and returns a network with a given adjacency matrix. The initial state 
+    is populated with 0's. 
+    
+    Input Variables
+    adjacency_matrix -> The matrix composed of adjacency values between the nodes.
+    bool_fcn -> Mask function
+    """
+    initial_state= num.array([len(adjacency_matrix)*[False]])
+    new_network=Network(adjacency_matrix, bool_fcn, function, state_vec = initial_state)
+    return new_network
+    
 def random(n_nodes,function,probability=(0.5,0.5,0.5),connected=False):
     '''
     Generates and returns a random network with a random initial conditions.

@@ -24,6 +24,12 @@ class TopologicalNetwork(ProbeableObj):
                                                               self.adjacency.flatten()*1))
         self.n_nodes = len(self.adjacency)
     
+    def text_plot(self):
+        for i in range(len(self.adjacency)):
+            for j in range(len(self.adjacency)): 
+                if self.adjacency[i][j]==True:
+                    print str(j)+"--->"+str(i)     
+
     def indegree(self):
         return self.adjacency.sum(axis=0)
     
@@ -44,7 +50,7 @@ class TopologicalNetwork(ProbeableObj):
         node_radius = 10
         
         drawing.create_text(200,10,text = "Network:"+str(id(self)))
-        
+
         list_of_coordinates = [(radius*math.sin(2*math.pi*n/n_nodes)+canvas_size/2,radius*math.cos(2*math.pi*n/n_nodes)+canvas_size/2) for n in range(n_nodes)]
         
         for linksto,node in enumerate(self.adjacency):
@@ -78,7 +84,8 @@ class TopologicalNetwork(ProbeableObj):
                                         fill="black",width=2,arrow="last")
         
         for node_ctr,(x,y) in enumerate(list_of_coordinates):
-            if type() != Network:
+
+            if type(self) != Network:
                 node_color = "white"
                 text_color = "black"
             elif self.state == num.array([[]]):
@@ -100,8 +107,43 @@ class TopologicalNetwork(ProbeableObj):
         drawing.pack()
         window.mainloop()
 
+    def laplacian(self):  
+        """
+        Returns the graph laplacian of the network
+        """  
+        symmetric = self.adjacency+self.adjacency.T-num.diag(self.adjacency.diagonal())
+        degrees = num.diag(symmetric.sum(axis=0))
+        laplacian = degrees-symmetric
+        return laplacian
         
+    def directed_laplacian(self):
+        """
+        Returns the laplacian of the network. It differs from laplacian function by using
+        the original adjacency matrix, not the symmetricised version of it. 
+        """
+        original = self.adjacency-num.diag(self.adjacency.diagonal())
+        degrees = num.diag(original.sum(axis=0)+original.sum(axis=1))
+        laplacian = degrees-original
+        return laplacian
         
+    def indegree_laplacian(self):
+        """
+        Returns the laplacian composed of in-degrees of the nodes
+        """
+        original = self.adjacency-num.diag(self.adjacency.diagonal())
+        degrees = num.diag(original.sum(axis=1))
+        laplacian = degrees-original
+        return laplacian  
+    
+    def outdegree_laplacian(self):
+        """
+        Returns the laplacian composed of out-degrees of the nodes
+        """
+        original = self.adjacency-num.diag(self.adjacency.diagonal())
+        degrees = num.diag(original.sum(axis=0))
+        laplacian = degrees-original
+        return laplacian  
+      
     def is_connected(self):
         """
         Returns True if the graph is connected, False if not.
