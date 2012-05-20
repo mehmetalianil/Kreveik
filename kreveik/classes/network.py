@@ -2,23 +2,20 @@
 Definition of network object.
 """
 
-import numpy as num
-import matplotlib.pyplot as plt
 import copy
 import itertools 
+import numpy as num
 import logging
-from kreveik.classes import *
-import kreveik.probes as probes
-from kreveik import *
+import matplotlib.pyplot as plt
 
 
-class TopologicalNetwork(ProbeableObj):
+class TopologicalNetwork(kreveik.classes.ProbeableObj):
     """
     This object is a stripped down network, designated to be a core 
     object for all network-like objects, like sub-graphs and motifs.
     """
     def __init__ (self,adjacency_matrix):
-        ProbeableObj.__init__(self)
+        kreveik.classes.ProbeableObj.__init__(self)
         self.adjacency = num.array(adjacency_matrix,dtype=bool)
         self.code = str(len(self.adjacency))+"-"+str(reduce(lambda x,y : 2*x+y, 
                                                               self.adjacency.flatten()*1))
@@ -169,7 +166,7 @@ class Motif(TopologicalNetwork):
         return False    
 
 
-class Network(TopologicalNetwork,Element):
+class Network(kreveik.classes.TopologicalNetwork,kreveik.classes.Element):
     '''
     Network Class
     
@@ -179,8 +176,8 @@ class Network(TopologicalNetwork,Element):
         state_vec  
     '''
     def __init__ (self,adjacency_matrix,mask,function,state_vec=None):
-        Element.__init__(self)
-        TopologicalNetwork.__init__(self,adjacency_matrix)
+        kreveik.classes.Element.__init__(self)
+        kreveik.classes.TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
         if state_vec == None:
@@ -262,7 +259,7 @@ class Network(TopologicalNetwork,Element):
             newstate = self.function(self,self.state[-1])
             self.state = num.append(self.state,[newstate],axis=0)
             
-        self.populate_probes(probes.advance)
+        self.populate_probes(kreveik.probes.advance)
         
     def set_state(self,state):
         """
@@ -350,7 +347,7 @@ class Network(TopologicalNetwork,Element):
                  
                 self.equilibria[location] = orbit_length
                 
-                self.populate_probes(probes.search_equilibrium)
+                self.populate_probes(kreveik.probes.search_equilibrium)
                 return (orbit_length,orbit)
         
         
@@ -374,7 +371,7 @@ class Network(TopologicalNetwork,Element):
   
         for state in binspace:
             self.search_equilibrium(2**self.n_nodes,state,orbit_extraction)  
-        self.populate_probes(probes.populate_equilibria)
+        self.populate_probes(kreveik.probes.populate_equilibria)
 
     
 

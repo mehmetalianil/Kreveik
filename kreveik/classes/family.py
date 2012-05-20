@@ -1,15 +1,12 @@
 """
 Definition of the family class
 """
+
+import logging
 import numpy as num
 import matplotlib.pyplot as plt
-import logging
-from kreveik.classes import *
-import kreveik.probes as probes
-from kreveik import parallel
 
-
-class Family(ProbeableObj,Ensemble):
+class Family(kreveik.classes.ProbeableObj,kreveik.classes.Ensemble):
     '''
     Family Class.
     A class that will have a single family of networks, a genetic algorithm 
@@ -19,8 +16,8 @@ class Family(ProbeableObj,Ensemble):
     '''
     
     def __init__ (self):
-        ProbeableObj.__init__(self)
-        Ensemble.__init__(self)
+        kreveik.classes.ProbeableObj.__init__(self)
+        kreveik.classes.Ensemble.__init__(self)
         self.network_list = []
         self.wildtype_list = [] 
         self.scores = num.array([])
@@ -78,21 +75,14 @@ class Family(ProbeableObj,Ensemble):
             return False
             
         self.scores = num.zeros(len(self.network_list))
-        if pp:
-            
-            jobs = [(network,parallel.JOBSERVER.submit(network.populate_equilibria,(), 
-            (self.equilibria, self.search_equilibrium, self.scorer, self.populate_probes),
-                                              ("numpy as num",))) for network in self]
-            for (ctr,(network,job)) in enumerate(jobs):
-                job()
-                self.scores[ctr] = network.score
-        else:    
-            for counter,network in enumerate(self.network_list): 
-                logging.info("("+str(counter+1)+"/"+str(len(self.network_list))
-                             +") Populating equilibrium for: "+str(network))
-                network.populate_equilibria()
-                self.scores[counter] = network.score
-        self.populate_probes(probes.populate_equilibria_in_family)
+       
+        
+        for counter,network in enumerate(self.network_list): 
+            logging.info("("+str(counter+1)+"/"+str(len(self.network_list))
+                         +") Populating equilibrium for: "+str(network))
+            network.populate_equilibria()
+            self.scores[counter] = network.score
+        self.populate_probes(kreveik.probes.populate_equilibria_in_family)
             
 
 
