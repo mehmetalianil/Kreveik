@@ -13,7 +13,7 @@ __status__ = "Production"
         
 import numpy as num
 import logging
-import boolfuncs_c
+import boolfuncs_c #@UnresolvedImport
 
 def xor_masking(network,state):
     """

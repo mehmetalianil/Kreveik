@@ -2,11 +2,13 @@
 Definition of the family class
 """
 
+import kreveik
+import other
 import logging
 import numpy as num
 import matplotlib.pyplot as plt
 
-class Family(kreveik.classes.ProbeableObj,kreveik.classes.Ensemble):
+class Family(other.ProbeableObj,other.Ensemble):
     '''
     Family Class.
     A class that will have a single family of networks, a genetic algorithm 
@@ -16,8 +18,8 @@ class Family(kreveik.classes.ProbeableObj,kreveik.classes.Ensemble):
     '''
     
     def __init__ (self):
-        kreveik.classes.ProbeableObj.__init__(self)
-        kreveik.classes.Ensemble.__init__(self)
+        other.ProbeableObj.__init__(self)
+        other.Ensemble.__init__(self)
         self.network_list = []
         self.wildtype_list = [] 
         self.scores = num.array([])

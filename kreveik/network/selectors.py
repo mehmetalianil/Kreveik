@@ -5,8 +5,6 @@ or False due to whether a particular element is eligible for mutation or not.
 
 import math
 import numpy as num
-import kreveik.classes as classes
-import kreveik.genetic as genetic
 import logging
 
 def hard_threshold(network,**kwargs):

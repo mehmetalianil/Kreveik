@@ -1,6 +1,6 @@
 import numpy as num
 import logging
-from kreveik import *
+import kreveik
 
 def point_mutate_adj(network):
     '''

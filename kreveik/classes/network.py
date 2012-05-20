@@ -2,20 +2,21 @@
 Definition of network object.
 """
 
+import kreveik
+import other
 import copy
 import itertools 
 import numpy as num
 import logging
 import matplotlib.pyplot as plt
 
-
-class TopologicalNetwork(kreveik.classes.ProbeableObj):
+class TopologicalNetwork(other.ProbeableObj):
     """
     This object is a stripped down network, designated to be a core 
     object for all network-like objects, like sub-graphs and motifs.
     """
     def __init__ (self,adjacency_matrix):
-        kreveik.classes.ProbeableObj.__init__(self)
+        other.ProbeableObj.__init__(self)
         self.adjacency = num.array(adjacency_matrix,dtype=bool)
         self.code = str(len(self.adjacency))+"-"+str(reduce(lambda x,y : 2*x+y, 
                                                               self.adjacency.flatten()*1))
@@ -166,7 +167,7 @@ class Motif(TopologicalNetwork):
         return False    
 
 
-class Network(kreveik.classes.TopologicalNetwork,kreveik.classes.Element):
+class Network(TopologicalNetwork,other.Element):
     '''
     Network Class
     
@@ -176,8 +177,8 @@ class Network(kreveik.classes.TopologicalNetwork,kreveik.classes.Element):
         state_vec  
     '''
     def __init__ (self,adjacency_matrix,mask,function,state_vec=None):
-        kreveik.classes.Element.__init__(self)
-        kreveik.classes.TopologicalNetwork.__init__(self,adjacency_matrix)
+        other.Element.__init__(self)
+        TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
         if state_vec == None:
@@ -193,7 +194,7 @@ class Network(kreveik.classes.TopologicalNetwork,kreveik.classes.Element):
         Prints out an identification of the Network.
         Prints:
             Id
-            Mothers
+            Mother
             Children
             Orbits
             Score
@@ -283,7 +284,7 @@ class Network(kreveik.classes.TopologicalNetwork,kreveik.classes.Element):
         # Take the state vector, convert the list of arrays into a 2d array, then show it as an image
         # Black and white. 
         
-        plt.imshow(self.state[-last:],cmap=plt.cm.binary,interpolation='nearest')     
+        plt.imshow(self.state[-last:],cmap=plt.cm.binary,interpolation='nearest')     #@UndefinedVariable
         plt.show()
 
 
@@ -299,7 +300,7 @@ class Network(kreveik.classes.TopologicalNetwork,kreveik.classes.Element):
         if self.n_nodes % 2 == 1:
             im_matrix = self.equilibria.reshape((rowsandcols,rowsandcols*2))
     
-        plt.imshow(im_matrix,cmap=plt.cm.gray,interpolation='nearest')
+        plt.imshow(im_matrix,cmap=plt.cm.gray,interpolation='nearest') #@UndefinedVariable
         
         plt.grid()
         plt.colorbar()
