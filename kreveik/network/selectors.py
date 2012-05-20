@@ -18,11 +18,11 @@ In this module, the selectors for the GA elements, networks are defined. A selec
 or False due to whether a particular element is eligible for mutation or not. 
 """
 
-import math
-import numpy as num
-import logging
-
 def hard_threshold(network,**kwargs):
+
+    import numpy as num
+    import logging
+
     if not('threshold' in  kwargs):
         logging.error("The hard_threshold Selector needs a threshold parameter to work.")
         return None
@@ -38,6 +38,10 @@ def hard_threshold(network,**kwargs):
     else:
         return False
 def hard_threshold_with_probability(network,**kwargs):
+    
+    import numpy as num
+    import logging
+
     if not('threshold' in kwargs):
         logging.error("The hard_threshold Selector needs a threshold parameter to work.")
         return None
@@ -61,6 +65,11 @@ def hard_threshold_with_probability(network,**kwargs):
         return False
     
 def logistic(network,**kwargs):
+
+    import numpy as num
+    import logging
+    import math
+
     if not ('angle' in kwargs) or not('midpoint' in kwargs):
         logging.error("The logistic Selector needs angle and midpoint parameters to work.")
         return None

@@ -13,10 +13,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-from kreveik import *
-import numpy as num
-import copy
-import itertools 
+import numpy as num 
 import logging
 
 def random_killer(ensemble,times):

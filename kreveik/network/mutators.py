@@ -13,15 +13,16 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import numpy as num
-import logging
-import kreveik
+
 
 def point_mutate_adj(network):
     '''
     Will result in a series of implicit point mutation of the adjacency matrix
     '''
-
+    
+    import numpy as num
+    import logging  
+    
     logging.info("Network "+str(network)+" is mutated")
     num.random.seed()
     random_i = num.random.randint(0, network.n_nodes)
@@ -32,6 +33,9 @@ def point_mutate_mask(network):
     '''
     Will result in a series of implicit point mutation of the masks
     '''                        
+        
+    import numpy as num
+    import logging  
     
     logging.info("Network "+str(network)+" is mutated")
     num.random.seed()
@@ -43,6 +47,10 @@ def degree_and_connectivity_preserving_mutation(network, maximum = 0, def_mutati
     """
     A mutation that preserves the degree of the network in concern.
     """
+        
+    import numpy as num
+    import logging  
+    
     adj = network.adjacency
     logging.debug( "Adjacency Matrix:")
     logging.debug( adj)
@@ -93,6 +101,10 @@ def degree_preserving_mutation(network, maximum = 0, def_mutation = False):
     """
     A mutation that preserves the degree of the network in concern.
     """
+        
+    import numpy as num
+    import logging  
+    
     adj = network.adjacency
     logging.debug( "Adjacency Matrix:")
     logging.debug( adj)

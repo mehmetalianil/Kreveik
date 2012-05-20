@@ -18,7 +18,7 @@ This module contains different scorer functions that have a
 single network as input and outputs its score accordingly.
 """
 
-import numpy as num
+
  
 def sum_scorer_f(network):
     """
@@ -36,6 +36,9 @@ def orbit_length_sum_f(network):
     This function takes a network object and and returns its 
     score computed by summing the lengths of genuine orbits.
     """
+    
+    import numpy as num
+    
     binspace = range(0,num.power(2,network.n_nodes))
     genuine_orbits = []
     genuine_orbit_lengths=[]

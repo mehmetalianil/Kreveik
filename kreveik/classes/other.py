@@ -58,3 +58,41 @@ class ProbeableObj (object):
             if probe.subroutine == subroutine:
                 measured = probe.function(self)
                 probe.data.append(measured)
+class Mutator (object):
+    """This is the class definition for the mutators. A mutating function must be given as an
+    input
+    """
+    def __init__ (self, function):
+        self.mutation = function
+    def __call__ (self,element):
+        self.mutation(element)
+    
+        
+class Selector (object):
+    """This is the class definition for the selector of the genetic iteration
+    The selecting function must be supplied as an input.
+    """
+    def __init__ (self,function,**kwargs):
+        self.selection = function
+        self.kwargs = kwargs
+    def __call__ (self,element):
+        self.selection(element,self.kwargs)  
+
+class Killer (object):
+    """This is the base class definition for the killer. A killing function must be supplied, which
+    will act on ensemble objects.
+    """ 
+    def __init__(self,function):
+        self.scoring=function
+    def __call__(self,ensemble):
+        self.scoring(ensemble)
+        
+
+class Scorer (object):
+    """This is the base class definition for the scorers. A scoring function must be supplied.
+    """ 
+    def __init__(self,function):
+        self.scoring=function
+    def __call__(self,element):
+        self.scoring(element)
+        

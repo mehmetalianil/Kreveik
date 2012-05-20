@@ -13,9 +13,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import numpy as num
-import kreveik
-import logging
+
 
 def random(n_nodes,function,probability=(0.5,0.5,0.5),connected=False):
     '''
@@ -30,6 +28,10 @@ def random(n_nodes,function,probability=(0.5,0.5,0.5),connected=False):
     A smaller value will decrease complexity and clustering coefficient.  
     scorer -> a function for the type network
     '''
+    
+    import numpy as num
+    import kreveik
+    import logging
 
     num.random.seed()
     adjacency_matrix=(num.random.random((n_nodes,n_nodes))<probability[0])

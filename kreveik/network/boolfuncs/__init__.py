@@ -29,7 +29,7 @@ The method can be:
     or any other function that outputs an integer with an input of two ndarrays.        
 """
 
-from boolfuncs import *
+from boolfuncs import xor_masking, and_masking, or_masking, xor_masking_C, and_masking_C, or_masking_C
 
 
 

@@ -13,32 +13,9 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import numpy as num
-import itertools
-import logging
+
 import killer
-
-
-def motif_freqs(family,degree, sorting=False, **kwargs):
-    """
-    Returns a list of motifs of the family.
-    """
-    from kreveik import network
-    import copy 
-    
-    if  'motiflist' in kwargs:
-        returned_motifs = copy.deepcopy(kwargs['motiflist'])
-    else:
-        returned_motifs = network.motif.all_conn_motifs(degree)[:]
-
-    logging.info("Computing motif frequencies of the family")
-    for networkf in family:
-        returned_motifs = network.motif.motif_freqs(networkf, degree, motiflist=returned_motifs)           
-        
-    if sorting:
-        return  sorted (returned_motifs, key = lambda returned_motifs:returned_motifs[1] , reverse = True)
-    else:
-        return returned_motifs
+from motifs import motif_freqs
 
 def mean_connectivity(family):
     """

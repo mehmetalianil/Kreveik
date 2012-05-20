@@ -16,7 +16,6 @@
 '''
 
 '''
-
         
 import numpy as num
 import logging

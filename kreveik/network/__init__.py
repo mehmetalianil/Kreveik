@@ -19,6 +19,43 @@ import scorers
 import selectors
 import boolfuncs
 
+def local_clustering_in(network):
+    """
+    Returns the local clustering coefficient for input connections for every single node 
+    """
+    import numpy as num
+    
+    adj = network.adjacency*1-num.diagflat(num.diag(network.adjacency*1))
+    returned = num.zeros(len(adj))
+    for (counter,row) in enumerate(adj):
+        k = row.sum()
+        where = num.where(k)[0]
+        connections=0.0
+        for first in where:
+            for second in where:
+                if adj(first,second)==1 or adj(second,first)==1:
+                    connections += 1.0
+        returned[counter] = connections /((k)*(k+1))
+    return returned
+
+def local_clustering_out(network):
+    """
+    Returns the local clustering coefficient for output connections for every single node 
+    """
+    import numpy as num
+    
+    adj = num.transpose(network.adjacency*1-num.diagflat(num.diag(network.adjacency*1)))
+    returned = num.zeros(len(adj))
+    for (counter,row) in enumerate(adj):
+        k = row.sum()
+        where = num.where(k)[0]
+        connections=0.0
+        for first in where:
+            for second in where:
+                if adj(first,second)==1 or adj(second,first)==1:
+                    connections += 1.0
+        returned[counter] = connections /((k)*(k+1))
+    return returned
 
 def global_clustering_out(network):
     """
