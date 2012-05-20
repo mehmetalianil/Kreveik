@@ -1,37 +1,24 @@
-
-#    Copyright 2012 Mehmet Ali ANIL
-#    
-#    Licensed under the Apache License, Version 2.0 (the "License");
-#    you may not use this file except in compliance with the License.
-#    You may obtain a copy of the License at
-#    
-#    http://www.apache.org/licenses/LICENSE-2.0
-#    
-#    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS,
-#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#    See the License for the specific language governing permissions and
-#    limitations under the License.
-
 """
 Definition of network object.
 """
 
-import kreveik
-import other
+import numpy as num
+import matplotlib.pyplot as plt
 import copy
 import itertools 
-import numpy as num
 import logging
-import matplotlib.pyplot as plt
+from kreveik.classes import *
+import kreveik.probes as probes
+from kreveik import *
 
-class TopologicalNetwork(other.ProbeableObj):
+
+class TopologicalNetwork(ProbeableObj):
     """
     This object is a stripped down network, designated to be a core 
     object for all network-like objects, like sub-graphs and motifs.
     """
     def __init__ (self,adjacency_matrix):
-        other.ProbeableObj.__init__(self)
+        ProbeableObj.__init__(self)
         self.adjacency = num.array(adjacency_matrix,dtype=bool)
         self.code = str(len(self.adjacency))+"-"+str(reduce(lambda x,y : 2*x+y, 
                                                               self.adjacency.flatten()*1))
@@ -43,28 +30,19 @@ class TopologicalNetwork(other.ProbeableObj):
     def outdegree(self):
         return self.adjacency.sum(axis=1)
     
-    def save_image(self,filename):
-        drawing = self.tk_canvas()
-        drawing.postscript(file = filename)
-        
     def plot(self):
         """Opens a window, draws the graph into the window.
            Requires Tk, and of course a windowing system.
         """
         import Tkinter as tk
-        drawing = self.tk_canvas()
-        drawing.pack()
-        
-
-    def tk_canvas(self):
         import math
-        import Tkinter as tk
-        window = tk.Tk()
+        window= tk.Tk()
         canvas_size = 400
         drawing = tk.Canvas(window, height=canvas_size, width=canvas_size, background="white")
         n_nodes = self.n_nodes
         radius = 150
         node_radius = 10
+        
         drawing.create_text(200,10,text = "Network:"+str(id(self)))
         
         list_of_coordinates = [(radius*math.sin(2*math.pi*n/n_nodes)+canvas_size/2,radius*math.cos(2*math.pi*n/n_nodes)+canvas_size/2) for n in range(n_nodes)]
@@ -100,7 +78,7 @@ class TopologicalNetwork(other.ProbeableObj):
                                         fill="black",width=2,arrow="last")
         
         for node_ctr,(x,y) in enumerate(list_of_coordinates):
-            if type(self) != Network:
+            if type() != Network:
                 node_color = "white"
                 text_color = "black"
             elif self.state == num.array([[]]):
@@ -116,10 +94,14 @@ class TopologicalNetwork(other.ProbeableObj):
                     
             drawing.create_oval(x-node_radius,y-node_radius,x+node_radius,y+node_radius,width=2,fill=node_color)
             drawing.create_text(x,y,text =  str(node_ctr),fill = text_color, font="Arial")
-                    
-        drawing.pack()
-        return drawing
+            
 
+        
+        drawing.pack()
+        window.mainloop()
+
+        
+        
     def is_connected(self):
         """
         Returns True if the graph is connected, False if not.
@@ -156,6 +138,7 @@ class TopologicalNetwork(other.ProbeableObj):
 
 class Motif(TopologicalNetwork):
     """
+    Motif is a 
     """
     def __init__(self, adjacency_matrix):
         TopologicalNetwork.__init__(self, adjacency_matrix)
@@ -182,7 +165,7 @@ class Motif(TopologicalNetwork):
         return False    
 
 
-class Network(TopologicalNetwork,other.Element):
+class Network(TopologicalNetwork,Element):
     '''
     Network Class
     
@@ -192,7 +175,7 @@ class Network(TopologicalNetwork,other.Element):
         state_vec  
     '''
     def __init__ (self,adjacency_matrix,mask,function,state_vec=None):
-        other.Element.__init__(self)
+        Element.__init__(self)
         TopologicalNetwork.__init__(self,adjacency_matrix)
         self.n_nodes= num.size(adjacency_matrix,0)
         self.mask=mask
@@ -209,7 +192,7 @@ class Network(TopologicalNetwork,other.Element):
         Prints out an identification of the Network.
         Prints:
             Id
-            Mother
+            Mothers
             Children
             Orbits
             Score
@@ -231,7 +214,8 @@ class Network(TopologicalNetwork,other.Element):
         print "The following are the states with respect to time "
         for (t,state) in enumerate(self.state):
             print "t= "+str(t)+" : "+str(node)
-
+        print "The scorer is : "
+        print self.scorer
         
     def __getitem__(self, index):
         """
@@ -275,7 +259,7 @@ class Network(TopologicalNetwork,other.Element):
             newstate = self.function(self,self.state[-1])
             self.state = num.append(self.state,[newstate],axis=0)
             
-        self.populate_probes(kreveik.probes.advance)
+        self.populate_probes(probes.advance)
         
     def set_state(self,state):
         """
@@ -299,7 +283,7 @@ class Network(TopologicalNetwork,other.Element):
         # Take the state vector, convert the list of arrays into a 2d array, then show it as an image
         # Black and white. 
         
-        plt.imshow(self.state[-last:],cmap=plt.cm.binary,interpolation='nearest')     #@UndefinedVariable
+        plt.imshow(self.state[-last:],cmap=plt.cm.binary,interpolation='nearest')     
         plt.show()
 
 
@@ -315,7 +299,7 @@ class Network(TopologicalNetwork,other.Element):
         if self.n_nodes % 2 == 1:
             im_matrix = self.equilibria.reshape((rowsandcols,rowsandcols*2))
     
-        plt.imshow(im_matrix,cmap=plt.cm.gray,interpolation='nearest') #@UndefinedVariable
+        plt.imshow(im_matrix,cmap=plt.cm.gray,interpolation='nearest')
         
         plt.grid()
         plt.colorbar()
@@ -363,7 +347,7 @@ class Network(TopologicalNetwork,other.Element):
                  
                 self.equilibria[location] = orbit_length
                 
-                self.populate_probes(kreveik.probes.search_equilibrium)
+                self.populate_probes(probes.search_equilibrium)
                 return (orbit_length,orbit)
         
         
@@ -387,7 +371,7 @@ class Network(TopologicalNetwork,other.Element):
   
         for state in binspace:
             self.search_equilibrium(2**self.n_nodes,state,orbit_extraction)  
-        self.populate_probes(kreveik.probes.populate_equilibria)
+        self.populate_probes(probes.populate_equilibria)
 
     
 
