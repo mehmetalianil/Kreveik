@@ -13,6 +13,25 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+"""
+family package
+==============
+
+This package includes functions that act on family objects (kreveik.classes.Family)
+
+Modules
+-------
+killer
+    Houses functions that kill a portion of a population.
+    
+Functions
+---------
+motif_freqs
+    Extracts motif frequencies of a population
+    
+mean connectivity
+    Returns the mean value of the connectivity of a population.
+"""
 
 import killer
 from motifs import motif_freqs
@@ -21,4 +40,7 @@ def mean_connectivity(family):
     """
     The mean connectivity of a Family of networks is returned.
     """
-    [network.network for network in family]
+    #[network.network for network in family]
+    pass
+
+    

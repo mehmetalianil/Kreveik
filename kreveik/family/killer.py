@@ -13,10 +13,26 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import numpy as num 
-import logging
 
 def random_killer(ensemble,times):
+    import numpy as num 
+    import logging
+    """
+    Kills randomly from an ensemble
+    
+    Kills a number of random individuals disregarding any properties of them.
+    
+    Args:
+    ----
+        ensemble: An object of Ensemble type (probably a Family) in which 
+        individuals will be randomly killed.
+        
+        times: the number of individuals that will be killed.
+    
+    Returns:
+    --------
+        None            
+    """
     logging.info("Killing "+str(times)+" individuals")
     for i in range(times):
         randomnum = num.random.randint(0,len(ensemble))
