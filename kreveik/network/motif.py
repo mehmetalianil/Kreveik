@@ -20,7 +20,17 @@ import kreveik
 
 
 def all_conn_motifs(nodes):
-    """Returns a list of all connected motifs for a degree.
+    """
+    Returns a list of all connected motifs for a degree.
+    
+    This function takes every possible (fully connected) configuration of a graph with n nodes.
+    And lists them as a list of all possible motifs. 
+    
+    Input Arguments:
+    ---------------
+    
+    nodes
+        The number of nodes of the motifs that will be generated.
     """
     logging.info("Returning all connected motifs with "+str(nodes)+" nodes")
     motiflist = []
@@ -39,8 +49,13 @@ def all_conn_motifs(nodes):
 def motif_freqs (network,degree,**kwargs):
     """
     Returns a list of motifs for a given network
+    
+    This function takes every possible combinations of nodes counting degree, out of all
+    nodes of the network provided, and counts them in a list of all motifs. 
+    TODO
     """
-
+    import itertools
+    
     logging.info("Extracting "+str(degree)+" motifs of network "+str(network))
     all_combinations = itertools.combinations(range(len(network.adjacency)),degree)
     
