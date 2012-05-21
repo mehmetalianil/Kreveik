@@ -52,7 +52,18 @@ def motif_freqs (network,degree,**kwargs):
     
     This function takes every possible combinations of nodes counting degree, out of all
     nodes of the network provided, and counts them in a list of all motifs. 
-    TODO
+    
+    Args:
+    ----
+        network: the network which motif frequencies will be found.
+        degree: the number of nodes of the motifs that will be searched in the network.
+        motiflist: an optional argument in which if supplied, the search will be limited to
+        motifs in that list.
+        
+    Returns:
+    -------
+    A numpy array of [Motif object , number of occurences], an N x 2 array. 
+        
     """
     import itertools
     
@@ -62,6 +73,9 @@ def motif_freqs (network,degree,**kwargs):
     if 'motiflist' in kwargs:
         allmotifs = kwargs['motiflist'][:]
         motif_list = allmotifs[:]
+        if len(motif_list[0]) == 1:
+            # if only a list of motifs are presented, not a list and numbers.
+            motif_list = num.array([[motif,0] for motif in motiflist])
     else:
         logging.info("Creating all possible motifs of node count "+str(degree)+".")
         motif_list = all_conn_motifs(degree)[:]

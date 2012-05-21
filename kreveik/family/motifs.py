@@ -17,6 +17,21 @@
 def motif_freqs(family,degree, sorting=False, **kwargs):
     """
     Returns a list of motifs of the family.
+    
+    Takes every single individual of a family, extracts motif frequencies of every single one
+    of them (Check network.motif.motif_freqs() function), accumulating with each individual.
+    When supplied with a motiflist, this function only searches for the motifs within the list.
+    If there isn't any motiflist supplied, then the function generates all possible motifs with
+    a specified number of nodes, and resumes calculation.
+    
+    Args:
+    ----
+    
+        family: The family in which motif frequencies will be extracted.
+        degree: the number of nodes of motifs in question.
+        sorting: if True, will sort the returned list of motif frequencies.
+        motiflist: an optional argument, that if supplied, the search for motifs will be 
+        limited with that particular list. 
     """
     from kreveik import network
     import copy

@@ -13,6 +13,18 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+"""
+family.killer module
+====================
+Houses functions that kill a portion of a population.
+
+Functions
+---------
+    random_killer: Kills randomly from an ensemble
+    qualified_killer: TODO
+    underachiever_killer: TODO
+    
+"""
 
 def random_killer(ensemble,times):
     import numpy as num 
