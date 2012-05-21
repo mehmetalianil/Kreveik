@@ -14,6 +14,7 @@
 #    limitations under the License.
 
 """
+This module houses class definitions that more complex class definitions are inherited from.
 """
 
 import logging

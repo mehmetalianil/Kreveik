@@ -15,7 +15,20 @@
 
 
 '''
+In this package, class definitions that are used within Kreveik are defined. 
+Some of these classes are fundamental objects, like Network of Motif, and some are 
+for utility purposes.
 
+
+Classes:
+--------
+Ensemble
+Element
+ProbeableObj
+TopologicalNetwork
+Motif
+Network
+Family
 '''
 
 from other import Ensemble,Element,ProbeableObj 

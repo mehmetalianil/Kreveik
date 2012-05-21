@@ -14,10 +14,9 @@
 #    limitations under the License.
 
 """
-Definition of the family class
+Module that maintains classes concerning Family objects. 
 """
 
-import kreveik
 import other
 import logging
 import numpy as num
@@ -59,6 +58,9 @@ class Family(other.ProbeableObj,other.Ensemble):
         return len(self.network_list)
     
     def remove(self,n):
+        """
+        removes the nth network from the family
+        """
         self.network_list = num.delete(self.network_list, n).tolist()
                 
     def add(self, network):
@@ -76,6 +78,10 @@ class Family(other.ProbeableObj,other.Ensemble):
         return True
             
     def plot_scores(self):
+        """
+        If family.populate_equilibria is used to extract scores of all networks within a family,
+        this function will plot the scores of each network.
+        """
              
         plt.plot(self.scores)
         plt.show()
