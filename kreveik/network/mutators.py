@@ -13,7 +13,23 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+"""
+mutators module
+===============
 
+This module houses operations which act on networks, that can be classified as 
+mutations. They manipulate networks explicitly.
+
+Functions
+---------
+    TODO
+    point_mutate_adj:
+    point_mutate_mask:
+    degree_and_connectivity_preserving_mutation:
+    degree_preserving_mutation:
+    
+ 
+"""
 
 def point_mutate_adj(network):
     '''
