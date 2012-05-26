@@ -27,7 +27,7 @@ if __name__ == '__main__':
     motifbox = [None]*50
     scorebox = [None]*50
     for network_number in xrange(40):
-        petri.add_to_family(classes.generate_random(7,
+        petri.add(classes.generate_random(7,
     	                                    network.scorers.orbit_length_sum_f,
     	                                    network.boolfuncs.xor_masking_C,
     	                                    probability = (0.5,0.5,0.5))) 
