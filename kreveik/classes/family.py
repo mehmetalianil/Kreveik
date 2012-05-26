@@ -21,6 +21,7 @@ import other
 import logging
 import numpy as num
 import matplotlib.pyplot as plt
+import kreveik
 
 class Family(other.ProbeableObj,other.Ensemble):
     '''

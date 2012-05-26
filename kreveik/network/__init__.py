@@ -18,6 +18,7 @@ import mutators
 import scorers
 import selectors
 import boolfuncs
+import motif
 
 def local_clustering_in(network):
     """
