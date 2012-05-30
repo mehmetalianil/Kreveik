@@ -65,7 +65,7 @@ def exclusive_conn_motifs(nodes):
         count = 0
         for j in range(nodes):
             x = allmotifs[i][0].adjacency[j][j]
-            if (x == True):                
+            if (x == False):                
                 count = count + 1
         if (count == nodes):
             exclusive_list.append([allmotifs[i][0],0])
