@@ -45,6 +45,31 @@ def all_conn_motifs(nodes):
                 motiflist.append([motif,0])
     return motiflist
 
+def exclusive_conn_motifs(nodes):
+    """
+    Returns a list of connected motifs for a degree, excluding self adjacency of the nodes.
+    
+    This function takes exclusive configurations of a graph with n nodes.
+    And lists them as a list of possible motifs. 
+    
+    Input Arguments:
+    ---------------
+    
+    nodes
+        The number of nodes of the motifs that will be generated.
+    """
+    logging.info("Returning exclusive connected motifs with "+str(nodes)+" nodes")
+    exclusive_list = []
+    allmotifs = all_conn_motifs(nodes)[:]
+    for i in range(len(allmotifs)):
+        count = 0
+        for j in range(nodes):
+            x = allmotifs[i][0].adjacency[j][j]
+            if (x == True):                
+                count = count + 1
+        if (count == nodes):
+            exclusive_list.append([allmotifs[i][0],0])
+    return exclusive_list
     
 def motif_freqs (network,degree,**kwargs):
     """
