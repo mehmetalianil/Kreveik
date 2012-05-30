@@ -71,17 +71,20 @@ def exclusive_conn_motifs(nodes):
             exclusive_list.append([allmotifs[i][0],0])
     return exclusive_list
     
-def motif_freqs (network,degree,**kwargs):
+def motif_freqs (network,degree,exclusive = False,**kwargs):
     """
     Returns a list of motifs for a given network
     
     This function takes every possible combinations of nodes counting degree, out of all
-    nodes of the network provided, and counts them in a list of all motifs. 
+    nodes of the network provided, and counts them in a list of all motifs, by default. If
+    the argument exclusive is set True, it takes only exclusive motifs (excluding self 
+    adjacencies of the nodes) into account.  
     
     Args:
     ----
         network: the network which motif frequencies will be found.
         degree: the number of nodes of the motifs that will be searched in the network.
+        exclusive: False by default. If set True, the search will be limited to exclusive motifs.
         motiflist: an optional argument in which if supplied, the search will be limited to
         motifs in that list.
         
@@ -103,7 +106,10 @@ def motif_freqs (network,degree,**kwargs):
             motif_list = num.array([[motif,0] for motif in motiflist])
     else:
         logging.info("Creating all possible motifs of node count "+str(degree)+".")
-        motif_list = all_conn_motifs(degree)[:]
+        if (exclusive == True):
+            motif_list = exclusive_conn_motifs(degree)[:]
+        else:
+            motif_list = all_conn_motifs(degree)[:]
         
     logging.info("Extracting motifs from all possible "+str(degree)+" node combinations of the network.")
     
@@ -111,9 +117,12 @@ def motif_freqs (network,degree,**kwargs):
         logging.debug("Motif Permutation:"+str(list(combination)))
         
         this_motif_adj = num.zeros((degree,degree), dtype = bool)
-        for (first_ctr,first_node) in enumerate(list(combination)):
+        for (first_ctr,first_node) in enumerate(list(combination)):            
             for (second_ctr,second_node) in enumerate(list(combination)):
-                this_motif_adj[first_ctr][second_ctr] = network.adjacency[first_node][second_node]
+                if (exclusive == True) and (first_ctr == second_ctr):
+                    this_motif_adj[first_ctr][second_ctr] = 0
+                else:                    
+                    this_motif_adj[first_ctr][second_ctr] = network.adjacency[first_node][second_node]
         
         this_motif = kreveik.classes.Motif(this_motif_adj)
         logging.debug("Motif Adjacency:")
