@@ -122,5 +122,4 @@ class Family(other.ProbeableObj,other.Ensemble):
             self.scores[counter] = network.score
         self.populate_probes(kreveik.probes.populate_equilibria_in_family)
             
-
-
+ 

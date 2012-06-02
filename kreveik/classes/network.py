@@ -220,7 +220,7 @@ class TopologicalNetwork(ProbeableObj):
       
     def laplacian_eigvals(self):
         """
-        Returns an ordered list of eigenvalues of the laplacian.
+        Returns an ordered array of eigenvalues of the laplacian.
         """
         ordered_list = []
         values = []
@@ -230,8 +230,17 @@ class TopologicalNetwork(ProbeableObj):
         for i in range(len(self.adjacency)):
             ordered_list.append(min(values))
             values.remove(min(values))
-        return ordered_list
+        return num.array(ordered_list)
         
+    def spectral_distance(self,other):
+        """
+        Computes spectral distance between networks.
+        """
+        difference = self.laplacian_eigvals()-other.laplacian_eigvals()
+        distance = difference * difference
+        spec_distance = distance.sum()
+        return spec_distance
+
     def is_connected(self):
         """
         Returns True if the graph is connected, False if not.

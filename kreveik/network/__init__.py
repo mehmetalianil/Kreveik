@@ -69,4 +69,10 @@ def global_clustering_in(network):
     Returns the global clustering coefficient for input connections for every single node 
     """
     local_clustering_in(network).mean()
+    
+def spectral_distance(network1, network2):
+    """
+    Returns spectral distance between two networks.
+    """
+    return network1.spectral_distance(network2)
                 
