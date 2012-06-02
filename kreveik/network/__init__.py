@@ -13,6 +13,43 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+"""
+network package
+==============
+
+This package includes functions that concern network-like objects
+
+Modules
+-------
+boolfuncs: 
+    Boolean functions that carry one state of a network to another (propogators).
+
+generators:
+    Functions that generate networks. 
+    
+mutators:
+    Functions that mutate functions
+
+scorers:
+    Functions that score networks
+
+selectors:
+    Functions that select networks genetic elimination
+    
+motif:
+    Functions that concerns networks' motifs.
+    
+Functions
+---------
+local_clustering_in:
+local_clustering_out:
+global_clustering_out:
+global_clustering_in:
+
+"""
+
+
+
 import generators
 import mutators
 import scorers
