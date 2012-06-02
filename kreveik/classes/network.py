@@ -106,6 +106,80 @@ class TopologicalNetwork(ProbeableObj):
         
         drawing.pack()
         window.mainloop()
+        
+    def save_plot(self,filename):
+        """Opens a window, draws the graph into the window.
+           Requires Tk, and of course a windowing system.
+        """
+        import Tkinter as tk
+        import math
+        window= tk.Tk()
+        canvas_size = 400
+        drawing = tk.Canvas(window, height=canvas_size, width=canvas_size, background="white")
+        n_nodes = self.n_nodes
+        radius = 150
+        node_radius = 10
+        
+        drawing.create_text(200,10,text = "Network:"+str(id(self)))
+        drawing.pack()
+        
+        list_of_coordinates = [(radius*math.sin(2*math.pi*n/n_nodes)+canvas_size/2,radius*math.cos(2*math.pi*n/n_nodes)+canvas_size/2) for n in range(n_nodes)]
+        
+        for linksto,node in enumerate(self.adjacency):
+            for linksfrom,link in enumerate(node):
+                
+                if linksto == linksfrom and link==True:
+                    angle = math.atan2(list_of_coordinates[linksto][1]-200,
+                                      list_of_coordinates[linksto][0]-200)
+                    
+                    drawing.create_line(list_of_coordinates[linksto][0]+node_radius*math.cos(angle),
+                                        list_of_coordinates[linksto][1]+node_radius*math.sin(angle),
+                                        list_of_coordinates[linksto][0]+node_radius*2*(math.cos(angle+20)),
+                                        list_of_coordinates[linksto][1]+node_radius*2*math.sin(angle+20),
+                                        list_of_coordinates[linksto][0]+node_radius*4*(math.cos(angle)),
+                                        list_of_coordinates[linksto][1]+node_radius*4*math.sin(angle),
+                                        list_of_coordinates[linksto][0]+node_radius*2*math.cos(angle-20),
+                                        list_of_coordinates[linksto][1]+node_radius*2*(math.sin(angle-20)),
+                                        list_of_coordinates[linksto][0]+node_radius*math.cos(angle),
+                                        list_of_coordinates[linksto][1]+node_radius*math.sin(angle),
+                                        smooth=True,joinstyle="round",fill="black",width=2,arrow="last"
+                                        )
+                
+                elif link == True: 
+                    angle = math.atan2(list_of_coordinates[linksto][1]-list_of_coordinates[linksfrom][1],
+                                   list_of_coordinates[linksto][0]-list_of_coordinates[linksfrom][0])
+                
+                    drawing.create_line(list_of_coordinates[linksfrom][0]+node_radius*math.cos(angle),
+                                        list_of_coordinates[linksfrom][1]+node_radius*math.sin(angle),
+                                        list_of_coordinates[linksto][0]-node_radius*math.cos(angle),
+                                        list_of_coordinates[linksto][1]-node_radius*math.sin(angle),
+                                        fill="black",width=2,arrow="last")
+        
+        for node_ctr,(x,y) in enumerate(list_of_coordinates):
+
+            if type(self) != Network:
+                node_color = "white"
+                text_color = "black"
+            elif self.state == num.array([[]]):
+                node_color = "white"
+                text_color = "black"
+            else:
+                if self.state[-1][node_ctr] == True: 
+                    node_color = "black"
+                    text_color = "white"
+                else:                
+                    node_color = "white"
+                    text_color = "black"
+                    
+            drawing.create_oval(x-node_radius,y-node_radius,x+node_radius,y+node_radius,width=2,fill=node_color)
+            drawing.create_text(x,y,text =  str(node_ctr),fill = text_color, font="Arial")
+            
+
+        drawing.update()
+        drawing.pack()
+        drawing.postscript(file=filename+".ps")
+        
+        #window.mainloop
 
     def laplacian(self):  
         """

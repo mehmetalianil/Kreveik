@@ -87,6 +87,7 @@ def motif_freqs (network,degree,exclusive = False,**kwargs):
         exclusive: False by default. If set True, the search will be limited to exclusive motifs.
         motiflist: an optional argument in which if supplied, the search will be limited to
         motifs in that list.
+        accumulate: if True, will accumulate motifs omitted in the motiflist provided.
         
     Returns:
     -------
@@ -98,12 +99,17 @@ def motif_freqs (network,degree,exclusive = False,**kwargs):
     logging.info("Extracting "+str(degree)+" motifs of network "+str(network))
     all_combinations = itertools.combinations(range(len(network.adjacency)),degree)
     
+    if 'accumulate' in kwargs:
+        accumulate = kwargs['accumulate'] 
+    else: 
+        accumulate = False
+        
     if 'motiflist' in kwargs:
         allmotifs = kwargs['motiflist'][:]
         motif_list = allmotifs[:]
         if len(motif_list[0]) == 1:
             # if only a list of motifs are presented, not a list and numbers.
-            motif_list = num.array([[motif,0] for motif in motiflist])
+            motif_list = num.array([[motif,0] for motif in motif_list])
     else:
         logging.info("Creating all possible motifs of node count "+str(degree)+".")
         if (exclusive == True):
@@ -133,12 +139,11 @@ def motif_freqs (network,degree,exclusive = False,**kwargs):
             if (any(truth) == True):
                 index = truth.index(True)
                 motif_list[index][1] = motif_list[index][1]+1
-            elif (all(truth) == False):
-                logging.info("")
-                motif_list.append([this_motif,1])
-            else:
-                logging.error("There has been a problem while extracting Motifs")
-                break
+            
+            elif accumulate: 
+                if (all(truth) == False):
+                    logging.debug("Added new motif,"+str(id(this_motif)))
+                    motif_list.append([this_motif,1])
         
     logging.info("Extraction done!")
     return motif_list

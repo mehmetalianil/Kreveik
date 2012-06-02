@@ -4,7 +4,7 @@ Created on Mar 8, 2011
 @author: Mehmet Ali Anil
 '''
 
-from kreveik import * 
+from Kreveik.kreveik import * 
 import numpy as num
 import matplotlib.pyplot as plt
 import copy
