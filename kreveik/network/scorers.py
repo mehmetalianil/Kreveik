@@ -14,8 +14,17 @@
 #    limitations under the License.
 
 """
+scorers module
+===============
+
 This module contains different scorer functions that have a 
 single network as input and outputs its score accordingly.
+
+Functions
+---------
+    sum_scorer_f:
+    orbit_length_sum_f
+ 
 """
 
 

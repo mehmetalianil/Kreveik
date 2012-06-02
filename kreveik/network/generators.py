@@ -13,6 +13,19 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+"""
+family.motifs module
+====================
+Functions that concern motifs. 
+
+Functions
+---------
+    create:Generate a network by giving adjacency matrix, the propogator (boolean function) 
+    and the mask. 
+    
+    random:Generates a network with random adjacency matrix.(Configuration.)
+    
+"""
 
 
 def create(adjacency_matrix, bool_fcn, function):
@@ -29,6 +42,7 @@ def create(adjacency_matrix, bool_fcn, function):
         Mask function
     """
     import numpy as num
+    from kreveik.classes import Network 
     
     initial_state= num.array([len(adjacency_matrix)*[False]])
     new_network=Network(adjacency_matrix, bool_fcn, function, state_vec = initial_state)
@@ -108,3 +122,5 @@ def random(n_nodes,function,probability=(0.5,0.5,0.5),connected=False, howmany=1
             print z
          
     return new_network
+
+__all__=[create, random]
