@@ -85,6 +85,13 @@ class Family(other.ProbeableObj,other.Ensemble):
         """
         return copy.deepcopy(self)
     
+    def remove_all_self_connections(self):
+        """
+        Removes self connections of the nodes in every network of a family.
+        """
+        for network in self:
+            network.remove_self_connection()
+            
     def plot_scores(self):
         """
         If family.populate_equilibria is used to extract scores of all networks within a family,

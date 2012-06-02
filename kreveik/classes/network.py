@@ -248,6 +248,9 @@ class TopologicalNetwork(ProbeableObj):
         return not(determinant == 0)
     
     def remove_self_connection(self):
+        """
+        Removes self connections of the nodes in the network.
+        """
         diagonal = num.diag(num.diag(self.adjacency))
         new_adjacency = self.adjacency - diagonal
         self.adjacency = new_adjacency
