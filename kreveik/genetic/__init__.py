@@ -13,6 +13,29 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+
+
+"""
+genetic package
+==============
+
+This package includes functions that concern the Genetical Algrithm.    
+
+Modules
+-------
+
+    
+Functions
+---------
+score:
+    Runs the scorer function of the object.
+    
+genetic_iteration:
+    Runs one iteration of the Genetical Algorithm.    
+
+"""
+
+
 def score(element,scorer=None):
     
     """
@@ -27,12 +50,13 @@ def score(element,scorer=None):
         return scorer(element)
 
 def genetic_iteration(ensemble,**kwargs):
-    import logging
     '''
     Runs one iteration of the genetic algorithm.
     It finds wildtypes of the family, mutates them, populates the family with mutants
     and assasinates as much of it has mutated. 
     '''
+    import logging
+        
     if ((ensemble.scorer == None) or (ensemble.selector == None)
         or (ensemble.mutator == None) or (ensemble.killer == None)):
         raise ValueError("An element needs its scorer, killer, selector and mutator \
@@ -70,4 +94,4 @@ def genetic_iteration(ensemble,**kwargs):
     logging.info("GA: Killing...")
     ensemble.killer(ensemble,killcount)
 
-
+__all__= [genetic_iteration, score]

@@ -26,6 +26,8 @@ Functions
     
 """
 
+
+
 def random_killer(ensemble,times):
     import numpy as num 
     import logging
@@ -57,4 +59,4 @@ def qualified_killer(ensemble,**kwargs):
 def underachiever_killer(ensemble,**kwargs):
     pass
 
-    
+__all__ = [random_killer, qualified_killer, underachiever_killer]

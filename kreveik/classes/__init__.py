@@ -30,8 +30,11 @@ Motif
 Network
 Family
 '''
-
 from other import Ensemble,Element,ProbeableObj 
 from network import TopologicalNetwork, Motif, Network
 from family import Family
+
+__all__=[Ensemble,Element,ProbeableObj,TopologicalNetwork,Motif,Network,Family]
+
+
 

@@ -28,19 +28,15 @@ Functions
 ---------
 motif_freqs
     Extracts motif frequencies of a population
-    
-mean connectivity
-    Returns the mean value of the connectivity of a population.
+
 """
 
 import killer
 from motifs import motif_freqs
 
-def mean_connectivity(family):
-    """
-    The mean connectivity of a Family of networks is returned.
-    """
-    #[network.network for network in family]
-    pass
+
+__all__=[killer, motif_freqs, ]
+
+
 
     
