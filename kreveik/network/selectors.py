@@ -13,9 +13,20 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+
 """
+selectors module
+===============
+
 In this module, the selectors for the GA elements, networks are defined. A selector returns True
 or False due to whether a particular element is eligible for mutation or not. 
+
+Functions
+---------
+    hard_threshold:
+    hard_threshold_with_probability:
+    logistic:
+ 
 """
 
 def hard_threshold(network,**kwargs):
@@ -81,3 +92,4 @@ def logistic(network,**kwargs):
     else:
         return False
 
+__all__ = [hard_threshold,hard_threshold_with_probability,logistic]

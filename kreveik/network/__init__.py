@@ -41,10 +41,10 @@ motif:
     
 Functions
 ---------
-local_clustering_in:
-local_clustering_out:
-global_clustering_out:
-global_clustering_in:
+local_clustering_in:  in- clustering for every node 
+local_clustering_out:  out- clustering for every node 
+global_clustering_out: returns the mean in-clustering of all nodes
+global_clustering_in:  returns the mean out-clustering of all nodes
 
 """
 
@@ -107,9 +107,7 @@ def global_clustering_in(network):
     """
     local_clustering_in(network).mean()
     
-def spectral_distance(network1, network2):
-    """
-    Returns spectral distance between two networks.
-    """
-    return network1.spectral_distance(network2)
+__all__= [generators,mutators, scorers,selectors,boolfuncs,motif,
+          global_clustering_in, global_clustering_out, local_clustering_out,
+          local_clustering_in]
                 

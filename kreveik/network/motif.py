@@ -15,7 +15,6 @@
 
 import logging
 import numpy as num
-import itertools
 import kreveik
 
 
@@ -148,3 +147,4 @@ def motif_freqs (network,degree,exclusive = False,**kwargs):
     logging.info("Extraction done!")
     return motif_list
 
+__all__ = [motif_freqs, exclusive_conn_motifs, all_conn_motifs ]
