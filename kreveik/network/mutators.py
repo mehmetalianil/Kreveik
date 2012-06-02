@@ -70,12 +70,13 @@ def degree_and_connectivity_preserving_mutation(network, maximum = 0, def_mutati
     adj = network.adjacency
     logging.debug( "Adjacency Matrix:")
     logging.debug( adj)
+    n_nodes = len(adj)
     if maximum == 0:
         maximum = 10*len(adj)**2
     columns = adj.sum(axis=0)
     rows = adj.sum(axis=1)
-    colsnotzero = num.where(columns != 0)[0]
-    rowsnotzero = num.where(rows != 0)[0]
+    colsnotzero = num.where([(item != 0 or item != n_nodes) for item in columns])[0]
+    rowsnotzero = num.where([(item != 0 or item != n_nodes) for item in rows])[0]
     #if all columns are zero or all rows are zero we can't proceed
     
     if len(colsnotzero) > 0 and len(rowsnotzero) > 0:
@@ -122,15 +123,19 @@ def degree_preserving_mutation(network, maximum = 0, def_mutation = False):
     import logging  
     
     adj = network.adjacency
+    n_nodes = len(adj)
     logging.debug( "Adjacency Matrix:")
     logging.debug( adj)
     if maximum == 0:
         maximum = 10*len(adj)**2
     columns = adj.sum(axis=0)
     rows = adj.sum(axis=1)
-    colsnotzero = num.where(columns != 0)[0]
-    rowsnotzero = num.where(rows != 0)[0]
-    #if all columns are zero or all rows are zero we can't proceed
+    colsnotzero = num.where([(item != 0 and item != n_nodes) for item in columns])[0]
+    rowsnotzero = num.where([(item != 0 and item != n_nodes) for item in rows])[0]
+    logging.debug( "Columns that are non zero and full:")
+    logging.debug(colsnotzero)
+    logging.debug( "Rows that are non zero and full:")
+    logging.debug(rowsnotzero)
     
     if len(colsnotzero) > 0 and len(rowsnotzero) > 0:
         for cntr in xrange(maximum):

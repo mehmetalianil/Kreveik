@@ -14,7 +14,7 @@
 #    limitations under the License.
 
 
-def motif_freqs(family,degree, sorting=False, **kwargs):
+def motif_freqs(family,degree, exclusive=False, sorting=False, **kwargs):
     """
     Returns a list of motifs of the family.
     
@@ -40,7 +40,10 @@ def motif_freqs(family,degree, sorting=False, **kwargs):
     if  'motiflist' in kwargs:
         returned_motifs = copy.deepcopy(kwargs['motiflist'])
     else:
-        returned_motifs = network.motif.all_conn_motifs(degree)[:]
+        if(exclusive == True):
+            returned_motifs = network.motif.exclusive_conn_motifs(degree)[:]
+        else:
+            returned_motifs = network.motif.all_conn_motifs(degree)[:]
 
     logging.info("Computing motif frequencies of the family")
     for networkf in family:
@@ -50,3 +53,18 @@ def motif_freqs(family,degree, sorting=False, **kwargs):
         return  sorted (returned_motifs, key = lambda returned_motifs:returned_motifs[1] , reverse = True)
     else:
         return returned_motifs
+
+def exclusive_motif_freqs(family,degree):
+    from kreveik import network
+    import copy
+    import logging
+    motifs = network.motif.exclusive_conn_motifs(degree)[:]
+    for networkf in family:
+        logging.info("Computing motif frequencies of the network"+str(networkf)+".")
+        returned_motifs = network.motif.motif_freqs(networkf, degree, exclusive=True)
+        for i in range(len(motifs)):
+            motifs[i][1] = motifs[i][1] + returned_motifs[i][1]
+    return motifs
+        
+    
+    

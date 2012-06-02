@@ -2,7 +2,7 @@ from kreveik import *
 import logging
 import numpy as num
 import shelve
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 petri = classes.Family()
 motiflist = []
@@ -12,7 +12,7 @@ allmotifs = network.motif.all_conn_motifs(3)
 
 for i in xrange(200):
     a = network.generators.random(7, network.boolfuncs.xor_masking_C,
-                                     probability=(0.4,0.5,0.5),
+                                     probability=(0.5,0.5,0.5),
                                      connected=True)
     petri.add(a)
     
@@ -27,7 +27,7 @@ petri.populate_equilibria()
 for i in xrange(100):
     for j in xrange(20):
         print "("+str(i)+"/100) ("+str(j)+"/20)"
-        kwargs = {'motiflist':allmotifs[:],'prob':0.49,'threshold':2}
+        kwargs = {'motiflist':allmotifs[:],'prob':0.5,'threshold':2}
         genetic.genetic_iteration(petri,**kwargs)
         degrees.append(num.mean([element.outdegree() for element in petri]))
         scores.append(num.mean([network.score for network in petri]))
