@@ -127,8 +127,14 @@ class Family(other.ProbeableObj,other.Ensemble):
         Computes spectral distance between every pair of network in the family.
         And returns a matrix composed of distance values.
         """
-        return [[network.spectral_distance(network2) for network in self] 
-         for network2 in self]
+        return num.array([[network.spectral_distance(network2) for network in self] 
+         for network2 in self])
     
+    def mean_spectral_distance(self):
+        """
+        Computes mean spectral distance of each network in the family,
+        and returns an array composed of the distance values.
+        """
+        return self.spectral_distance().mean()
     
                 
