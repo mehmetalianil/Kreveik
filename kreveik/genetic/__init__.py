@@ -13,6 +13,29 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+
+
+"""
+genetic package
+==============
+
+This package includes functions that concern the Genetical Algrithm.    
+
+Modules
+-------
+
+    
+Functions
+---------
+score:
+    Runs the scorer function of the object.
+    
+genetic_iteration:
+    Runs one iteration of the Genetical Algorithm.    
+
+"""
+
+
 def score(element,scorer=None):
     
     """
@@ -70,4 +93,4 @@ def genetic_iteration(ensemble,**kwargs):
     logging.info("GA: Killing...")
     ensemble.killer(ensemble,killcount)
 
-
+__all__= [genetic_iteration, score]
