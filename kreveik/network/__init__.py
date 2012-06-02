@@ -106,4 +106,8 @@ def global_clustering_in(network):
     Returns the global clustering coefficient for input connections for every single node 
     """
     local_clustering_in(network).mean()
+    
+__all__= [generators,mutators, scorers,selectors,boolfuncs,motif,
+          global_clustering_in, global_clustering_out, local_clustering_out,
+          local_clustering_in]
                 
