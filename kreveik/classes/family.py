@@ -122,4 +122,13 @@ class Family(other.ProbeableObj,other.Ensemble):
             self.scores[counter] = network.score
         self.populate_probes(kreveik.probes.populate_equilibria_in_family)
             
- 
+    def spectral_distance(self):
+        """
+        Computes spectral distance between every pair of network in the family.
+        And returns a matrix composed of distance values.
+        """
+        return [[network.spectral_distance(network2) for network in self] 
+         for network2 in self]
+    
+    
+                
