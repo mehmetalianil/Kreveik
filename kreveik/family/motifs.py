@@ -13,6 +13,17 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+"""
+family.motifs module
+====================
+Houses functions concerning motif extraction from a Family.
+
+Functions
+---------
+    motif_freqs: extracts motifs and their frequencies.
+    exclusive_motif_freqs: WIP
+    
+"""
 
 def motif_freqs(family,degree, exclusive=False, sorting=False, **kwargs):
     """
@@ -55,6 +66,9 @@ def motif_freqs(family,degree, exclusive=False, sorting=False, **kwargs):
         return returned_motifs
 
 def exclusive_motif_freqs(family,degree):
+    """
+    Work in Progress
+    """
     from kreveik import network
     import copy
     import logging
@@ -65,6 +79,8 @@ def exclusive_motif_freqs(family,degree):
         for i in range(len(motifs)):
             motifs[i][1] = motifs[i][1] + returned_motifs[i][1]
     return motifs
+
+__all__ =[motif_freqs, exclusive_motif_freqs]
         
     
     
