@@ -92,3 +92,4 @@ def logistic(network,**kwargs):
     else:
         return False
 
+__all__ = [hard_threshold,hard_threshold_with_probability,logistic]
