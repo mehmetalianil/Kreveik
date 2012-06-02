@@ -144,6 +144,20 @@ class TopologicalNetwork(ProbeableObj):
         laplacian = degrees-original
         return laplacian  
       
+    def laplacian_eigvals(self):
+        """
+        Returns an ordered list of eigenvalues of the laplacian.
+        """
+        ordered_list = []
+        values = []
+        eigenvalues = num.linalg.eigvals(self.laplacian())   
+        for i in range(len(self.adjacency)):
+            values.append(eigenvalues[i])
+        for i in range(len(self.adjacency)):
+            ordered_list.append(min(values))
+            values.remove(min(values))
+        return ordered_list
+        
     def is_connected(self):
         """
         Returns True if the graph is connected, False if not.
