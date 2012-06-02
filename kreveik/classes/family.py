@@ -22,6 +22,7 @@ import logging
 import numpy as num
 import matplotlib.pyplot as plt
 import kreveik
+import copy
 
 class Family(other.ProbeableObj,other.Ensemble):
     '''
@@ -78,6 +79,12 @@ class Family(other.ProbeableObj,other.Ensemble):
         self.network_list.append(network)
         return True
             
+    def copy(self):
+        """
+        Returns a copy of the Family object. 
+        """
+        return copy.deepcopy(self)
+    
     def plot_scores(self):
         """
         If family.populate_equilibria is used to extract scores of all networks within a family,

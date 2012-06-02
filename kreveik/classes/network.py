@@ -247,6 +247,11 @@ class TopologicalNetwork(ProbeableObj):
         determinant = num.linalg.det(laplacian +num.ones((len(laplacian),len(laplacian) )))
         return not(determinant == 0)
     
+    def remove_self_connection(self):
+        diagonal = num.diag(num.diag(self.adjacency))
+        new_adjacency = self.adjacency - diagonal
+        self.adjacency = new_adjacency
+            
     def copy(self):
         """
         Returns a copy of the Topological Network object. 
