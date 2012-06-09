@@ -115,7 +115,8 @@ def randomize(network, number):
     network_list=[]
     network_list.append(network)
     for i in range(number):
-        network_list.append(mutators.degree_preserving_mutation(network_list[i]))
+        new_network=network_list[i].copy()
+        network_list.append(mutators.degree_preserving_mutation(new_network))
     return network_list
     
 __all__= [generators,mutators, scorers,selectors,boolfuncs,motif,
