@@ -108,11 +108,13 @@ class TopologicalNetwork(ProbeableObj):
         window.mainloop()
         
     def save_plot(self,filename):
-        """Opens a window, draws the graph into the window.
-           Requires Tk, and of course a windowing system.
+        """
+        Saves the image as filename.ps in the working directory
+        Requires Tk, and of course a windowing system.
         """
         import Tkinter as tk
         import math
+
         window= tk.Tk()
         canvas_size = 400
         drawing = tk.Canvas(window, height=canvas_size, width=canvas_size, background="white")
@@ -178,6 +180,11 @@ class TopologicalNetwork(ProbeableObj):
         drawing.update()
         drawing.pack()
         drawing.postscript(file=filename+".ps")
+        window.destroy()                        # This destroys the window that is 
+                                                # generated for the postscript extraction
+                                                # We actually need a Tk setting which disables 
+                                                # rendering
+                                                # TODO (mehmet.ali.anil)
         
         #window.mainloop
 
@@ -189,6 +196,7 @@ class TopologicalNetwork(ProbeableObj):
         degrees = num.diag(symmetric.sum(axis=0))
         laplacian = degrees-symmetric
         return laplacian
+    
         
     def directed_laplacian(self):
         """
