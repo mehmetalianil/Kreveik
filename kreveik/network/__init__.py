@@ -107,7 +107,19 @@ def global_clustering_in(network):
     """
     local_clustering_in(network).mean()
     
+def randomize(network, number):
+    """
+    Randomizes a given network, by generating a number of networks preserving in and out
+    degrees of every node.
+    """
+    network_list=[]
+    network_list.append(network)
+    for i in range(number):
+        network_list.append(mutators.degree_preserving_mutation(network_list[i]))
+    return network_list
+    
 __all__= [generators,mutators, scorers,selectors,boolfuncs,motif,
           global_clustering_in, global_clustering_out, local_clustering_out,
-          local_clustering_in]
+          local_clustering_in, randomize]
+
                 
