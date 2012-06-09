@@ -70,6 +70,26 @@ def exclusive_conn_motifs(nodes):
             exclusive_list.append([allmotifs[i][0],0])
     return exclusive_list
     
+def node_duplication(motif):
+    #TODO
+    """
+    Duplicates every node in a motif for a given number of times,
+    generates a new motif for every node duplication, and returns
+    a list of all the generated motifs.
+    """
+    motiflist=[]
+    new_adjacency=motif.adjacency
+    for i in range(len(motif.adjacency)):
+        in_going=motif.adjacency[i][:]          
+        out_going=motif.adjacency[:][i]
+#        for j in range(number):
+        new_adjacency = num.append(new_adjacency, in_going)
+        transposed_adjacency = num.append(num.transpose(new_adjacency), out_going)
+        new_adjacency = num.transpose(transposed_adjacency)
+        motif = kreveik.classes.Motif(new_adjacency)
+        motiflist.append(motif)
+    return motiflist
+
 def motif_freqs (network,degree,exclusive = False,**kwargs):
     """
     Returns a list of motifs for a given network
