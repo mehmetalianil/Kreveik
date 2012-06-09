@@ -167,4 +167,4 @@ def motif_freqs (network,degree,exclusive = False,**kwargs):
     logging.info("Extraction done!")
     return motif_list
 
-__all__ = [motif_freqs, exclusive_conn_motifs, all_conn_motifs ]
+__all__ = [motif_freqs, exclusive_conn_motifs, all_conn_motifs, node_duplication ]
