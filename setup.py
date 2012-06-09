@@ -28,7 +28,7 @@ setup(
     name = "Kreveik",
     version = "0.5.9",
     packages = find_packages(),
-    install_requires = ['docutils>=0.3','numpy>=1.5','matplotlib>=1.0','Tkinter'],
+    install_requires = ['docutils>=0.3','numpy>=1.5','matplotlib>=1.0','Tkinter','shelve'],
 
     package_data = {
         # If any package contains *.md files, include them:
