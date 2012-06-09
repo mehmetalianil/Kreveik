@@ -48,8 +48,6 @@ global_clustering_in:  returns the mean out-clustering of all nodes
 
 """
 
-
-
 import generators
 import mutators
 import scorers
