@@ -60,3 +60,62 @@ __version__ = "0.0.5"
 __maintainer__ = "Mehmet Ali Anil"
 __email__ = "mehmet.anil@colorado.edu"
 __status__ = "Production"
+
+def save(objects=[],filename, **kwargs):
+    """
+    Saves the current state of the experiment.
+    """
+    import shelve
+    import os
+    import logging
+    
+    if "ext" in kwargs:
+        ext = kwargs["ext"]
+    else:    
+        ext = ".kvk"
+        
+    if "type_list" in kwargs:
+        type_list = kwargs["typelist"]
+    else: 
+        return None
+        #TODO
+        #type_list = defaults["type_list"]
+        
+    filename = filename+ext
+    
+    if os.path.isfile(filename):
+        logging.info("The file"+filename+"is already present.")
+        logging.info("Actions:")
+        logging.info("(O)verwrite")
+        logging.info("(N)ew filename")
+        logging.info("e(X)it")
+        prompt = input("Please select action:")
+        
+        while not(prompt in "ONXonx"):
+            logging.info("(O)verwrite")
+            logging.info("(N)ew filename")
+            logging.info("e(X)it")
+            logging.info("Please select a valid action by typing O,N or X.")
+            prompt = input("Please select action:")
+            
+        if prompt == "X" or prompt == "x":
+            logging.info("Exiting saving sequence.")
+            return None
+        elif prompt == "O" or prompt == "o":
+            logging.info("Overwriting"+filename+".")
+        elif prompt == "N" or prompt == "n":
+            logging.info("Enter new filename without extension .kvk:")
+            input("Filename :")
+            filename = filename+ext
+        else:
+            logging.debug("Saving sequence failed.")
+            return None
+        
+        theshelve = shelve.open(filename)
+        
+        for item in locals():
+            if type(locals()[item]) in type_list:
+            # TODO
+            return None 
+
+        
