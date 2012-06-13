@@ -116,6 +116,27 @@ def randomize(network, number):
         new_network=network_list[i].copy()
         network_list.append(mutators.degree_preserving_mutation(new_network))
     return network_list
+
+def z_score(network, number, degree, **kwargs):
+    """
+    """
+    import numpy as num
+    if 'motiflist' in kwargs:
+        allmotifs = kwargs['motiflist'][:]
+        motif_list = allmotifs[:]
+    else:
+        motif_list = motif.all_conn_motifs(degree)[:]
+    networks_list = randomize(network, number)
+    network_motifs = []
+    z_score_list = []
+    original_motifs = motif.relative_motif_freqs(network, degree, motiflist=motif_list)
+    for networkz in networks_list:
+        relative_motifs = motif.relative_motif_freqs(networkz, degree, motiflist=motif_list)
+        motif_count = [[relative_motifs[i][1]] for i in range(len(motif_list))]
+        network_motifs.append(motif_count)
+    for i in range(len(motif_list)):
+        z_score_list.append((num.array(original_motifs[i][1])-num.mean(network_motifs, axis=0)[i])/num.std(network_motifs,axis=0)[i])
+    return z_score_list
     
 __all__= [generators,mutators, scorers,selectors,boolfuncs,motif,
           global_clustering_in, global_clustering_out, local_clustering_out,

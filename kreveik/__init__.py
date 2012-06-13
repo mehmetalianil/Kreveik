@@ -61,7 +61,7 @@ __maintainer__ = "Mehmet Ali Anil"
 __email__ = "mehmet.anil@colorado.edu"
 __status__ = "Production"
 
-def save(objects=[],filename, **kwargs):
+def save(filename, objects=[], **kwargs):
     """
     Saves the current state of the experiment.
     """
@@ -113,9 +113,9 @@ def save(objects=[],filename, **kwargs):
         
         theshelve = shelve.open(filename)
         
-        for item in locals():
-            if type(locals()[item]) in type_list:
+        #for item in locals():
+#            if type(locals()[item]) in type_list:
             # TODO
-            return None 
+            #return None 
 
         

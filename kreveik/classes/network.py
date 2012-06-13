@@ -439,7 +439,7 @@ class Network(TopologicalNetwork,Element):
         # Take the state vector, convert the list of arrays into a 2d array, then show it as an image
         # Black and white. 
         
-        plt.imshow(self.state[-last:],cmap=plt.cm.binary,interpolation='nearest')     
+#        plt.imshow(self.state[-last:],cmap=plt.cm.binary,interpolation='nearest')     
         plt.show()
 
 
@@ -455,7 +455,7 @@ class Network(TopologicalNetwork,Element):
         if self.n_nodes % 2 == 1:
             im_matrix = self.equilibria.reshape((rowsandcols,rowsandcols*2))
     
-        plt.imshow(im_matrix,cmap=plt.cm.gray,interpolation='nearest')
+#        plt.imshow(im_matrix,cmap=plt.cm.gray,interpolation='nearest')
         
         plt.grid()
         plt.colorbar()

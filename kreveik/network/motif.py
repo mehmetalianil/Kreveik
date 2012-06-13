@@ -198,4 +198,5 @@ def relative_motif_freqs (network,degree,**kwargs):
         relative_freqs.append([network_motifs[i][0], float(network_motifs[i][1])/motif_counts.sum()])
     return num.array(relative_freqs)
 
-__all__ = [motif_freqs, exclusive_conn_motifs, all_conn_motifs, node_duplication ]
+__all__ = [motif_freqs, exclusive_conn_motifs, all_conn_motifs, node_duplication, 
+           relative_motif_freqs ]

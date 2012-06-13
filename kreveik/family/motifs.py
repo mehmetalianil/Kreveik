@@ -64,6 +64,26 @@ def motif_freqs(family,degree, exclusive=False, sorting=False, **kwargs):
         return  sorted (returned_motifs, key = lambda returned_motifs:returned_motifs[1] , reverse = True)
     else:
         return returned_motifs
+    
+def relative_motif_freqs(family, degree, sorting=False, **kwargs):
+    """
+    """
+    from kreveik import network
+    import copy
+    import logging
+    import numpy as num
+    
+    if  'motiflist' in kwargs:
+        returned_motifs = copy.deepcopy(kwargs['motiflist'])
+    else:
+        returned_motifs = network.motif.all_conn_motifs(degree)[:]
+    logging.info("Computing relative motif frequencies of the family")
+    family_motifs = family.motifs.motif_freqs(family, degree, motiflist=returned_motifs)[:]
+    motif_counts = num.array([[family_motifs[i][1]] for i in range(len(family_motifs))])
+    relative_freqs = []
+    for i in range(len(family_motifs)):
+        relative_freqs.append([family_motifs[i][0], float(family_motifs[i][1])/motif_counts.sum()])
+    return num.array(relative_freqs)
 
 def exclusive_motif_freqs(family,degree):
     """
