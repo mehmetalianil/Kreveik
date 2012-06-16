@@ -2,22 +2,22 @@
 import os
 
 os.chdir("../../")
-from kreveik import * 
+import kreveik
 import logging
 import numpy as num
 import shelve
 logging.basicConfig(level=logging.INFO)
 os.chdir("examples/example1/")
 
-petri = classes.Family()
+petri = kreveik.classes.Family()
 motiflist = []
 scores = []
 degrees = []
 mean_distance = []
-allmotifs = network.motif.all_conn_motifs(3)
+allmotifs = kreveik.network.motif.all_conn_motifs(3)
 
 for i in xrange(200):
-    a = network.generators.random(7, network.boolfuncs.xor_masking_C,
+    a = kreveik.network.generators.random(7, kreveik.network.boolfuncs.xor_masking_C,
                                      probability=(0.5,0.5,0.5),
                                      connected=True)
     petri.add(a)

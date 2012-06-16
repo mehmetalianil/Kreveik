@@ -152,8 +152,4 @@ def save(filename, objects=[], **kwargs):
     
     theshelve.close()
     logging.info("Saved as "+filename)    
-        
-        
-        
-        
-    
+
