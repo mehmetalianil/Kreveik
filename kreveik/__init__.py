@@ -97,14 +97,14 @@ def save(filename, objects=[], **kwargs):
         logging.info("(O)verwrite")
         logging.info("(N)ew filename")
         logging.info("e(X)it")
-        prompt = input("Please select action:")
+        prompt = raw_input("Please select action:")
         
         while not(prompt in "ONXonx"):
             logging.info("(O)verwrite")
             logging.info("(N)ew filename")
             logging.info("e(X)it")
             logging.info("Please select a valid action by typing O,N or X.")
-            prompt = input("Please select action:")
+            prompt = raw_input("Please select action:")
             
         if prompt == "X" or prompt == "x":
             logging.info("Exiting saving sequence.")
@@ -113,7 +113,7 @@ def save(filename, objects=[], **kwargs):
             logging.info("Overwriting"+filename+".")
         elif prompt == "N" or prompt == "n":
             logging.info("Enter new filename without extension .kvk:")
-            input("Filename :")
+            raw_input("Filename :")
             filename = filename+ext
         else:
             logging.debug("Saving sequence failed.")
