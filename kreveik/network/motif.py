@@ -167,4 +167,35 @@ def motif_freqs (network,degree,exclusive = False,**kwargs):
     logging.info("Extraction done!")
     return motif_list
 
+def relative_motif_freqs (network,degree,**kwargs):
+    """
+    Returns a list of motifs and their number of occurrences as a fraction of the total
+    number of occurrences of all the motifs in the list, for a given network.
+    
+    Args:
+    ----
+        network: the network which motif frequencies will be found.
+        degree: the number of nodes of the motifs that will be searched in the network.
+        motiflist: an optional argument in which if supplied, the search will be limited to
+        motifs in that list.
+        
+    Returns:
+    -------
+    A numpy array of [Motif object , number of occurrences over total number of occurrences], 
+    an N x 2 array. 
+        
+    """
+    if 'motiflist' in kwargs:
+        allmotifs = kwargs['motiflist'][:]
+        motif_list = allmotifs[:]
+    else:
+        logging.info("Creating all possible motifs of node count "+str(degree)+".")
+        motif_list = all_conn_motifs(degree)[:]
+    network_motifs = motif_freqs(network, degree, motiflist=motif_list)[:]
+    motif_counts = num.array([[network_motifs[i][1]] for i in range(len(network_motifs))])
+    relative_freqs = []
+    for i in range(len(network_motifs)):
+        relative_freqs.append([network_motifs[i][0], float(network_motifs[i][1])/motif_counts.sum()])
+    return num.array(relative_freqs)
+
 __all__ = [motif_freqs, exclusive_conn_motifs, all_conn_motifs, node_duplication ]
