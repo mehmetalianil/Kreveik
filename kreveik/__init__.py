@@ -52,6 +52,9 @@ import genetic
 import network
 import probes
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 __author__ = "Mehmet Ali Anil"
 __copyright__ = ""
 __credits__ = ["Mehmet Ali Anil","Ayse Erzan","Burcin Danaci"]
@@ -61,13 +64,15 @@ __maintainer__ = "Mehmet Ali Anil"
 __email__ = "mehmet.anil@colorado.edu"
 __status__ = "Production"
 
-def save(objects=[],filename, **kwargs):
+defaults = {}
+defaults["type_list"]  = [classes.Family, classes.Motif, classes.Network]
+
+def save(filename, objects=[], **kwargs):
     """
     Saves the current state of the experiment.
     """
     import shelve
     import os
-    import logging
     
     if "ext" in kwargs:
         ext = kwargs["ext"]
@@ -76,10 +81,13 @@ def save(objects=[],filename, **kwargs):
         
     if "type_list" in kwargs:
         type_list = kwargs["typelist"]
-    else: 
-        return None
-        #TODO
-        #type_list = defaults["type_list"]
+    else:
+        type_list = defaults["type_list"]    
+    
+    if "type_list" in kwargs:
+        extras = kwargs["extras"]
+    else:
+        extras = []
         
     filename = filename+ext
     
@@ -111,11 +119,39 @@ def save(objects=[],filename, **kwargs):
             logging.debug("Saving sequence failed.")
             return None
         
-        theshelve = shelve.open(filename)
+    theshelve = shelve.open(filename)
+    
+    save_list = []
+    locals_copy = locals().copy()
+    logging.debug("Copy of the locals():")
+    logging.debug(str(locals_copy))
+    
+    for item in locals_copy:
+        logging.debug("Trying "+str(locals_copy[item]))
+        if type(locals_copy[item]) in type_list:
+            logging.debug(str(locals_copy[item])+", item #"+str(item)+", with the type "
+                          +str(type(locals_copy[item]))+" is added to the save_list.")
+            save_list.append([item,locals_copy[item],type(locals_copy[item])])
+        if locals_copy[item] in extras:
+            save_list.append([item,locals_copy[item],type(locals_copy[item])])
+            logging.debug(str(locals_copy[item])+", item #"+str(item)+", with the type "
+                          +str(type(locals_copy[item]))+" is added to the save_list.")
+    
+    logging.debug("The following list is generated for saving:")
+    logging.debug(str(save_list))
+    
+    if len(save_list) == 0:
+        logging.info("Unable to recognize an object to be saved. ")
+        logging.info("Please create networks, families and then try to save the present state.")
+        return None
+    else:
+        logging.info("The following objects are being saved:") 
+        for item in save_list:
+            logging.info("("+save_list[2]+")"+" "+save_list[1]) 
+        theshelve[save_list[0]] = save_list[1]
+    
+    theshelve.close()
+    logging.info("Saved as "+filename)    
         
-        for item in locals():
-            if type(locals()[item]) in type_list:
-            # TODO
-            return None 
 
-        
+    
