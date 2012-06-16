@@ -93,5 +93,29 @@ def genetic_iteration(ensemble,**kwargs):
     
     logging.info("GA: Killing...")
     ensemble.killer(ensemble,killcount)
+    
+def stop_iteration(ensemble, number, **kwargs):
+    """
+    """
+    import numpy as num
+    import logging
+    
+    if number>200:
+        return False
+    else:
+        if 'scores' in kwargs:
+            
+            last_scores = kwargs['scores'][-100:]
+            logging.debug("Last scores are: "+str(last_scores))
+            previous_scores =  kwargs['scores'][-200:-100]
+            logging.debug("Previous scores are: "+str(previous_scores))
+        else:
+            last_scores = [network.score for network in ensemble][-100:]
+            previous_scores = [network.score for network in ensemble][-200:-100]
+        difference = num.std(previous_scores) - num.mean(last_scores)
+        if abs(difference) < 0.001:
+            return True
+        else:
+            return False
 
 __all__= [genetic_iteration, score]

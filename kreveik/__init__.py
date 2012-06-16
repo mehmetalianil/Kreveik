@@ -53,7 +53,7 @@ import network
 import probes
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 __author__ = "Mehmet Ali Anil"
 __copyright__ = ""
