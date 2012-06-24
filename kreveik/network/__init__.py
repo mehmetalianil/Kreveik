@@ -107,7 +107,7 @@ def global_clustering_in(network):
     
 def randomize(network, number):
     """
-    Randomizes a given network, by generating a number of networks preserving in and out
+    Randomizes a given network, by generating a given number of networks preserving in and out
     degrees of every node.
     """
     network_list=[]
@@ -115,6 +115,37 @@ def randomize(network, number):
     for i in range(number):
         new_network=network_list[i].copy()
         network_list.append(mutators.degree_preserving_mutation(new_network))
+    return network_list
+
+def randomize_preserving_total_degree(network, number):
+    """
+    Randomizes a given network, by generating a given number of networks preserving 
+    the total in and out degree of the network.
+    """
+    
+    import numpy as num
+    import random
+    
+    network_list=[]
+    new_network=network.copy()
+    total_degree = num.sum(network.adjacency*1)
+    
+    
+    for i in range(number):
+        j = 0
+        new_adjacency = new_network.adjacency - new_network.adjacency
+        new_network.adjacency = new_adjacency
+        adjacency_sequence = num.ndarray.flatten(new_network.adjacency)
+        while j < total_degree:
+            index = random.randrange(0, num.square(len(new_network.adjacency)), step=1)
+            if adjacency_sequence[index] == 1:
+                j = j
+            else:
+                adjacency_sequence[index] = 1
+                j = j + 1
+        new_network.adjacency = adjacency_sequence.reshape(7,7)
+        network_list.append(new_network.copy())
+        
     return network_list
 
 def z_score(network, number, degree, **kwargs):
