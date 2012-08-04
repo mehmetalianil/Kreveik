@@ -248,6 +248,23 @@ class TopologicalNetwork(ProbeableObj):
         distance = difference * difference
         spec_distance = distance.sum()
         return spec_distance
+    
+    def diameter(self):
+        """
+        """
+        symmetric = self.adjacency+self.adjacency.T-num.diag(self.adjacency.diagonal())
+        adj=symmetric*1
+        new_adjacency=adj
+        summed_adjacency=adj
+        result=0
+        for j in range(len(self.adjacency)+1):
+            result=result+1
+            if num.alltrue(summed_adjacency):                    
+                break
+            else:
+                new_adjacency=num.dot(new_adjacency, adj)            
+                summed_adjacency=summed_adjacency+new_adjacency
+        return result
 
     def is_connected(self):
         """
