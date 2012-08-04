@@ -251,6 +251,12 @@ class TopologicalNetwork(ProbeableObj):
     
     def diameter(self):
         """
+        Computes diameter of a network which means the maximum values of 
+        the minimum number of edges between every pair of nodes.
+        
+        Note: diameter cannot be bigger than the number of nodes for 
+        connected networks. This problem is eliminated by returning 
+        number of nodes plus 1 for disconnected networks.
         """
         symmetric = self.adjacency+self.adjacency.T-num.diag(self.adjacency.diagonal())
         adj=symmetric*1
