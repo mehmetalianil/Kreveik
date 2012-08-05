@@ -165,7 +165,7 @@ class Family(other.ProbeableObj,other.Ensemble):
                         if spec_dist[j][k]<a:
                             indexes[k]=n
                             group_fam.add(self.network_list[k])
-            new_groups.append(group_fam)
+                new_groups.append(group_fam)
         return new_groups
         
         
