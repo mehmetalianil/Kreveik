@@ -23,6 +23,7 @@ import numpy as num
 import matplotlib.pyplot as plt
 import kreveik
 import copy
+import math
 
 class Family(other.ProbeableObj,other.Ensemble):
     '''
@@ -143,5 +144,32 @@ class Family(other.ProbeableObj,other.Ensemble):
         Computes the global mean spectral distance of the family.
         """
         return self.spectral_distance().mean()
+    
+    def grouping_networks(self):
+        """
+        Groups networks in a family according to the spectral distances
+        between every pair of networks and returns a list of 
+        family groups.
+        """
+        new_groups=[]
+        spec_dist=self.spectral_distance()        
+        a=math.pow(10,-16)
+        indexes=num.zeros(len(self.network_list))
+        n=0
+        for j in range(len(self.network_list)):
+            if indexes[j]==0:                        
+                n=n+1
+                group_fam=kreveik.classes.Family()
+                for k in range(len(self.network_list)):
+                    if k>=j:
+                        if spec_dist[j][k]<a:
+                            indexes[k]=n
+                            group_fam.add(self.network_list[k])
+            new_groups.append(group_fam)
+        return new_groups
+        
+        
+        
+        
     
                 

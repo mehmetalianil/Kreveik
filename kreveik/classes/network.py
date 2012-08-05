@@ -251,7 +251,7 @@ class TopologicalNetwork(ProbeableObj):
     
     def diameter(self):
         """
-        Computes diameter of a network which means the maximum values of 
+        Computes diameter of a network which means the maximum value of 
         the minimum number of edges between every pair of nodes.
         
         Note: diameter cannot be bigger than the number of nodes for 
