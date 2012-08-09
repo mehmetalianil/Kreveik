@@ -18,7 +18,8 @@ This module houses class definitions that more complex class definitions are inh
 """
 
 import logging
-                
+               
+ 
 class Ensemble(object):
     """Base class for all that are going to be used as an ensemble of elements that are subject to 
     Genetical Algorithm

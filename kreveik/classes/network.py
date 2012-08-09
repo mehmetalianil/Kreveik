@@ -262,7 +262,7 @@ class TopologicalNetwork(ProbeableObj):
         degrees = num.diagflat(symmetric.sum(axis=0))
         laplacian = degrees-symmetric
         determinant = num.linalg.det(laplacian +num.ones((len(laplacian),len(laplacian) )))
-        return not(determinant == 0)
+        return not(num.allclose(determinant,0.0))
     
     def remove_self_connection(self):
         """

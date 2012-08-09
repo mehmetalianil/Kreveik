@@ -52,8 +52,7 @@ import genetic
 import network
 import probes
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
+
 
 __author__ = "Mehmet Ali Anil"
 __copyright__ = ""
@@ -67,89 +66,94 @@ __status__ = "Production"
 defaults = {}
 defaults["type_list"]  = [classes.Family, classes.Motif, classes.Network]
 
-def save(filename, objects=[], **kwargs):
-    """
-    Saves the current state of the experiment.
-    """
-    import shelve
-    import os
-    
-    if "ext" in kwargs:
-        ext = kwargs["ext"]
-    else:    
-        ext = ".kvk"
-        
-    if "type_list" in kwargs:
-        type_list = kwargs["typelist"]
-    else:
-        type_list = defaults["type_list"]    
-    
-    if "type_list" in kwargs:
-        extras = kwargs["extras"]
-    else:
-        extras = []
-        
-    filename = filename+ext
-    
-    if os.path.isfile(filename):
-        logging.info("The file"+filename+"is already present.")
-        logging.info("Actions:")
-        logging.info("(O)verwrite")
-        logging.info("(N)ew filename")
-        logging.info("e(X)it")
-        prompt = raw_input("Please select action:")
-        
-        while not(prompt in "ONXonx"):
-            logging.info("(O)verwrite")
-            logging.info("(N)ew filename")
-            logging.info("e(X)it")
-            logging.info("Please select a valid action by typing O,N or X.")
-            prompt = raw_input("Please select action:")
-            
-        if prompt == "X" or prompt == "x":
-            logging.info("Exiting saving sequence.")
-            return None
-        elif prompt == "O" or prompt == "o":
-            logging.info("Overwriting"+filename+".")
-        elif prompt == "N" or prompt == "n":
-            logging.info("Enter new filename without extension .kvk:")
-            raw_input("Filename :")
-            filename = filename+ext
-        else:
-            logging.debug("Saving sequence failed.")
-            return None
-        
-    theshelve = shelve.open(filename)
-    
-    save_list = []
-    locals_copy = locals().copy()
-    logging.debug("Copy of the locals():")
-    logging.debug(str(locals_copy))
-    
-    for item in locals_copy:
-        logging.debug("Trying "+str(locals_copy[item]))
-        if type(locals_copy[item]) in type_list:
-            logging.debug(str(locals_copy[item])+", item #"+str(item)+", with the type "
-                          +str(type(locals_copy[item]))+" is added to the save_list.")
-            save_list.append([item,locals_copy[item],type(locals_copy[item])])
-        if locals_copy[item] in extras:
-            save_list.append([item,locals_copy[item],type(locals_copy[item])])
-            logging.debug(str(locals_copy[item])+", item #"+str(item)+", with the type "
-                          +str(type(locals_copy[item]))+" is added to the save_list.")
-    
-    logging.debug("The following list is generated for saving:")
-    logging.debug(str(save_list))
-    
-    if len(save_list) == 0:
-        logging.info("Unable to recognize an object to be saved. ")
-        logging.info("Please create networks, families and then try to save the present state.")
-        return None
-    else:
-        logging.info("The following objects are being saved:") 
-        for item in save_list:
-            logging.info("("+save_list[2]+")"+" "+save_list[1]) 
-        theshelve[save_list[0]] = save_list[1]
-    
-    theshelve.close()
-    logging.info("Saved as "+filename)    
+#
+#
+#  TODO !!! mehmet.ali.anil
+#
+#def save(filename, objects=[], **kwargs):
+#    """
+#    Saves the current state of the experiment.
+#    """
+#    import shelve
+#    import os
+#    import logging
+#    
+#    if "ext" in kwargs:
+#        ext = kwargs["ext"]
+#    else:    
+#        ext = ".kvk"
+#        
+#    if "type_list" in kwargs:
+#        type_list = kwargs["typelist"]
+#    else:
+#        type_list = defaults["type_list"]    
+#    
+#    if "type_list" in kwargs:
+#        extras = kwargs["extras"]
+#    else:
+#        extras = []
+#        
+#    filename = filename+ext
+#    
+#    if os.path.isfile(filename):
+#        logging.info("The file"+filename+"is already present.")
+#        logging.info("Actions:")
+#        logging.info("(O)verwrite")
+#        logging.info("(N)ew filename")
+#        logging.info("e(X)it")
+#        prompt = raw_input("Please select action:")
+#        
+#        while not(prompt in "ONXonx"):
+#            logging.info("(O)verwrite")
+#            logging.info("(N)ew filename")
+#            logging.info("e(X)it")
+#            logging.info("Please select a valid action by typing O,N or X.")
+#            prompt = raw_input("Please select action:")
+#            
+#        if prompt == "X" or prompt == "x":
+#            logging.info("Exiting saving sequence.")
+#            return None
+#        elif prompt == "O" or prompt == "o":
+#            logging.info("Overwriting"+filename+".")
+#        elif prompt == "N" or prompt == "n":
+#            logging.info("Enter new filename without extension .kvk:")
+#            raw_input("Filename :")
+#            filename = filename+ext
+#        else:
+#            logging.debug("Saving sequence failed.")
+#            return None
+#        
+#    theshelve = shelve.open(filename)
+#    
+#    save_list = []
+#    globals_copy = globals().copy()
+#    logging.debug("Copy of the locals():")
+#    logging.debug(str(globals_copy))
+#    
+#    for item in globals_copy:
+#        logging.debug("Trying "+str(globals_copy[item]))
+#        if type(globals_copy[item]) in type_list:
+#            logging.debug(str(globals_copy[item])+", item #"+str(item)+", with the type "
+#                          +str(type(globals_copy[item]))+" is added to the save_list.")
+#            save_list.append([item,globals_copy[item],type(globals_copy[item])])
+#        if globals_copy[item] in extras:
+#            save_list.append([item,globals_copy[item],type(globals_copy[item])])
+#            logging.debug(str(globals_copy[item])+", item #"+str(item)+", with the type "
+#                          +str(type(globals_copy[item]))+" is added to the save_list.")
+#    
+#    logging.debug("The following list is generated for saving:")
+#    logging.debug(str(save_list))
+#    
+#    if len(save_list) == 0:
+#        logging.info("Unable to recognize an object to be saved. ")
+#        logging.info("Please create networks, families and then try to save the present state.")
+#        return None
+#    else:
+#        logging.info("The following objects are being saved:") 
+#        for item in save_list:
+#            logging.info("("+save_list[2]+")"+" "+save_list[1]) 
+#        theshelve[save_list[0]] = save_list[1]
+#    
+#    theshelve.close()
+#    logging.info("Saved as "+filename)    
 
