@@ -13,3 +13,7 @@
 /results
 /test
 /example
+.project*
+.pydevproject*
+.cproject*
+
