@@ -13,7 +13,5 @@
 /results
 /test
 /example
-.project*
-.pydevproject*
-.cproject*
-
+.*
+!.gitignore
