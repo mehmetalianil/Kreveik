@@ -17,7 +17,6 @@
 #use_setuptools()
 
 from setuptools import setup, find_packages, Extension
-import py2app
 import numpy
 import sys
 
