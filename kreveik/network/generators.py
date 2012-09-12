@@ -48,7 +48,32 @@ def create(adjacency_matrix, bool_fcn, function):
     new_network=Network(adjacency_matrix, bool_fcn, function, state_vec = initial_state)
     return new_network
 
+def tree_network(adjacency_matrix, branch_number, generations):
+    """
+    Generates a tree-like topological network
+    """
+    import numpy as num
+    from kreveik import *
+    from kreveik.classes import TopologicalNetwork 
+    new_network=TopologicalNetwork(adjacency_matrix)
+    for i in range(generations):
+        adj=new_network.adjacency
+        laplacian=new_network.laplacian()
+        for j in range(len(laplacian)):
+            if laplacian[j][j]==1:                
+                for k in range(branch_number):
+                    new_length=len(adj)
+                    new_row=num.zeros((1,new_length))
+                    new_row[0][j]=1
+                    adj=num.append(adj, new_row, axis=0)
+                    new_length=len(adj)
+                    new_column=num.zeros((new_length,1))
+                    new_column[j][0]=1
+                    adj=num.append(adj, new_column, axis=1)
+        new_network=TopologicalNetwork(adj)
+    return new_network
     
+   
 def random(n_nodes,function,probability=(0.5,0.5,0.5),connected=False, howmany=1):
     """
     Generates and returns a random network with a random initial conditions.
