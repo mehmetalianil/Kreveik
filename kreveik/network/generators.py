@@ -73,7 +73,21 @@ def tree_network(adjacency_matrix, branch_number, generations):
         new_network=TopologicalNetwork(adj)
     return new_network
     
-   
+def periodic_lattice(node_number, neighbors):
+    """
+    Generates a periodic lattice with a given number of neighbors.
+    """
+    import numpy as num
+    from kreveik import *
+    from kreveik.classes import TopologicalNetwork 
+    adjacency_matrix = num.zeros((node_number,node_number))
+    for i in range(node_number):
+        for j in range(neighbors):
+            adjacency_matrix[i][i-j-1]=1
+    adjacency_matrix=adjacency_matrix + adjacency_matrix.transpose()
+    new_network=TopologicalNetwork(adjacency_matrix)
+    return new_network
+
 def random(n_nodes,function,probability=(0.5,0.5,0.5),connected=False, howmany=1):
     """
     Generates and returns a random network with a random initial conditions.
