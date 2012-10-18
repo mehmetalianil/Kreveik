@@ -54,6 +54,39 @@ def xor_masking(network,state):
         logging.error(id(network))
         return False
 
+def alternate_xor_masking(network,state):
+    """
+    Differs from xor_masking by returning true as components of newstate
+    for equal numbers of true and false values.   
+    """
+    
+    state = num.array(state,dtype=bool)
+    newstate = num.array([None]*network.n_nodes)
+    
+    for i in xrange(network.n_nodes):
+        #    Detect all nodes that have an incoming connection
+        
+        nonzero_of_adj = network.adjacency[i,].nonzero()[0]
+        
+        #    Reduce the boolean function and the state to a boolean function
+        #     and state concerning only the incoming connections.
+        
+        short_mask = network.mask[i,].take(nonzero_of_adj)
+        short_state = state.take(nonzero_of_adj)
+    
+        #    Two vectors are XOR' d element wise, and is summed in modulo 2
+        #    This corresponds to i th node operating its boolean function over the same
+        #    state vector.
+        
+        newstate[i] = (num.logical_xor(short_mask,short_state).sum()<=len(short_state)/2.0)
+        
+    try:
+        return newstate
+    except:
+        logging.error("XOR masking failed in network")
+        logging.error("Printing id:")
+        logging.error(id(network))
+        return False
 
 
     

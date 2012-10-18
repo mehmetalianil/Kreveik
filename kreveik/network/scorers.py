@@ -63,3 +63,26 @@ def orbit_length_sum_f(network):
             genuine_orbit_lengths.append(orbit_length)
     return sum(genuine_orbit_lengths)
 
+def orbit_count_f(network):
+    """
+    This function takes a network object and and returns its 
+    score computed by counting the number of genuine orbits.
+    """
+    
+    import numpy as num
+    
+    binspace = range(0,num.power(2,network.n_nodes))
+    genuine_orbits = []
+    genuine_orbit_lengths=[]
+    for state in binspace:
+        (orbit_length,orbit) = network.search_equilibrium(2**network.n_nodes,state,True)
+        is_in_list = False
+        for old_orbit in genuine_orbits:
+            for state in old_orbit:
+                if all(state == orbit[-1]):
+                    is_in_list = True
+        if is_in_list == False:
+            genuine_orbits.append(orbit)
+            genuine_orbit_lengths.append(orbit_length)
+    return len(genuine_orbits)
+

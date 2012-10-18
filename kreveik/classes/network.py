@@ -552,5 +552,33 @@ class Network(TopologicalNetwork,Element):
             self.search_equilibrium(2**self.n_nodes,state,orbit_extraction)  
         self.populate_probes(probes.populate_equilibria)
 
+def search_all_orbits(self):
+    """
+    Searches orbits for all initial conditions.
+    Returns the list of orbits for each initial state.
+    """
     
+    import numpy as num
+    
+    binspace = range(0,num.power(2,self.n_nodes))
+    orbits_of_initials=[]
+    for state in binspace:
+        (orbit_length,orbit) = self.search_equilibrium(2**self.n_nodes,state,True)
+        orbits_of_initials.append(orbit)
+    return orbits_of_initials
+
+#def initial_states_of_orbits(self):
+#    """
+#    TODO
+#    """
+#    orbit_list=[]
+#    initial_states=num.zeros(num.power(2,self.n_nodes))
+#    count=0
+#    binspace = range(0,num.power(2,self.n_nodes))
+#    all_orbits=self.search_all_orbits()
+#    for i in range(len(all_orbits)):
+#        if initial_states[i]==0:
+#            for j in range(len(all_orbits)):
+#                
+#            count=count+1
 
