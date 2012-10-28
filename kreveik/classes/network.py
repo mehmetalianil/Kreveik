@@ -9,7 +9,7 @@ import itertools
 import logging
 from kreveik.classes import *
 import kreveik.probes as probes
-from kreveik import *
+from kreveik import network
 
 
 class TopologicalNetwork(ProbeableObj):
@@ -421,7 +421,7 @@ class Network(TopologicalNetwork,Element):
         self.search_equilibrium(2**self.n_nodes,state,orbit_extraction=False,def_advance=1)
         
         
-    def advance(self,times,start_from=None,*args):
+    def advance(self,times,C=False,start_from=None,*args):
         '''
         Advances the state in the phase space a given number of times.
         If a starter state is given, the initial condition is taken as the given state.
@@ -433,12 +433,16 @@ class Network(TopologicalNetwork,Element):
         
         if start_from != None:
             self.set_set(start_from)
-        
-        for counter in xrange(times):
-            newstate = self.function(self,self.state[-1])
-            self.state = num.append(self.state,[newstate],axis=0)
+        if C:
+            newstate = network.boolfuncs.advance_C(self,self.state[-1],times)
+            self.state = num.append(self.state,newstate,axis=0)
+        else:
+            for counter in xrange(times):
+                newstate = self.function(self,self.state[-1])
+                self.state = num.append(self.state,[newstate],axis=0)
             
-        self.populate_probes(probes.advance)
+        self.populate_probes(probes.advance)    
+
         
     def set_state(self,state):
         """
@@ -485,7 +489,7 @@ class Network(TopologicalNetwork,Element):
         plt.show()
              
            
-    def search_equilibrium(self,chaos_limit,starter_state,orbit_extraction=False,def_advance=1):
+    def search_equilibrium(self,chaos_limit,starter_state,orbit_extraction=False,C=False,def_advance=1):
         '''
         Searches for an equilibrium point, or a limit cycle. 
         Returns the state vector, or the state vector list, if the equilibrium is a limit cycle.
@@ -496,18 +500,15 @@ class Network(TopologicalNetwork,Element):
                 The calculation will stop when this point is reached.
             orbit_extraction -> True when every individual orbit is recorded with its degree.
         '''
-        if not(hasattr(self,"equilibria")):
-            self.equilibria = num.zeros(2**self.n_nodes)
-        if not(hasattr(self,"orbits")):
-            if orbit_extraction:
-                self.orbits = num.array([None]*2**self.n_nodes)
-        
+
         self.set_state(starter_state)
         starter_state = self.state[-1]
         
         for ctr in xrange(chaos_limit):
-            
-            self.advance(def_advance)
+            if C:
+                self.advance(def_advance, C=True)
+            else:        
+                self.advance(def_advance)
             row = num.all(self.state[-1] == self.state, axis=1) 
             where = num.where(row==True)
             
@@ -522,16 +523,12 @@ class Network(TopologicalNetwork,Element):
                 
                 if orbit_extraction:
                     orbit = self.state[frst_where:scnd_where]
-                    self.orbits[location] = orbit
-                 
-                self.equilibria[location] = orbit_length
-                
+
                 self.populate_probes(probes.search_equilibrium)
                 return (orbit_length,orbit)
         
-        
             
-    def populate_equilibria(self,orbit_extraction=False):
+    def populate_equilibria(self,orbit_extraction=False,C=False):
         '''
         Creates all possible initial conditions by listing all possible 2^n boolean states.
         Then runs populate_equilibrium for each of them.
@@ -542,14 +539,26 @@ class Network(TopologicalNetwork,Element):
             normalize -> normalizes the scores to the value given.
         '''
         
+        if not(hasattr(self,"equilibria")):
+            self.equilibria = num.zeros(2**self.n_nodes)
+        if not(hasattr(self,"orbits")):
+            if orbit_extraction:
+                self.orbits = num.array([None]*2**self.n_nodes)
+                
         self.equilibria = num.zeros(2**self.n_nodes)
         if orbit_extraction:
             self.orbits = num.array([None]*2**self.n_nodes)
         
         binspace = range(0,num.power(2,self.n_nodes))
-  
-        for state in binspace:
-            self.search_equilibrium(2**self.n_nodes,state,orbit_extraction)  
+        unit_advance = 1
+        C_given = C
+        for location,state in enumerate(binspace):
+            (orbit_length,orbit) = self.search_equilibrium(2**self.n_nodes,state,orbit_extraction,def_advance=unit_advance,C=C_given)
+            if orbit_extraction:
+                self.orbits[location] = orbit
+            self.equilibria[location] = orbit_length
+            unit_advance = (unit_advance + orbit_length)/2
+            
         self.populate_probes(probes.populate_equilibria)
 
 def search_all_orbits(self):

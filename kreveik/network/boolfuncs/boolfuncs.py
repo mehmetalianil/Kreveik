@@ -130,9 +130,19 @@ def or_masking(network,state):
         logging.error(id(network))
         return False
     
+def advance_C(network,state,steps):
+
+    newstates = boolfuncs_c.advance_c(network.adjacency,network.mask,state,steps)
+    return newstates
+    
 def xor_masking_C(network,state):
 
     newstate = boolfuncs_c.xor_masking_c(network.adjacency,network.mask,state)
+    return newstate
+
+def xor_masking_CP(network,state):
+
+    newstate = boolfuncs_c.xor_masking_c_p(network.adjacency,network.mask,state)
     return newstate
 
 def or_masking_C(network,state):
