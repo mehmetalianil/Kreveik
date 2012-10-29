@@ -18,7 +18,6 @@
 
 from setuptools import setup, find_packages, Extension
 import numpy
-import sysconfig
 
 numpy_include = str(numpy.get_include())
 module = Extension('kreveik.network.boolfuncs.boolfuncs_c', 
