@@ -42,8 +42,7 @@ static char doc_and[] =
 "This is the C extension for and_masking routine. It interfaces with Python via C-Api, and calculates the"
 "next state with C pointer arithmetic";
 static char doc_advance_c[] =
-"This is the C extension for and_masking routine. It interfaces with Python via C-Api, and calculates the"
-"next state with C pointer arithmetic";
+"";
 
 static PyMethodDef boolfuncs_c[] = {
         {"xor_masking_c", xor_masking_c, METH_VARARGS, doc_xor},
@@ -102,7 +101,9 @@ static PyObject* advance_c(PyObject *self, PyObject *args){
 
 
     for(step=0; step<stepcount; step++){
-		#pragma omp parallel for
+	#pragma omp parallel
+    	{
+		#pragma omp for
     		for(i=0;i<dims[0];i++){
 				npy_int sum = 0;
 				npy_int conn_ctr = 0;
@@ -140,7 +141,7 @@ static PyObject* advance_c(PyObject *self, PyObject *args){
 					}
 
 			}
-
+    	}
     }
     Py_DECREF(adjacency_arr);
     Py_DECREF(mask_arr);
