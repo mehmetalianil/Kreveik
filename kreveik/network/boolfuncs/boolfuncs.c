@@ -228,6 +228,7 @@ static PyObject* advance_c(PyObject *self, PyObject *args){
 						*state_out_ptr =  false;
 
 					}
+    		}
     }
     Py_DECREF(adjacency_arr);
     Py_DECREF(mask_arr);
