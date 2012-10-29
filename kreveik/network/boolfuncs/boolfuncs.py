@@ -134,6 +134,11 @@ def advance_C(network,state,steps):
 
     newstates = boolfuncs_c.advance_c(network.adjacency,network.mask,state,steps)
     return newstates
+
+def advance_CP(network,state,steps):
+
+    newstates = boolfuncs_c.advance_c_p(network.adjacency,network.mask,state,steps)
+    return newstates
     
 def xor_masking_C(network,state):
 
