@@ -421,7 +421,7 @@ class Network(TopologicalNetwork,Element):
         self.search_equilibrium(2**self.n_nodes,state,orbit_extraction=False,def_advance=1)
         
         
-    def advance(self,times,C=False, P=False,start_from=None,*args):
+    def advance(self,times,start_from=None,*args):
         '''
         Advances the state in the phase space a given number of times.
         If a starter state is given, the initial condition is taken as the given state.
@@ -432,17 +432,10 @@ class Network(TopologicalNetwork,Element):
         '''
         
         if start_from != None:
-            self.set_set(start_from)
-        if C and P:
-            newstate = network.boolfuncs.advance_CP(self,self.state[-1],times)
-            self.state = num.append(self.state,newstate,axis=0)
-        elif C:
-            newstate = network.boolfuncs.advance_C(self,self.state[-1],times)
-            self.state = num.append(self.state,newstate,axis=0)
-        else:
-            for counter in xrange(times):
-                newstate = self.function(self,self.state[-1])
-                self.state = num.append(self.state,[newstate],axis=0)
+            self.set_state(start_from)
+            
+        newstate = self.function(self,self.state[-1],times)
+        self.state = num.append(self.state,newstate,axis=0)
             
         self.populate_probes(probes.advance)    
 
@@ -492,7 +485,7 @@ class Network(TopologicalNetwork,Element):
         plt.show()
              
            
-    def search_equilibrium(self,chaos_limit,starter_state,orbit_extraction=False,C=False,P=False,def_advance=1):
+    def search_equilibrium(self,chaos_limit,starter_state,orbit_extraction=False,def_advance=1):
         '''
         Searches for an equilibrium point, or a limit cycle. 
         Returns the state vector, or the state vector list, if the equilibrium is a limit cycle.
@@ -508,10 +501,8 @@ class Network(TopologicalNetwork,Element):
         starter_state = self.state[-1]
         
         for ctr in xrange(chaos_limit):
-            if C or P:
-                self.advance(def_advance, C=C, P=P)
-            else:        
-                self.advance(def_advance)
+
+            self.advance(def_advance)
                 
             row = num.all(self.state[-1] == self.state, axis=1) 
             where = num.where(row==True)
@@ -532,7 +523,7 @@ class Network(TopologicalNetwork,Element):
                 return (orbit_length,orbit)
         
             
-    def populate_equilibria(self,orbit_extraction=False,C=False,P=False):
+    def populate_equilibria(self,orbit_extraction=False):
         '''
         Creates all possible initial conditions by listing all possible 2^n boolean states.
         Then runs populate_equilibrium for each of them.
@@ -555,10 +546,8 @@ class Network(TopologicalNetwork,Element):
         
         binspace = range(0,num.power(2,self.n_nodes))
         unit_advance = 1
-        C_given = C
-        P_Given = P
         for location,state in enumerate(binspace):
-            (orbit_length,orbit) = self.search_equilibrium(2**self.n_nodes,state,orbit_extraction,def_advance=unit_advance,C=C_given,P=P_Given)
+            (orbit_length,orbit) = self.search_equilibrium(2**self.n_nodes,state,orbit_extraction,def_advance=unit_advance)
             if orbit_extraction:
                 self.orbits[location] = orbit
             self.equilibria[location] = orbit_length
