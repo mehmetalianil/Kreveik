@@ -131,39 +131,29 @@ def or_masking(network,state):
         return False
     
 def advance_C(network,state,steps):
-
     newstates = boolfuncs_c.advance_c(network.adjacency,network.mask,state,steps)
-    return newstates
-
-def advance_CP(network,state,steps):
-
-    newstates = boolfuncs_c.advance_c_p(network.adjacency,network.mask,state,steps)
     return newstates
     
 def xor_masking_C(network,state,steps):
-    states = []
-    for counter in xrange(steps):
+    states = [boolfuncs_c.xor_masking_c(network.adjacency,network.mask,state)]
+    for counter in xrange(steps-1):
+        state = network.state[-1]
         newstate = boolfuncs_c.xor_masking_c(network.adjacency,network.mask,state)
-        num.append(states,[newstate],axis=0)
-    return newstate
-
-def xor_masking_CP(network,state,steps):
-    states = []
-    for counter in xrange(steps):
-        newstate = boolfuncs_c.xor_masking_c_p(network.adjacency,network.mask,state)
-        num.append(states,[newstate],axis=0)
-    return newstate
+        states = num.append(states,[newstate],axis=0)
+    return states
 
 def or_masking_C(network,state,steps):
-    states = []
+    states = [[]]
     for counter in xrange(steps):
         newstate = boolfuncs_c.or_masking_c(network.adjacency,network.mask,state)
-        num.append(states,[newstate],axis=0)
-    return newstate
+        num.append(states,newstate,axis=0)
+        states = network.state[-1]
+    return states
 
 def and_masking_C(network,state,steps):
-    states = []
+    states = [[]]
     for counter in xrange(steps):
         newstate = boolfuncs_c.and_masking_c(network.adjacency,network.mask,state)
-        num.append(states,[newstate],axis=0)
-    return newstate
+        num.append(states,newstate,axis=0)
+        states = network.state[-1]
+    return states

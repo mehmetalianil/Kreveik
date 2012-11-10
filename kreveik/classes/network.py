@@ -520,7 +520,10 @@ class Network(TopologicalNetwork,Element):
                     orbit = self.state[frst_where:scnd_where]
 
                 self.populate_probes(probes.search_equilibrium)
-                return (orbit_length,orbit)
+                trajectory_length = frst_where+1
+                return (orbit_length,orbit,trajectory_length)
+            
+
         
             
     def populate_equilibria(self,orbit_extraction=False):
@@ -547,11 +550,12 @@ class Network(TopologicalNetwork,Element):
         binspace = range(0,num.power(2,self.n_nodes))
         unit_advance = 1
         for location,state in enumerate(binspace):
-            (orbit_length,orbit) = self.search_equilibrium(2**self.n_nodes,state,orbit_extraction,def_advance=unit_advance)
+            result =  self.search_equilibrium(2**self.n_nodes,state,orbit_extraction,def_advance=unit_advance)
+            (orbit_length,orbit,trajectory_length) = result
             if orbit_extraction:
                 self.orbits[location] = orbit
             self.equilibria[location] = orbit_length
-            unit_advance = (unit_advance + orbit_length)/2
+            unit_advance = trajectory_length
             
         self.populate_probes(probes.populate_equilibria)
 
